@@ -8,3 +8,12 @@
   file:
     path: /usr/local/share/applications/
     state: directory
+- name: Refresh apt cache
+  apt:
+    update_cache: yes
+- name: Find user bashrc
+  find:
+    paths: "/home/*/"
+    patterns: ".bashrc"
+    file_type: file
+  register: all_user_bashrc

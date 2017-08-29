@@ -1,0 +1,26 @@
+---
+# tasks file for robot-pkgs
+- name: Add ROS repository
+  apt_repository:
+    repo: deb http://packages.ros.org/ros/ubuntu xenial main
+    file: ros-latest
+    state: present
+- name: Add ROS key
+  apt_key:
+    keyserver: ha.pool.sks-keyservers.net
+    id: 421C365BD9FF1F717815A3895523BAEEB01FA116
+    state: present
+- name: Update apt cache
+  apt:
+    update_cache: yes
+- name: Install robot development packages
+  apt: name={{ item }} state=present
+  with_items:
+    - ros-kinetic-desktop-full
+- name: Add ROS bash entry
+  lineinfile:
+    path: "{{ item.path }}"
+    regexp: 'kinetic'
+    line: 'source /opt/ros/kinetic/setup.bash'
+    insertafter: EOF
+  with_items: "{{ all_user_bashrc.files }}"

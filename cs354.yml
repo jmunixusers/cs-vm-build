@@ -1,0 +1,6 @@
+---
+- name: Configure CS354
+  hosts: all
+  roles:
+    - common
+    - robot-pkgs
