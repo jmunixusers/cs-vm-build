@@ -1,5 +1,5 @@
 ---
-# tasks file for c-development
+# tasks file for adv-prog-pkgs
 - name: Install C development packages
   apt: name={{ item }} state=present
   with_items:
