@@ -19,7 +19,7 @@
     - ros-kinetic-desktop-full
 - name: Add ROS bash entry
   lineinfile:
-    path: "{{ item.path }}"
+    name: "{{ item.path }}"
     regexp: 'kinetic'
     line: 'source /opt/ros/kinetic/setup.bash'
     insertafter: EOF

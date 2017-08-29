@@ -13,7 +13,9 @@
     update_cache: yes
 - name: Find user bashrc
   find:
-    paths: "/home/*/"
+    paths: "/home/"
     patterns: ".bashrc"
+    recurse: yes
+    hidden: yes
     file_type: file
   register: all_user_bashrc
