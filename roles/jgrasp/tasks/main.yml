@@ -20,3 +20,7 @@
       dest: /opt/
       src: /opt/jgrasp.zip
   when: st.stat.checksum|default("") != '192cbf3b9a1adedaadc3c2766a8a483563679deb'
+- name: Install JGrasp desktop icon
+  template:
+    src: jgrasp.desktop.j2
+    dest: /usr/local/share/applications/jgrasp.desktop

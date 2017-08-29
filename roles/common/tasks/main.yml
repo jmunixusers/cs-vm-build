@@ -1,2 +1,10 @@
 ---
 # tasks file for common
+- name: Create opt directory
+  file:
+    path: /opt/
+    state: directory
+- name: Create local applications directory
+  file:
+    path: /usr/local/share/applications/
+    state: directory

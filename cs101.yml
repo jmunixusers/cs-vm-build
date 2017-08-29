@@ -2,4 +2,5 @@
 - name: Configure CS101
   hosts: all
   roles:
+    - common
     - jgrasp
