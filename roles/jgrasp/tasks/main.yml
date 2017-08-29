@@ -1,24 +1,23 @@
 ---
 # tasks file for jgrasp
-- name: Check JGrasp zip
+- name: Check JGrasp
   stat:
     path: /opt/jgrasp.zip
   register: st
-- name: Fetch JGrasp
-  block:
-  - name: Fetch zip
-    get_url:
-      url: 'http://www.jgrasp.org/dl4g/jgrasp/jgrasp204_01.zip'
-      dest: /opt/jgrasp.zip
-      force: yes
-  - name: Remove old directory
-    file:
-      path: /opt/jgrasp/
-      state: absent
-  - name: Unpack zip
-    unarchive:
-      dest: /opt/
-      src: /opt/jgrasp.zip
+- block:
+    - name: Fetch zip
+      get_url:
+        url: 'http://www.jgrasp.org/dl4g/jgrasp/jgrasp204_01.zip'
+        dest: /opt/jgrasp.zip
+        force: yes
+    - name: Remove old directory
+      file:
+        path: /opt/jgrasp/
+        state: absent
+    - name: Unpack zip
+      unarchive:
+        dest: /opt/
+        src: /opt/jgrasp.zip
   when: st.stat.checksum|default("") != '192cbf3b9a1adedaadc3c2766a8a483563679deb'
 - name: Install JGrasp desktop icon
   template:
