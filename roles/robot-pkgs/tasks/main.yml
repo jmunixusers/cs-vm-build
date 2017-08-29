@@ -3,7 +3,7 @@
 - name: Add ROS repository
   apt_repository:
     repo: deb http://packages.ros.org/ros/ubuntu xenial main
-    file: ros-latest
+    filename: 'ros-latest'
     state: present
 - name: Add ROS key
   apt_key:
