@@ -1,0 +1,6 @@
+---
+- name: Configure CS261
+  hosts: all
+  roles:
+    - common
+    - c-development
