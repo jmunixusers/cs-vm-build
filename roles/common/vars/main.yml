@@ -1,2 +1,3 @@
 ---
 # vars file for common
+global_base_path: /opt
