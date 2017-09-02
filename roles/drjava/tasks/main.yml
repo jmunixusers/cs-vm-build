@@ -27,3 +27,13 @@
   copy:
     src: drjava.ico
     dest: '{{ drjava.install_path }}'
+- name: Copy DrJava prefs
+  copy:
+    src: .drjava
+    dest: '{{ item.value.4 }}'
+    owner: '{{ item.value.1 }}'
+    group: '{{ item.value.2 }}'
+  with_dict: "{{ getent_passwd }}"
+  when:
+    - item.value.4 | match ("^/home/")
+    - item.value.5 != "/bin/false"

@@ -1,0 +1,4 @@
+indent.level = 4
+auto.close.comments = true
+files.backup = false
+window.width = 1064
