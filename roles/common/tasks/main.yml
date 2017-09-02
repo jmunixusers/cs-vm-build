@@ -19,3 +19,14 @@
     hidden: yes
     file_type: file
   register: all_user_bashrc
+- name: Copy stu-home desktop
+  copy:
+    src: stu-home.desktop
+    dest: '{{ item.value.4 }}/Desktop'
+    owner: '{{ item.value.1 }}'
+    group: '{{ item.value.2 }}'
+  with_dict: "{{ getent_passwd }}"
+  when:
+    - item.value.4 | match ("^/home/")
+    - item.value.5 != "/bin/false"
+

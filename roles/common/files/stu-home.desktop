@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=jmucs-homedir
+Exec=sh -c "nemo sftp://${USER}@stu.cs.jmu.edu/cs/home/stu/${USER}/"
+##Exec=sh -c "nemo sftp://stu.cs.jmu.edu/cs/home/stu"
+Comment=Mount/umount your JMUCS NFS home directory
+Terminal=False
+Type=Application
+Categories=Application;
+Icon=usermount
+Name[en_US]=stu-home
