@@ -17,10 +17,28 @@
   apt: name={{ item }} state=present
   with_items:
     - ros-kinetic-desktop-full
-- name: Add ROS bash entry
+- name: Add ROS kinetic bash entry
   lineinfile:
-    name: "{{ item.path }}"
+    name: "/etc/profile"
     regexp: 'kinetic'
     line: 'source /opt/ros/kinetic/setup.bash'
     insertafter: EOF
-  with_items: "{{ all_user_bashrc.files }}"
+- name: Add ROS Turtlebot bash entry
+  lineinfile:
+    name: "/etc/profile"
+    regexp: 'TURTLEBOT'
+    line: 'export TURTLEBOT_3D_SENSOR=kinect'
+    insertafter: EOF
+- name: Init rosdep if missing
+  command: rosdep init
+  args:
+    creates: /etc/ros/rosdep/sources.list.d/20-default.list
+- name: Get users
+  getent:
+    database: passwd
+- name: Update rosdep for each user
+  command: rosdep update
+  become: yes
+  become_user: "{{ item.key }}"
+  with_dict: "{{ getent_passwd }}"
+  when: item.value.4 | match ("^/home/")
