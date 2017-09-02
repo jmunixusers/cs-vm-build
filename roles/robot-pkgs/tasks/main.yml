@@ -54,3 +54,13 @@
   when:
     - item.value.4 | match ("^/home/")
     - item.value.5 != "/bin/false"
+- name: Init Catkin workspace
+  command: catkin_init_workspace
+  args:
+    chdir: '{{ item.value.4 }}/catkin_ws/src/'
+  become: yes
+  become_user: "{{ item.key }}"
+  with_dict: "{{ getent_passwd }}"
+  when:
+    - item.value.4 | match ("^/home/")
+    - item.value.5 != "/bin/false"
