@@ -48,6 +48,8 @@
   file:
     path: '{{ item.value.4 }}/catkin_ws/src/'
     state: directory
+    owner: '{{ item.value.1 }}'
+    group: '{{ item.value.2 }}'
   with_dict: "{{ getent_passwd }}"
   when:
     - item.value.4 | match ("^/home/")
