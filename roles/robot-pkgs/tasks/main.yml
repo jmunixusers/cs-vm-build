@@ -41,4 +41,14 @@
   become: yes
   become_user: "{{ item.key }}"
   with_dict: "{{ getent_passwd }}"
-  when: item.value.4 | match ("^/home/")
+  when:
+    - item.value.4 | match ("^/home/")
+    - item.value.5 != "/bin/false"
+- name: Create Catkin workspace directory
+  file:
+    path: '{{ item.value.4 }}/catkin_ws/src/'
+    state: directory
+  with_dict: "{{ getent_passwd }}"
+  when:
+    - item.value.4 | match ("^/home/")
+    - item.value.5 != "/bin/false"
