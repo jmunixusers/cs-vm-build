@@ -55,9 +55,10 @@
     - item.value.4 | match ("^/home/")
     - item.value.5 != "/bin/false"
 - name: Init Catkin workspace
-  command: catkin_init_workspace
+  shell: source /opt/ros/kinetic/setup.bash && catkin_make
   args:
-    chdir: '{{ item.value.4 }}/catkin_ws/src/'
+    executable: /bin/bash
+    chdir: '{{ item.value.4 }}/catkin_ws/'
   become: yes
   become_user: "{{ item.key }}"
   with_dict: "{{ getent_passwd }}"
