@@ -15,7 +15,15 @@
         dest: '{{ drjava.jar }}'
         force: yes
   when: st.stat.checksum|default("") != drjava.hash
-- name: Install DrJava desktop icon
+- name: Install DrJava menu shortcut
   template:
     src: drjava.desktop.j2
     dest: /usr/local/share/applications/drjava.desktop
+- name: Install DrJava start script
+  template:
+    src: drjava.sh.j2
+    dest: '{{ drjava.install_path }}'
+- name: Install DrJava shortcut icon
+  copy:
+    src: drjava.ico
+    dest: '{{ drjava.install_path }}'
