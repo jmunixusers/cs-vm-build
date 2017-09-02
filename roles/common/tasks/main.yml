@@ -19,6 +19,9 @@
     hidden: yes
     file_type: file
   register: all_user_bashrc
+- name: Get users
+  getent:
+    database: passwd
 - name: Copy stu-home desktop
   copy:
     src: stu-home.desktop
