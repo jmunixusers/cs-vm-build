@@ -1,0 +1,21 @@
+---
+# tasks file for DrJava
+- name: Check DrJava
+  stat:
+    path: '{{ drjava.jar }}'
+  register: st
+- block:
+    - name: Create DrJava directory
+      file:
+        path: '{{ drjava.install_path }}'
+        state: directory
+    - name: Fetch jar
+      get_url:
+        url: '{{ drjava.url }}'
+        dest: '{{ drjava.jar }}'
+        force: yes
+  when: st.stat.checksum|default("") != drjava.hash
+- name: Install DrJava desktop icon
+  template:
+    src: drjava.desktop.j2
+    dest: /usr/local/share/applications/drjava.desktop
