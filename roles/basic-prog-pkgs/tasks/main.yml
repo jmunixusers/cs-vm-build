@@ -25,7 +25,7 @@
 - name: Copy idlerc prefs
   copy:
     src: .idlerc
-    dest: item.value.4
+    dest: '{{ item.value.4 }}'
     owner: '{{ item.value.1 }}'
     group: '{{ item.value.2 }}'
   with_dict: "{{ getent_passwd }}"
