@@ -45,3 +45,13 @@
   when:
     - item.value.4 | match ("^/home/")
     - item.value.5 != "/bin/false"
+- name: Copy mimeapps Idle pref
+  copy:
+    src: mimeapps.list
+    dest: '{{ item.value.4 }}/.config/'
+    owner: '{{ item.value.1 }}'
+    group: '{{ item.value.2 }}'
+  with_dict: "{{ getent_passwd }}"
+  when:
+    - item.value.4 | match ("^/home/")
+    - item.value.5 != "/bin/false"
