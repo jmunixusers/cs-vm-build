@@ -1,6 +1,33 @@
 ---
 # tasks file for adv-prog-pkgs
-- name: Install C development packages
+- name: Install advanced language packages
   apt: name={{ item }} state=present
   with_items:
     - build-essential
+    - gcc
+    - g++
+    - gdb
+    - lua5.3
+    - python3
+    - ruby
+    - valgrind
+    - logisim
+- name: Install source control packages
+  apt: name={{ item }} state=present
+  with_items:
+    - subversion
+    - git
+    - gitg
+    - mercurial
+    - meld
+- name: Install code editor packages
+  apt: name={{ item }} state=present
+  with_items:
+    - vim
+    - vim-gnome
+    - gedit
+    - nano
+    - check
+    - bvi
+    - astyle
+    - indent

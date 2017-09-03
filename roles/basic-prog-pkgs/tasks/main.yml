@@ -5,10 +5,11 @@
   with_items:
     - artha
     - bless
-    - default-jdk
     - geany
     - idle
     - meld
+    - default-jdk
+    - openjdk-8-jdk
     - openjdk-8-source
     - pinta
     - python-pygame
@@ -19,6 +20,8 @@
     - libreoffice-templates
     - libreoffice-style-tango
     - logisim
+    - lsb-core
+    - eclipse-jdt
 - name: Get users
   getent:
     database: passwd
