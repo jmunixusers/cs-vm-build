@@ -1,0 +1,10 @@
+---
+- name: Configure UUG VM
+  hosts: all
+  roles:
+    - { role: common, tags: ["cs101", "cs261", "cs354"] }
+    - { role: basic-prog-pkgs, tags: ["cs101"] }
+    - { role: adv-prog-pkgs, tags: ["cs261"] }
+    - { role: robot-pkgs, tags: ["cs354"] }
+    - { role: jgrasp, tags: ["cs101"] }
+    - { role: drjava, tags: ["cs101"] }
