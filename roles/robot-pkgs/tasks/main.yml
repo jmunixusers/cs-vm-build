@@ -33,35 +33,23 @@
   command: rosdep init
   args:
     creates: /etc/ros/rosdep/sources.list.d/20-default.list
-- name: Get users
-  getent:
-    database: passwd
 - name: Update rosdep for each user
   command: rosdep update
   become: yes
-  become_user: "{{ item.key }}"
-  with_dict: "{{ getent_passwd }}"
-  when:
-    - item.value.4 | match ("^/home/")
-    - item.value.5 != "/bin/false"
+  become_user: "{{ item.user }}"
+  with_dict: "{{ real_users }}"
 - name: Create Catkin workspace directory
   file:
-    path: '{{ item.value.4 }}/catkin_ws/src/'
+    path: '{{ item.homedir }}/catkin_ws/src/'
     state: directory
-    owner: '{{ item.value.1 }}'
-    group: '{{ item.value.2 }}'
-  with_dict: "{{ getent_passwd }}"
-  when:
-    - item.value.4 | match ("^/home/")
-    - item.value.5 != "/bin/false"
+    owner: '{{ item.uid }}'
+    group: '{{ item.gid }}'
+  with_dict: "{{ real_users }}"
 - name: Init Catkin workspace
   shell: source /opt/ros/kinetic/setup.bash && catkin_make
   args:
     executable: /bin/bash
-    chdir: '{{ item.value.4 }}/catkin_ws/'
+    chdir: '{{ item.homedir }}/catkin_ws/'
   become: yes
-  become_user: "{{ item.key }}"
-  with_dict: "{{ getent_passwd }}"
-  when:
-    - item.value.4 | match ("^/home/")
-    - item.value.5 != "/bin/false"
+  become_user: "{{ item.user }}"
+  with_dict: "{{ real_users }}"
