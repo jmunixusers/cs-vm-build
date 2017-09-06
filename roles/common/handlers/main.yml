@@ -1,2 +1,11 @@
 ---
 # handlers file for common
+- name: Suggest restart
+  command: >-
+    notify-send -u critical "JMU Software Change" 
+    "Changes have been made to your machine that 
+    will only take effect when log out or when 
+    you reboot. Please do this immediately."
+  become: yes
+  become_user: "{{ item.user }}"
+  with_dict: "{{ real_users }}"

@@ -23,6 +23,8 @@
     regexp: 'kinetic'
     line: 'source /opt/ros/kinetic/setup.bash'
     insertafter: EOF
+  notify:
+  - Suggest restart
 - name: Add ROS Turtlebot bash entry
   lineinfile:
     name: "/etc/profile"
