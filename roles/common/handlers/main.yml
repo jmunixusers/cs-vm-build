@@ -8,4 +8,4 @@
     you reboot. Please do this immediately."
   become: yes
   become_user: "{{ item.user }}"
-  with_dict: "{{ real_users }}"
+  with_items: "{{ real_users }}"
