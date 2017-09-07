@@ -33,4 +33,4 @@
     dest: '{{ item.homedir }}'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-  with_dict: "{{ real_users }}"
+  with_items: "{{ real_users }}"
