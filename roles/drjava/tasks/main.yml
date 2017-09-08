@@ -9,7 +9,7 @@
       file:
         path: '{{ drjava.install_path }}'
         state: directory
-    - name: Fetch jar
+    - name: Fetch DrJava jar
       get_url:
         url: '{{ drjava.url }}'
         dest: '{{ drjava.jar }}'

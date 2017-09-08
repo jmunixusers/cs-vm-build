@@ -5,16 +5,16 @@
     path: '{{ jgrasp.zip }}'
   register: st
 - block:
-    - name: Fetch zip
+    - name: Fetch JGrasp zip
       get_url:
         url: '{{ jgrasp.url }}'
         dest: '{{ jgrasp.zip }}'
         force: yes
-    - name: Remove old directory
+    - name: Remove old JGrasp directory
       file:
         path: '{{ jgrasp.install_path }}'
         state: absent
-    - name: Unpack zip
+    - name: Unpack JGrasp zip
       unarchive:
         dest: '{{ global_base_path }}'
         src: '{{ jgrasp.zip }}'
