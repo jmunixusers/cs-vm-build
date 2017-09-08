@@ -4,4 +4,4 @@ aptana:
   url: 'https://github.com/aptana/studio3/releases/download/v3.6.1/Aptana_Studio_3_Setup_Linux_x86_64_3.6.1.zip'
   hash: '9e19e96b5a53f381b898f49eca5a7ff7479d6e42'
   zip: '{{ global_base_path }}/aptana.zip'
-  install_path: '{{ global_base_path }}/aptana'
+  install_path: '{{ global_base_path }}/Aptana_Studio_3'
