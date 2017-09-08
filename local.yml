@@ -8,3 +8,4 @@
     - { role: robot-pkgs, tags: ["cs354"] }
     - { role: jgrasp, tags: ["cs101"] }
     - { role: drjava, tags: ["cs101"] }
+    - { role: aptana, tags: ["cs101"] }

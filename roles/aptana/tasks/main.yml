@@ -1,2 +1,31 @@
 ---
 # tasks file for aptana
+- name: Install Aptana Java
+  apt: name={{ item }} state=present
+  with_items:
+    - default-jdk
+    - openjdk-8-jdk
+- name: Check Aptana
+  stat:
+    path: '{{ aptana.zip }}'
+  register: st
+- block:
+    - name: Fetch Aptana zip
+      get_url:
+        url: '{{ aptana.url }}'
+        dest: '{{ aptana.zip }}'
+        force: yes
+    - name: Remove old Aptana directory
+      file:
+        path: '{{ aptana.install_path }}'
+        state: absent
+    - name: Unpack zip
+      unarchive:
+        dest: '{{ global_base_path }}'
+        src: '{{ aptana.zip }}'
+  when: st.stat.checksum|default("") != aptana.hash
+- name: Install Aptana desktop icon
+  template:
+    src: aptana.desktop.j2
+    dest: /usr/local/share/applications/aptana.desktop
+
