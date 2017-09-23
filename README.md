@@ -9,10 +9,10 @@ git clone https://github.com/ripleymj/uugvm-ansible
 cd uugvm-ansible
 ansible-playbook -i hosts -c local -K -t TAGS local.yml
 ```
-where TAGS is a comma separated list of cs101, cs261, or cs354 as appropriate.
-
-This can also be run directly from GitHub:
+or directly from GitHub:
 ```
 ansible-pull -U https://github.com/ripleymj/uugvm-ansible -i hosts -K -t TAGS
 ```
-using the same tags as above.
+where TAGS is a comma separated list of cs101, cs261, or cs354 as appropriate.
+
+This was developed on and for Linux Mint, but is not known to have any problems with other Debian-based distributions.
