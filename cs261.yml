@@ -1,6 +1,0 @@
----
-- name: Configure CS261
-  hosts: all
-  roles:
-    - common
-    - adv-prog-pkgs
