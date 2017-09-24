@@ -7,7 +7,7 @@ If you choose to risk your machine, this can be run with either:
 apt-get install ansible git
 git clone https://github.com/ripleymj/uugvm-ansible
 cd uugvm-ansible
-ansible-playbook -i hosts -K -t TAGS local.yml
+ansible-playbook -i hosts -c local -K -t TAGS local.yml
 ```
 or directly from GitHub:
 ```

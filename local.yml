@@ -1,7 +1,6 @@
 ---
 - name: Configure UUG VM
   hosts: all
-  connection: local
   become: true
   roles:
     - { role: common, tags: all }
