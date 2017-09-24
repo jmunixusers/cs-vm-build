@@ -1,10 +1,5 @@
 ---
 # tasks file for aptana
-- name: Install Aptana Java
-  apt: name={{ item }} state=present
-  with_items:
-    - default-jdk
-    - openjdk-8-jdk
 - name: Check Aptana
   stat:
     path: '{{ aptana.zip }}'

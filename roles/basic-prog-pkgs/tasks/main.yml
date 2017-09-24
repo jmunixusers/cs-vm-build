@@ -8,9 +8,6 @@
     - geany
     - idle
     - meld
-    - default-jdk
-    - openjdk-8-jdk
-    - openjdk-8-source
     - pinta
     - python-pygame
     - wireshark
