@@ -12,3 +12,4 @@
     - { role: jgrasp, tags: ["cs149"] }
     - { role: drjava, tags: ["cs149"] }
     - { role: aptana, tags: ["cs101"] }
+    - { role: finch, tags: ["cs101"] }
