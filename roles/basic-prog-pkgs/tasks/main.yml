@@ -17,8 +17,6 @@
     - libreoffice-templates
     - libreoffice-style-tango
     - logisim
-    - lsb-core
-    - eclipse-jdt
 - name: Get users
   getent:
     database: passwd

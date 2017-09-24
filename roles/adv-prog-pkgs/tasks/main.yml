@@ -12,6 +12,7 @@
     - ruby
     - valgrind
     - logisim
+    - lsb-core
 - name: Install source control packages
   apt: name={{ item }} state=present
   with_items:

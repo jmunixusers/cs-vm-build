@@ -1,0 +1,6 @@
+---
+# tasks file for java-dev
+- name: Install Java development packages
+  apt: name={{ item }} state=present
+  with_items:
+    - eclipse-jdt
