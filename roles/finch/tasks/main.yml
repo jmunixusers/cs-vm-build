@@ -37,7 +37,7 @@
     dest: '{{ global_profile_path }}'
     marker: "## {mark} Finch profile entries ##"
     block: |
-      export HIDAPI_LIB_PATH="{{ finch.install_path }}"
+      export HIDAPI_LIB_PATH={{ finch.install_path }}
   notify:
   - Suggest restart
 
