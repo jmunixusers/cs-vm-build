@@ -4,6 +4,8 @@
   apt: name={{ item }} state=present
   with_items:
     - cups-client
+# Do not indent continuation lines of a multi-line block,
+# they become newlines when parsed
 - name: Add printers
   shell: >
     lpadmin -p "{{ item.name }}" -E
