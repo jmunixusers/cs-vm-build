@@ -31,6 +31,13 @@
     regexp: 'TURTLEBOT'
     line: 'export TURTLEBOT_3D_SENSOR=kinect'
     insertafter: EOF
+- name: Create ROS profile entries
+  blockinfile:
+    dest: '{{ global_profile_path }}'
+    marker: <!-- {mark} ROS profile entries -->
+    block: |
+      source /opt/ros/kinetic/setup.bash
+      export TURTLEBOT_3D_SENSOR=kinect
 - name: Init rosdep if missing
   command: rosdep init
   args:
