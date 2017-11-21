@@ -23,11 +23,21 @@
   copy:
     src: 55-finch.rules
     dest: '/etc/udev/rules.d/'
-- name: Install Finch udev rule
+- name: Install Finch extra: dance2.py
   copy:
     src: dance2.py
     dest: '{{ finch.install_path }}'
-- name: Install Finch udev rule
+- name: Install Finch extra: maze.py
   copy:
     src: maze.py
     dest: '{{ finch.install_path }}'
+# Dest becomes path in Ansible 2.3+
+- name: Create Finch profile entries
+  blockinfile:
+    dest: '{{ global_profile_path }}'
+    marker: "## {mark} Finch profile entries ##"
+    block: |
+      export HIDAPI_LIB_PATH='{{ finch.install_path }}'
+  notify:
+  - Suggest restart
+
