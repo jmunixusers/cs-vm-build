@@ -17,20 +17,6 @@
   apt: name={{ item }} state=present
   with_items:
     - ros-kinetic-desktop-full
-- name: Add ROS kinetic bash entry
-  lineinfile:
-    name: "/etc/profile"
-    regexp: 'kinetic'
-    line: 'source /opt/ros/kinetic/setup.bash'
-    insertafter: EOF
-  notify:
-  - Suggest restart
-- name: Add ROS Turtlebot bash entry
-  lineinfile:
-    name: "/etc/profile"
-    regexp: 'TURTLEBOT'
-    line: 'export TURTLEBOT_3D_SENSOR=kinect'
-    insertafter: EOF
 # Dest becomes path in Ansible 2.3+
 - name: Create ROS profile entries
   blockinfile:
