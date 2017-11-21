@@ -1,12 +1,12 @@
 ---
 # vars file for wireless-printing
 printers:
-  bandw:
+  - bandw:
     name: JMU-LabPrintBW
     queue: lpd://labprintremote@labprint.jmu.edu/LabPrintBW
     descr: JMU Labs & Libraries
     driver: drv:///sample.drv/generic.ppd
-  color:
+  - color:
     name: JMU-LabPrintColor
     queue: lpd://labprintremote@labprint.jmu.edu/LabPrintColor
     descr: JMU Labs & Libraries

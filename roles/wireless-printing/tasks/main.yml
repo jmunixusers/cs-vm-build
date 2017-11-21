@@ -4,13 +4,12 @@
   apt: name={{ item }} state=present
   with_items:
     - cups-client
-    - gtk3-print-backends
 - name: Add printers
-  shell: |
-    lpadmin -p "{{ item.name }}" -E \
-        -v "{{ item.queue }}" \
-        -L "{{ item.descr }}" \
-        -m "drv:///sample.drv/generic.ppd" \
-        -o "Duplex=DuplexNoTumble"\
-        -o "Option1=True"
+  shell: >
+    lpadmin -p "{{ item.name }}" -E
+    -v "{{ item.queue }}"
+    -L "{{ item.descr }}"
+    -m "drv:///sample.drv/generic.ppd"
+    -o "Duplex=DuplexNoTumble"
+    -o "Option1=True"
   with_items: "{{ printers }}"
