@@ -44,9 +44,10 @@
     owner: root
     group: root
     state: touch
+# dest becomes path in Ansible 2.3+
 - name: Add profile to user bashrc
   lineinfile:
-    path: '{{ item.homedir }}/.bashrc'
+    dest: '{{ item.homedir }}/.bashrc'
     line: "source {{ global_profile_path }}"
     state: present
     insertafter: EOF
