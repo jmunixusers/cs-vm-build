@@ -23,11 +23,11 @@
   copy:
     src: 55-finch.rules
     dest: '/etc/udev/rules.d/'
-- name: Install Finch extra: dance2.py
+- name: Install Finch extra - dance2.py
   copy:
     src: dance2.py
     dest: '{{ finch.install_path }}'
-- name: Install Finch extra: maze.py
+- name: Install Finch extra - maze.py
   copy:
     src: maze.py
     dest: '{{ finch.install_path }}'
