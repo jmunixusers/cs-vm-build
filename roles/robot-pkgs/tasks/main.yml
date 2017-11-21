@@ -17,6 +17,8 @@
   apt: name={{ item }} state=present
   with_items:
     - ros-kinetic-desktop-full
+    - gazebo7
+    - rviz
 # Dest becomes path in Ansible 2.3+
 - name: Create ROS profile entries
   blockinfile:
