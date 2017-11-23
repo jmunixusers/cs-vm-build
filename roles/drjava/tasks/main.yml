@@ -22,7 +22,8 @@
 - name: Install DrJava start script
   template:
     src: drjava.sh.j2
-    dest: '{{ drjava.install_path }}'
+    mode: 0755
+    dest: '{{ drjava.install_path }}/drjava.sh'
 - name: Install DrJava shortcut icon
   copy:
     src: drjava.ico
