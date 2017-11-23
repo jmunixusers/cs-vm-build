@@ -17,36 +17,31 @@
     - libreoffice-templates
     - libreoffice-style-tango
     - logisim
-- name: Get users
-  getent:
-    database: passwd
 - name: Copy idlerc prefs
   copy:
     src: .idlerc
-    dest: '{{ item.value.4 }}'
-    owner: '{{ item.value.1 }}'
-    group: '{{ item.value.2 }}'
-  with_dict: "{{ getent_passwd }}"
-  when:
-    - item.value.4 | match ("^/home/")
-    - item.value.5 != "/bin/false"
+    dest: '{{ item.homedir }}'
+    owner: '{{ item.uid }}'
+    group: '{{ item.gid }}'
+  with_items: "{{ real_users }}"
 - name: Copy lab worksheet
   copy:
     src: Lab04-Worksheet.txt
-    dest: '{{ item.value.4 }}'
-    owner: '{{ item.value.1 }}'
-    group: '{{ item.value.2 }}'
-  with_dict: "{{ getent_passwd }}"
-  when:
-    - item.value.4 | match ("^/home/")
-    - item.value.5 != "/bin/false"
+    dest: '{{ item.homedir }}'
+    owner: '{{ item.uid }}'
+    group: '{{ item.gid }}'
+  with_items: "{{ real_users }}"
 - name: Copy mimeapps Idle pref
   copy:
     src: mimeapps.list
-    dest: '{{ item.value.4 }}/.config/'
-    owner: '{{ item.value.1 }}'
-    group: '{{ item.value.2 }}'
-  with_dict: "{{ getent_passwd }}"
-  when:
-    - item.value.4 | match ("^/home/")
-    - item.value.5 != "/bin/false"
+    dest: '{{ item.homedir }}/.config/'
+    owner: '{{ item.uid }}'
+    group: '{{ item.gid }}'
+    force: no
+  with_items: "{{ real_users }}"
+- name: Set Idle pref in existing mimeapps
+  lineinfile: 
+    path: '{{ item.homedir }}/.config/mimeapps.list'
+    regexp: '^text/x-python='
+    line: 'text/x-python=idle-python2.7.desktop;gedit.desktop;pluma.desktop'
+  with_items: "{{ real_users }}"
