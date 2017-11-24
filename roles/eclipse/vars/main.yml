@@ -1,0 +1,7 @@
+---
+# vars file for eclipse
+eclipse:
+  url: 'https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/oxygen/1a/eclipse-java-oxygen-1a-linux-gtk-x86_64.tar.gz&r=1'
+  hash: '6b9f9c7577fa9ef8f61f953579fd75ffa8f7b866'
+  zip: '{{ global_base_path }}/eclipse.tar.gz'
+  install_path: '{{ global_base_path }}/eclipse/'

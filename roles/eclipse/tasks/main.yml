@@ -1,0 +1,21 @@
+---
+# tasks file for eclipse
+- name: Check Eclipse
+  stat:
+    path: '{{ eclipse.zip }}'
+  register: st
+- block:
+    - name: Fetch Eclipse bundle
+      get_url:
+        url: '{{ eclipse.url }}'
+        dest: '{{ eclipse.zip }}'
+        force: yes
+    - name: Remove old Eclipse directory
+      file:
+        path: '{{ eclipse.install_path }}'
+        state: absent
+    - name: Unpack Eclipse bundle
+      unarchive:
+        dest: '{{ global_base_path }}'
+        src: '{{ eclipse.zip }}'
+  when: st.stat.checksum|default("") != eclipse.hash
