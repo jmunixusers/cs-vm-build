@@ -28,6 +28,7 @@
   copy:
     src: stu-home.desktop
     dest: '{{ item.homedir }}/Desktop'
+    mode: 0755
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
   with_items: "{{ real_users }}"
