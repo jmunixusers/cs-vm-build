@@ -1,5 +1,12 @@
 ---
 # tasks file for eclipse
+- name: Remove Mint Eclipse
+  apt: name={{ item }} state=absent
+  with_items:
+    - eclipse-jdt
+    - eclipse-platform
+    - eclipse-platform-data
+    - eclipse-rcp
 - name: Check Eclipse
   stat:
     path: '{{ eclipse.zip }}'
@@ -19,3 +26,7 @@
         dest: '{{ global_base_path }}'
         src: '{{ eclipse.zip }}'
   when: st.stat.checksum|default("") != eclipse.hash
+- name: Install Eclipse desktop icon
+  template:
+    src: eclipse.desktop.j2
+    dest: /usr/local/share/applications/eclipse.desktop
