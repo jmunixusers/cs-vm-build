@@ -8,6 +8,7 @@
 # they become newlines when parsed
 - name: Add printers
   shell: >
+    lpstat -p "{{ item.name }}" ||
     lpadmin -p "{{ item.name }}" -E
     -v "{{ item.queue }}"
     -L "{{ item.descr }}"
@@ -15,4 +16,6 @@
     -o "Duplex=DuplexNoTumble"
     -o "Option1=True"
     -o "printer-is-shared=false"
+  register: lpstat_result
+  changed_when: '"Invalid destination name" in lpstat_result.stderr'
   with_items: "{{ printers }}"
