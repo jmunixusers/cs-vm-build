@@ -23,6 +23,7 @@
     dest: '{{ item.homedir }}'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
+    # Quotes are requred due to a bug in Ansible 2.1
     directory_mode: "0750"
     mode: 0640
   with_items: "{{ real_users }}"
