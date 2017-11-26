@@ -23,6 +23,8 @@
     dest: '{{ item.homedir }}'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
+    directory_mode: 0750
+    mode: 0640
   with_items: "{{ real_users }}"
 - name: Copy lab worksheet
   copy:
@@ -30,6 +32,7 @@
     dest: '{{ item.homedir }}'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
+    mode: 0640
   with_items: "{{ real_users }}"
 - name: Copy mimeapps Idle pref
   copy:
@@ -37,6 +40,7 @@
     dest: '{{ item.homedir }}/.config/'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
+    mode: 0640
     force: no
   with_items: "{{ real_users }}"
 # Dest becomes path in Ansible 2.3+

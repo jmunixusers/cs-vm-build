@@ -28,9 +28,9 @@
   copy:
     src: stu-home.desktop
     dest: '{{ item.homedir }}/Desktop'
-    mode: 0755
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
+    mode: 0750
   with_items: "{{ real_users }}"
 - name: Install Java runtime
   apt: name={{ item }} state=present
