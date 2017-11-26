@@ -28,10 +28,12 @@
   copy:
     src: drjava.ico
     dest: '{{ drjava.install_path }}'
+    mode: 0644
 - name: Copy DrJava prefs
   copy:
     src: .drjava
     dest: '{{ item.homedir }}'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
+    mode: 0640
   with_items: "{{ real_users }}"
