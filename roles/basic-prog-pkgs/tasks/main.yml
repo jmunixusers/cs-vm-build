@@ -23,7 +23,7 @@
     dest: '{{ item.homedir }}'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-    directory_mode: 0750
+    directory_mode: "0750"
     mode: 0640
   with_items: "{{ real_users }}"
 - name: Copy lab worksheet
