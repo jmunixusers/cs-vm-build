@@ -4,4 +4,4 @@ jgrasp:
   url: 'http://www.jgrasp.org/dl4g/jgrasp/jgrasp204_03.zip'
   hash: '1aafdc19ef8ed8e4e15cbdcdabe383fc18428d63'
   zip: '{{ global_base_path }}/jgrasp.zip'
-  install_path: '{{ global_base_path }}/jgrasp/'
+  install_path: '{{ global_base_path }}/jgrasp'
