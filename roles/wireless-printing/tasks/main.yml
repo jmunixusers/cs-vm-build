@@ -4,6 +4,14 @@
   apt: name={{ item }} state=present
   with_items:
     - cups-client
+    - cups
+# The service must be running for lpadmin commands to work
+# and the server must be working to print
+- name: Ensure CUPS is started
+  service:
+      name: cups
+      enabled: yes
+      state: started
 # Do not indent continuation lines of a multi-line block,
 # they become newlines when parsed
 - name: Add printers
