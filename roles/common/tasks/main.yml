@@ -39,7 +39,7 @@
     - openjdk-8-jdk
     - openjdk-8-source
 - name: Touch VM profile
-  file:
+  copy:
     src: csvmprofile
     dest: '{{ global_profile_path }}'
     mode: 0644
