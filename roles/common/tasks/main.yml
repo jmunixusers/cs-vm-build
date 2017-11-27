@@ -40,11 +40,13 @@
     - openjdk-8-source
 - name: Touch VM profile
   file:
-    path: '{{ global_profile_path }}'
+    src: csvmprofile
+    dest: '{{ global_profile_path }}'
     mode: 0644
     owner: root
     group: root
-    state: touch
+    # prevent overwriting
+    force: no
 # dest becomes path in Ansible 2.3+
 - name: Add profile to user bashrc
   lineinfile:
