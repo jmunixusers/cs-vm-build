@@ -1,0 +1,89 @@
+---
+# vars file for oem
+oem_base_path: /opt
+oem_vmtools_path: "{{ oem_base_path }}/vmtools"
+oem_ansible_wrapper: "{{ oem_vmtools_path }}/bin/uug-ansible-wrapper"
+
+supported_courses:
+    - { tags: cs101, desc: Install CS101 packages }
+    - { tags: cs149, desc: Install CS149 packages }
+    - { tags: cs159, desc: Install CS159 packages }
+    - { tags: cs261, desc: Install CS261 packages }
+    - { tags: cs354, desc: Install CS354 packages }
+    - { tags: common, desc: Refresh VM Config }
+
+# https://github.com/jmunixusers/cs-vm-build/issues/11#issuecomment-347015788 
+packages_to_remove:
+    - libreoffice-*
+    - thunderbird*
+    - hexchat*
+    - pidgin*
+    - transmission*
+    - gimp*
+    - pix*
+    - rhythmbox*
+    - tomboy
+    - bluez*
+    - simple-scan
+    - xplayer*
+    - vlc*
+    - openvpn
+    - btrfs-tools
+    - mono-*
+    - xscreensaver-*
+    - fonts-noto-cjk
+    - mint-backgrounds-sarah
+    - mint-backgrounds-serena
+    - libllvm3.8
+    - fonts-beng*
+    - fonts-deva*
+    - fonts-gargi*
+    - fonts-gujr*
+    - fonts-guru*
+    - fonts*guru*
+    - fonts*gujr*
+    - fonts-gubbi
+    - fonts-kacst*
+    - fonts-khmeros-core
+    - fonts-kalapi
+    - fonts-lohit-*
+    - fonts-lao
+    - fonts-nakula
+    - fonts-nanum
+    - fonts-lklug-sinhala
+    - fonts-navilu
+    - fonts-pagul
+    - fonts-sahadeva
+    - fonts-orya-extra
+    - fonts-samyak-*
+    - fonts-sarai
+    - fonts-tlwg-*
+    - fonts-wqy-microhei
+    - fonts-sil-*
+    - fonts-smc
+    - fonts-takao-pgothic
+    - fonts-telu-extra
+    - fonts-tibetan-machine
+    - myspell-en-au
+    - myspell-en-gb
+    - myspell-en-za
+    - myspell-es
+    - myspell-it
+    - myspell-pt*
+    - wbritish
+    - hyphen-de
+    - hypgen-fr
+    - hyphen-it
+    - hyphen-ru
+    - hunspell-de-at
+    - hunspell-de-ch
+    - hunspell-de-de
+    - hunspell-en-ca
+    - hunspell-en-gb
+    - hunspell-en-za
+    - hunspell-fr
+    - hunspell-fr-classical
+    - hunspell-it
+    - hunspell-ru
+    - mint-artwork-mate
+    - mint-backgrounds-sonya

@@ -1,0 +1,10 @@
+[Destop Entry]
+Type=Application
+Version=1.1
+Name={{ item.desc }}
+Comment=Configure packages and settings for {{ item.desc }}
+TryExec=ansible-pull
+Exec={{ oem_ansible_wrapper }} "{{ item.tags }}"
+Icon=xterm-color
+Categories=System;ConsoleOnly
+Terminal=true

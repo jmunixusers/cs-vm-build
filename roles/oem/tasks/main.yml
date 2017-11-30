@@ -1,0 +1,37 @@
+---
+# tasks file for oem
+- name: Refresh apt cache
+  apt:
+      update_cache: yes
+- name: Remove unneeded stock packages
+  apt: name={{ item }} state=absent purge=yes
+  with_items: '{{ packages_to_remove }}'
+- name: Remove unused dependencies
+  apt:
+      # A name must be specified in Ansible 2.1.1.0 or you get a cryptic error
+      # message when running the playbook. This will not remove the curl package.
+      # It was chosen arbitrarily just to allow this playbook to run
+      name: curl
+      autoremove: yes
+- name: Clean the apt database
+  command: apt-get clean
+  # This will always report as changed otherwise
+  changed_when: False
+- name: Create "{{ oem_vmtools_path }}/bin"
+  file:
+      path: "{{ oem_vmtools_path }}/bin"
+      state: directory
+- name: Install Ansible wrapper script
+  copy:
+      src: uug-ansible-wrapper
+      dest: '{{ oem_ansible_wrapper }}'
+      mode: 0755
+- name: Create skeleton desktop directory
+  file:
+      path: /etc/skel/Desktop/
+      state: directory
+- name: Copy desktop files to user desktop
+  template:
+      src: desktop-template.desktop.j2
+      dest: /etc/skel/Desktop/{{ item.tags }}.desktop
+  with_items: '{{ supported_courses }}'

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# bash is used because read -p and echo -e are undefined in POSIX sh
+
+if [ -z "$1" ]; then
+    exit 1;
+fi
+
+if ansible-pull -U https://github.com/jmunixusers/cs-vm-build -i hosts -K -t "$1"; then
+    exit_status=0
+else
+    echo ""
+    echo -e "\e[1mERROR\e[0m"
+    echo "There were errors running the playbook. Please try to run this again. If you"
+    echo "continue to experience issues, please report a bug at:"
+    echo "  https://github.com/jmunixusers/cs-vm-build/issues/new"
+    exit_status=1
+fi
+read -p "Press ENTER to exit" junk
+exit $exit_status
