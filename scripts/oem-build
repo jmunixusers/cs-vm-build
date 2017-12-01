@@ -1,11 +1,26 @@
 #!/usr/bin/env bash
 
-echo "==> Installing ansible and git"
-sudo apt install ansible git
+user () {
+    echo "==> ${1}"
+}
 
-echo "==> Running ansible OEM playbook"
-cd "$(dirname "$0")"/.. || exit 1
-ansible-playbook -i hosts -c local -K -t oem oem.yml || exit 1
+error () {
+    echo "!!! ${1}"
+    echo "Exiting."
+    exit 1
+}
 
-echo "Filling disk with zeros to assist with compression"
+user "==> Installing ansible and git"
+sudo apt-get install --asume-yes ansible git\
+    || error "Unable to install ansible and git packages"
+
+user "==> Running ansible OEM playbook"
+# Ensure this runs from the root directory of 
+cd "$(dirname "$0")"/.. \
+    || error "Unable to cd to $(dirname "$0")/.."
+ansible-playbook -i hosts -c local -K -t oem oem.yml \
+    || error "Playbook failed to complete successfully"
+
+user "Filling disk with zeros to assist with compression"
 sudo dd if=/dev/zero of=/bigfile bs=1M; sudo sync; sudo rm /bigfile
+
