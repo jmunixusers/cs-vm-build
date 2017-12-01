@@ -8,4 +8,4 @@ cd "$(dirname "$0")"/.. || exit 1
 ansible-playbook -i hosts -c local -K -t oem oem.yml || exit 1
 
 echo "Filling disk with zeros to assist with compression"
-sudo dd if=/dev/zero of=/bigfile bs=1M; sudo sync; sudo rm bigfile
+sudo dd if=/dev/zero of=/bigfile bs=1M; sudo sync; sudo rm /bigfile
