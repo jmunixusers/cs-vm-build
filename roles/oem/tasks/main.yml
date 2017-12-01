@@ -30,9 +30,14 @@
   file:
       path: /etc/skel/Desktop/
       state: directory
-- name: Copy desktop files to user desktop
+- name: Copy shortcuts to skeleton desktop directory
   template:
       src: desktop-template.desktop.j2
       dest: /etc/skel/Desktop/{{ item.tags }}.desktop
       mode: 0755
   with_items: '{{ supported_courses }}'
+- name: Copy welcome shortcut to skeleton desktop directory
+  copy:
+      src: welcome-to-vm.desktop
+      dest: /etc/skel/Desktop/welcome-to-vm.desktop
+      mode: 0755
