@@ -26,6 +26,11 @@
       src: uug-ansible-wrapper
       dest: '{{ oem_ansible_wrapper }}'
       mode: 0755
+- name: Install JMU Tux icon
+  copy:
+      src: jmu-tux.svg
+      dest: "{{ oem_base_path }}/jmu-tux.svg"
+      mode: 0644
 - name: Create skeleton desktop directory
   file:
       path: /etc/skel/Desktop/
