@@ -1,8 +1,5 @@
 ---
 # tasks file for oem
-- name: Refresh apt cache
-  apt:
-      update_cache: yes
 - name: Remove unneeded stock packages
   apt: name={{ item }} state=absent purge=yes
   with_items: '{{ packages_to_remove }}'

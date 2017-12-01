@@ -10,6 +10,9 @@ error () {
     exit 1
 }
 
+user "==> Updating apt package cache"
+sudo apt-get update
+
 user "==> Installing ansible and git"
 sudo apt-get install --asume-yes ansible git\
     || error "Unable to install ansible and git packages"
