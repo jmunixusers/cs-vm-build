@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # bash is used because read -p and echo -e are undefined in POSIX sh
 
-if gksudo ansible-pull -U https://github.com/jmunixusers/cs-vm-build -i hosts -t "$1"; then
+if gksudo -- ansible-pull -U https://github.com/jmunixusers/cs-vm-build -i hosts -t "$1"; then
     exit_status=0
 else
     echo ""
