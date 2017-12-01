@@ -34,4 +34,5 @@
   template:
       src: desktop-template.desktop.j2
       dest: /etc/skel/Desktop/{{ item.tags }}.desktop
+      mode: 0755
   with_items: '{{ supported_courses }}'
