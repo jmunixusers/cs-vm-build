@@ -32,8 +32,11 @@
     group: '{{ item.gid }}'
     mode: 0750
   with_items: "{{ real_users }}"
+- name: Upgrade installed software
+  apt:
+      upgrade: safe
 - name: Install required dependencies
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=latest
   with_items:
     - default-jdk
     - openjdk-8-jdk

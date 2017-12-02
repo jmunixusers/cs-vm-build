@@ -1,7 +1,7 @@
 ---
 # tasks file for adv-prog-pkgs
 - name: Install advanced language packages
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=latest
   with_items:
     - build-essential
     - gcc
@@ -14,7 +14,7 @@
     - logisim
     - lsb-core
 - name: Install source control packages
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=latest
   with_items:
     - subversion
     - git
@@ -22,7 +22,7 @@
     - mercurial
     - meld
 - name: Install code editor packages
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=latest
   with_items:
     - vim
     - vim-gnome
