@@ -32,12 +32,13 @@
     group: '{{ item.gid }}'
     mode: 0750
   with_items: "{{ real_users }}"
-- name: Install Java runtime
+- name: Install required dependencies
   apt: name={{ item }} state=present
   with_items:
     - default-jdk
     - openjdk-8-jdk
     - openjdk-8-source
+    - libnotify-bin
 - name: Touch VM profile
   copy:
     src: csvmprofile
