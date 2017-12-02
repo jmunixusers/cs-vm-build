@@ -1,7 +1,7 @@
 ---
 # tasks file for basic-prog-pkgs
 - name: Install introductory development packages
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=latest
   with_items:
     - artha
     - bless

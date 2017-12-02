@@ -14,7 +14,7 @@
   apt:
     update_cache: yes
 - name: Install robot development packages
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=latest
   with_items:
     - ros-kinetic-desktop-full
     - gazebo7
