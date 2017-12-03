@@ -14,6 +14,9 @@
   apt:
       name: mint-artwork-gnome
       state: latest
+- name: Upgrade all installed packages
+  apt:
+      upgrade: safe
 - name: Clean the apt database
   command: apt-get clean
   # This will always report as changed otherwise
