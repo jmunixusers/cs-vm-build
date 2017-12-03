@@ -18,30 +18,6 @@
   command: apt-get clean
   # This will always report as changed otherwise
   changed_when: False
-- name: Create "{{ oem_vmtools_path }}/bin"
-  file:
-      path: "{{ oem_vmtools_path }}/bin"
-      state: directory
-- name: Install Ansible wrapper script
-  copy:
-      src: uug-ansible-wrapper
-      dest: '{{ oem_ansible_wrapper }}'
-      mode: 0755
-- name: Install JMU Tux icon
-  copy:
-      src: jmu-tux.svg
-      dest: "{{ oem_base_path }}/jmu-tux.svg"
-      mode: 0644
-- name: Create skeleton desktop directory
-  file:
-      path: /etc/skel/Desktop/
-      state: directory
-- name: Copy shortcuts to skeleton desktop directory
-  template:
-      src: desktop-template.desktop.j2
-      dest: /etc/skel/Desktop/{{ item.tags }}.desktop
-      mode: 0755
-  with_items: '{{ supported_courses }}'
 - name: Copy welcome shortcut to skeleton desktop directory
   copy:
       src: welcome-to-vm.desktop

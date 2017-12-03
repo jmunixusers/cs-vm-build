@@ -1,0 +1,35 @@
+---
+# tasks file for task-shortcuts
+
+- set_fact:
+    base_path: "{{ oem_base_path }}"
+    icon_path: "/etc/skel/Desktop"
+  when: icon_mode == oem
+- set_fact:
+    base_path: "{{ global_base_path }}"
+    icon_path: "/usr/local/share/applications"
+  when: icon_mode == user
+- set_fact:
+    bin_path: "{{ base_path/vmtools/bin }}"
+
+- name: Create VMTools bin
+  file:
+      path: "{{ bin_path }} "
+      state: directory
+- name: Install Ansible wrapper script
+  copy:
+      src: uug-ansible-wrapper
+      dest: '{{ bin_path }}'
+      mode: 0755
+- name: Install JMU Tux icon
+  copy:
+      src: jmu-tux.svg
+      dest: "{{ base_path }}/jmu-tux.svg"
+      mode: 0644
+- name: Copy shortcuts to skeleton desktop directory
+  template:
+      src: desktop-template.desktop.j2
+      dest: "{{ icon_path }}/{{ item.tags }}.desktop"
+      mode: 0755
+  with_items: '{{ supported_courses }}'
+
