@@ -4,22 +4,22 @@
 - set_fact:
     base_path: "{{ oem_base_path }}"
     icon_path: "/etc/skel/Desktop"
-  when: icon_mode == oem
+  when: icon_mode == 'oem'
 - set_fact:
     base_path: "{{ global_base_path }}"
     icon_path: "/usr/local/share/applications"
-  when: icon_mode == user
-- set_fact:
-    bin_path: "{{ base_path/vmtools/bin }}"
+  when: icon_mode == 'user'
+- set_fact: bin_path="{{ base_path }}/vmtools/bin"
+- set_fact: uug_ansible_wrapper="{{ bin_path }}/uug-ansible-wrapper"
 
 - name: Create VMTools bin
   file:
-      path: "{{ bin_path }} "
+      path: "{{ bin_path }}"
       state: directory
 - name: Install Ansible wrapper script
   copy:
       src: uug-ansible-wrapper
-      dest: '{{ bin_path }}'
+      dest: '{{ uug_ansible_wrapper }}'
       mode: 0755
 - name: Install JMU Tux icon
   copy:
