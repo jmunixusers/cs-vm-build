@@ -1,22 +1,37 @@
 #!/usr/bin/env bash
-# bash is used because read -p and echo -e are undefined in POSIX sh
 
-REPO_URL="https://github.com/jmunixusers/cs-vm-build"
+repo_url="https://github.com/jmunixusers/cs-vm-build"
+
+error_text=$(cat <<- EOF
+    <b>ERROR</b>
+    There were errors running the playbook. Please try to run it again. If you
+    continue to experience issues, please report a bug on
+    <a href="https://github.com/jmunixusers/cs-vm-build/issues/new>GitHub</a>
+EOF
+)
+
+success_text=$(cat <<- EOF
+    <b>SUCCESS</b>
+    The script completed successfully.
+EOF
+)
+
+no_root_text=$(cat <<- EOF
+    <b>ERROR</b>
+    This must be run as root.
+EOF
+)
 
 if [ -z "$1" ]; then
-    read -p "Re-run this as root. Press ENTER to exit" junk
+    zenity --error "${no_root_text}"
     exit 1;
 fi
 
-if ansible-pull --url "$REPO_URL" --purge -i hosts -t "$1"; then
+if ansible-pull --url "$repo_url" --purge -i hosts -t "$1"; then
+    zenity --info --text="${success_text}"
     exit_status=0
 else
-    echo ""
-    echo -e "\e[1mERROR\e[0m"
-    echo "There were errors running the playbook. Please try to run this again. If you"
-    echo "continue to experience issues, please report a bug at:"
-    echo "  https://github.com/jmunixusers/cs-vm-build/issues/new"
+    zenity --error --text="${error_text}"
     exit_status=1
 fi
-read -p "Press ENTER to exit" junk
 exit $exit_status
