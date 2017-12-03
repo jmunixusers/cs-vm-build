@@ -12,8 +12,8 @@
       autoremove: yes
 - name: Install default desktop background package
   apt:
-        name: mint-artwork-gnome
-        state: latest
+      name: mint-artwork-gnome
+      state: latest
 - name: Clean the apt database
   command: apt-get clean
   # This will always report as changed otherwise
