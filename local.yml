@@ -13,3 +13,4 @@
     - { role: drjava, tags: ["cs149"] }
     - { role: aptana, tags: ["cs101"] }
     - { role: finch, tags: ["cs101"] }
+    - { role: task-shortcuts, tags: always, icon_mode: user }

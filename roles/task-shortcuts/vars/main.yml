@@ -1,0 +1,10 @@
+---
+# vars file for task-shortcuts
+
+supported_courses:
+    - { tags: cs101, desc: Install CS101 packages }
+    - { tags: cs149, desc: Install CS149 packages }
+    - { tags: cs159, desc: Install CS159 packages }
+    - { tags: cs261, desc: Install CS261 packages }
+    - { tags: cs354, desc: Install CS354 packages }
+    - { tags: common, desc: Refresh VM Config }
