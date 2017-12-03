@@ -22,7 +22,17 @@ no_root_text=$(cat <<- EOF
 EOF
 )
 
+no_args_text=$(cat <<- EOF
+    <b>ERROR</b>
+    Not enough informaton was provided.
+EOF
+)
+
 if [ -z "$1" ]; then
+    zenity --error "${no_args_text}"
+fi
+
+if [ -$UID -ne 0 ]; then
     zenity --error "${no_root_text}"
     exit 1;
 fi
