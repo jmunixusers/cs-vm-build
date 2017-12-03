@@ -6,7 +6,7 @@ error_text=$(cat <<- EOF
     <b>ERROR</b>
     There were errors running the playbook. Please try to run it again. If you
     continue to experience issues, please report a bug on
-    <a href="https://github.com/jmunixusers/cs-vm-build/issues/new">GitHub</a>
+    <a href="${repo_url}/issues/new">GitHub</a>
 EOF
 )
 
