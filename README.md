@@ -1,7 +1,7 @@
 # JMU UUG virtual machine build script
-This is an attempt to use Ansible to build the computer science student virtual machine. Don't use this on any machine you care about.
-
-If you choose to risk your machine, this can be run with either:
+This is an attempt to use Ansible to build the computer science student
+virtual machine. Extended end user documentation using these tasks and the VM
+is available [separately](https://jmunixusers.github.io/presentations/welcome-to-vm.html).
 
 ```
 apt-get install ansible git
@@ -10,12 +10,16 @@ cd cs-vm-build
 ansible-playbook -i hosts -c local -K -t TAGS local.yml
 ```
 or directly from GitHub:
+
 ```
 ansible-pull -U https://github.com/jmunixusers/cs-vm-build --purge -i hosts -K -t TAGS
 ```
-where TAGS is a comma separated list of cs101, cs149, cs159, cs261, or cs354 as appropriate.
+where TAGS is a comma separated list (with no spaces) of
+cs101, cs149, cs159, cs261, or cs354 as appropriate.
 
-This was developed on and for Linux Mint, but is not known to have any problems with other Debian-based distributions.
+This was developed on and for Linux Mint, but can be adapted to any Debian-based
+distribution with minimal changes. Adaptions for distributions that do not use
+apt will require more extensive modifications.
 
 ## Installed packages and features
 
@@ -23,6 +27,7 @@ This was developed on and for Linux Mint, but is not known to have any problems 
 * SFTP connection to stu
 * JDK/JRE 8
 * Wireless printing
+* Shortcuts to re-run tasks
 
 ### CS101
 * Mint packages (basic-prog-pkgs role)
