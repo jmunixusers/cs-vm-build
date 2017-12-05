@@ -16,9 +16,9 @@ success_text=$(cat <<- EOF
 EOF
 )
 
-no_root_text=$(cat <<- EOF
-    <b>ERROR</b>
-    This must be run as root.
+root_text=$(cat <<- EOF
+    <b>WARNING</b>
+    It is recommended to not run this tool with root permissions.
 EOF
 )
 
@@ -28,17 +28,19 @@ no_args_text=$(cat <<- EOF
 EOF
 )
 
+gksudo_msg="This tool makes modifications to your system. In order to run, it requires your password."
+
 if [ -z "$1" ]; then
     zenity --error "${no_args_text}"
     exit 1
 fi
 
-if [ -$UID -ne 0 ]; then
-    zenity --error "${no_root_text}"
+if [ -$UID -eq 0 ]; then
+    zenity --warning "${root_text}"
     exit 1
 fi
 
-if ansible-pull --url "$repo_url" --purge -i hosts -t "$1"; then
+if gksudo --message "$gksudo_msg" -- ansible-pull --url "$repo_url" --purge -i hosts -t "$1"; then
     zenity --info --text="${success_text}"
     exit_status=0
 else
