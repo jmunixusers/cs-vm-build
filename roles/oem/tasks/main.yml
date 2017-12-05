@@ -21,6 +21,8 @@
   command: apt-get clean
   # This will always report as changed otherwise
   changed_when: False
+  args:
+    warn: no
 - name: Copy welcome shortcut to skeleton desktop directory
   copy:
       src: welcome-to-vm.desktop
