@@ -8,6 +8,16 @@
   file:
     path: /usr/local/share/applications/
     state: directory
+- apt_repository:
+    repo: "{{ item }}"
+    state: absent
+    filename: 'official-package-repositories'
+  with_items: "{{ delete_repos }}"
+- apt_repository:
+    repo: "{{ item }}"
+    state: present
+    filename: 'official-package-repositories'
+  with_items: "{{ add_repos }}"
 - name: Refresh apt cache
   apt:
     update_cache: yes
