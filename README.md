@@ -11,7 +11,7 @@ ansible-playbook -i hosts -c local -K -t TAGS local.yml
 ```
 or directly from GitHub:
 ```
-ansible-pull -U https://github.com/jmunixusers/cs-vm-build -i hosts -K -t TAGS
+ansible-pull -U https://github.com/jmunixusers/cs-vm-build --purge -i hosts -K -t TAGS
 ```
 where TAGS is a comma separated list of cs101, cs149, cs159, cs261, or cs354 as appropriate.
 
