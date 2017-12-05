@@ -23,8 +23,12 @@
   changed_when: False
   args:
     warn: no
+- name: Ensure skeleton Desktop directory exists
+  file:
+      path: /etc/skel/Desktop
+      state: directory
 - name: Copy welcome shortcut to skeleton desktop directory
   copy:
       src: welcome-to-vm.desktop
       dest: /etc/skel/Desktop/welcome-to-vm.desktop
-      mode: 0755
+      mode: 0644

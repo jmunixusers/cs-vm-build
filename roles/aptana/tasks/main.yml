@@ -23,4 +23,4 @@
   template:
     src: aptana.desktop.j2
     dest: /usr/local/share/applications/aptana.desktop
-
+    mode: 0644
