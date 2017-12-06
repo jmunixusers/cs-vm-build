@@ -1,18 +1,15 @@
 ---
 # tasks file for robot-pkgs
-- name: Add ROS repository
-  apt_repository:
-    repo: deb http://packages.ros.org/ros/ubuntu xenial main
-    filename: 'ros-latest'
-    state: present
 - name: Add ROS key
   apt_key:
     keyserver: ha.pool.sks-keyservers.net
     id: 421C365BD9FF1F717815A3895523BAEEB01FA116
     state: present
-- name: Update apt cache
-  apt:
-    update_cache: yes
+- name: Add ROS repository
+  apt_repository:
+    repo: deb http://packages.ros.org/ros/ubuntu xenial main
+    filename: 'ros-latest'
+    state: present
 - name: Install robot development packages
   apt: name={{ item }} state=latest
   with_items:
