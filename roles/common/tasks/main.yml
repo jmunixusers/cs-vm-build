@@ -11,11 +11,13 @@
 - apt_repository:
     repo: "{{ item }}"
     state: absent
+    update_cache: no
     filename: 'official-package-repositories'
   with_items: "{{ delete_repos }}"
 - apt_repository:
     repo: "{{ item }}"
     state: present
+    update_cache: no
     filename: 'official-package-repositories'
   with_items: "{{ add_repos }}"
 - name: Refresh apt cache
