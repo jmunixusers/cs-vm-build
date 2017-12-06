@@ -27,6 +27,7 @@
   file:
       path: /etc/skel/Desktop
       state: directory
+      mode: 0750
 - name: Copy welcome shortcut to skeleton desktop directory
   copy:
       src: welcome-to-vm.desktop
