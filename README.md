@@ -28,6 +28,7 @@ apt will require more extensive modifications.
 * JDK/JRE 8
 * Wireless printing
 * Shortcuts to re-run tasks
+* Filezilla
 
 ### CS101
 * Mint packages (basic-prog-pkgs role)
