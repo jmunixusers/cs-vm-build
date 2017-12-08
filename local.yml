@@ -9,9 +9,9 @@
     - { role: basic-prog-pkgs, tags: ["cs101"] }
     - { role: adv-prog-pkgs, tags: ["cs261"] }
     - { role: robot-pkgs, tags: ["cs354"] }
-    - { role: eclipse, tags: ["cs159"] }
-    - { role: jgrasp, tags: ["cs149"] }
-    - { role: drjava, tags: ["cs149"] }
+    - { role: eclipse, tags: ["cs149", "cs159"] }
+    - { role: jgrasp, tags: ["cs149", "cs159"] }
+    - { role: drjava, tags: ["cs149", "cs159"] }
     - { role: aptana, tags: ["cs101"] }
     - { role: finch, tags: ["cs101"] }
     - { role: task-shortcuts, tags: always, icon_mode: user }
