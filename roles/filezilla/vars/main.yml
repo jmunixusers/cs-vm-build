@@ -1,2 +1,4 @@
 ---
 # vars file for filezilla
+
+filezilla_config_dir: ".filezilla"

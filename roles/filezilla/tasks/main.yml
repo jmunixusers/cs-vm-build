@@ -1,9 +1,6 @@
 ---
 # tasks file for filezilla
 
-- set_fact:
-    filezilla_config_dir: ".filezilla"
-
 - name: Install Filezilla package
   apt:
       name: filezilla
