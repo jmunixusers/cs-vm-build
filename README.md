@@ -45,9 +45,12 @@ apt will require more extensive modifications.
 * Aptana
 * Finch robot
 
-### CS149 & CS159
+### CS149
 * JGrasp
 * DrJava
+* Eclipse
+
+## CS159
 * Eclipse
 
 ### CS261
