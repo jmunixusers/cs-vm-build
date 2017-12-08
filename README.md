@@ -48,8 +48,9 @@ apt will require more extensive modifications.
 ### CS149
 * JGrasp
 * DrJava
+* Eclipse
 
-### CS159
+## CS159
 * Eclipse
 
 ### CS261
