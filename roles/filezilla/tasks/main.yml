@@ -1,0 +1,24 @@
+---
+# tasks file for filezilla
+
+- name: Install Filezilla package
+  apt:
+      name: filezilla
+      state: latest
+- name: Create Filezilla configuration directory
+  file:
+      path: "{{ item.homedir }}/{{ filezilla_config_dir }}"
+      state: directory
+      owner: '{{ item.uid }}'
+      group: '{{ item.gid }}'
+      mode: 0750
+  with_items: "{{ real_users }}"
+- name: Copy template default Filezilla configuration
+  template:
+      src: fzdefaults.xml.j2
+      dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/fzdefaults.xml"
+      owner: '{{ item.uid }}'
+      group: '{{ item.gid }}'
+      mode: 0640
+  with_items: "{{ real_users }}"
+
