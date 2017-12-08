@@ -2,7 +2,7 @@
 # tasks file for filezilla
 
 - set_fact:
-    filezilla_config_dir: ".config/filezilla"
+    filezilla_config_dir: ".filezilla"
 
 - name: Install Filezilla package
   apt:
@@ -19,7 +19,7 @@
 - name: Copy template default Filezilla configuration
   template:
       src: fzdefaults.xml.j2
-      dest: "{{ item.homedir }}/{{ filezilla_config_dir }}"
+      dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/fzdefaults.xml"
       owner: '{{ item.uid }}'
       group: '{{ item.gid }}'
       mode: 0640
