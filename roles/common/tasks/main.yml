@@ -36,14 +36,6 @@
   when:
     - item.value.4 | match ("^/home/")
     - item.value.5 != "/bin/false"
-- name: Copy stu-home desktop
-  copy:
-    src: stu-home.desktop
-    dest: '{{ item.homedir }}/Desktop'
-    owner: '{{ item.uid }}'
-    group: '{{ item.gid }}'
-    mode: 0750
-  with_items: "{{ real_users }}"
 - name: Upgrade installed software
   apt:
       upgrade: safe
