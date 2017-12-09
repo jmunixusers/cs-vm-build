@@ -8,9 +8,13 @@
 - name: Add ROS repository
   apt_repository:
     repo: "{{ item }}"
+    update_cache: no
     filename: 'ros-latest'
     state: present
   with_items: "{{ ros_repos }}"
+- name: Refresh apt cache
+  apt:
+    update_cache: yes
 - name: Install robot development packages
   apt: name={{ item }} state=latest
   with_items: "{{ ros_packages }}"
