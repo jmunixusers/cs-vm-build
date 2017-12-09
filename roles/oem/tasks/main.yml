@@ -33,3 +33,8 @@
       src: welcome-to-vm.desktop
       dest: /etc/skel/Desktop/welcome-to-vm.desktop
       mode: 0644
+- name: Validate missing USB 2/3 controllers
+  shell: lspci | grep -i -e EHCI -e xHCI
+  register: lspci_output
+  failed_when: lspci_output.rc == 0
+  changed_when: False
