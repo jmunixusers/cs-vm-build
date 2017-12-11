@@ -87,3 +87,8 @@ apt will require more extensive modifications.
 * Gazebo7
 * Rviz
 * Rosdep/catkin initialization
+
+## License
+
+This project is licensed under the MIT license. See LICENSE for more
+information.
