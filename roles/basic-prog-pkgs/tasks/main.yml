@@ -9,7 +9,7 @@
     - idle
     - meld
     - pinta
-    - python-pygame
+      #   - python-pygame
     - wireshark
     - fonts-crosextra-caladea
     - fonts-crosextra-carlito
