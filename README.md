@@ -60,14 +60,9 @@ apt will require more extensive modifications.
     * gcc
     * g++
     * gdb
-    * lua5.3
-    * python3
-    * ruby
     * valgrind
     * logisim
-    * lsb-core
   * Source control
-    * subversion
     * git
     * gitg
     * mercurial
