@@ -38,11 +38,9 @@ apt will require more extensive modifications.
   * idle
   * meld
   * pinta
-  * python-pygame
   * wireshark
   * libreoffice
   * logisim
-* Aptana
 * Finch robot
 
 ### CS149
