@@ -4,11 +4,11 @@
   apt: name={{ item }} state=latest
   with_items:
     - build-essential
-    - gcc
     - g++
+    - gcc
     - gdb
-    - valgrind
     - logisim
+    - valgrind
 - name: Install source control packages
   apt: name={{ item }} state=latest
   with_items:
@@ -19,11 +19,11 @@
 - name: Install code editor packages
   apt: name={{ item }} state=latest
   with_items:
+    - astyle
+    - bvi
+    - check
+    - gedit
+    - indent
+    - nano
     - vim
     - vim-gnome
-    - gedit
-    - nano
-    - check
-    - bvi
-    - astyle
-    - indent
