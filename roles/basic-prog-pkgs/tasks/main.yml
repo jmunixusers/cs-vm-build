@@ -5,17 +5,17 @@
   with_items:
     - artha
     - bless
-    - geany
-    - idle
-    - meld
-    - pinta
-    - wireshark
     - fonts-crosextra-caladea
     - fonts-crosextra-carlito
+    - geany
+    - idle
     - libreoffice
     - libreoffice-templates
     - libreoffice-style-tango
     - logisim
+    - meld
+    - pinta
+    - wireshark
 - name: Copy idlerc prefs
   copy:
     src: .idlerc
