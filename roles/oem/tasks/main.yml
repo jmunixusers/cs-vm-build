@@ -13,10 +13,6 @@
       # It was chosen arbitrarily just to allow this playbook to run
       name: curl
       autoremove: yes
-- name: Install default desktop background package
-  apt:
-      name: mint-artwork-gnome
-      state: latest
 - name: Upgrade all installed packages
   apt:
       upgrade: safe
@@ -24,8 +20,7 @@
   apt:
       name: "{{ item }}"
       state: latest
-  with_items:
-      - zenity
+  with_items: '{{ packages_to_install }}'
 - name: Clean the apt database
   command: apt-get clean
   # This will always report as changed otherwise
