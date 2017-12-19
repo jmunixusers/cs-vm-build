@@ -62,11 +62,6 @@ apt will require more extensive modifications.
     * gdb
     * logisim
     * valgrind
-  * Source control
-    * git
-    * gitg
-    * mercurial
-    * meld
   * Code editors
     * astyle
     * bvi
@@ -76,6 +71,11 @@ apt will require more extensive modifications.
     * nano
     * vim
     * vim-gnome
+  * Source control
+    * git
+    * gitg
+    * mercurial
+    * meld
 
 ### CS354
 * Gazebo7
