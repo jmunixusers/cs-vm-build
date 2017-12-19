@@ -3,8 +3,8 @@
 - name: Install printer packages
   apt: name={{ item }} state=latest
   with_items:
-    - cups-client
     - cups
+    - cups-client
 # The service must be running for lpadmin commands to work
 # and the server must be working to print
 - name: Ensure CUPS is started
