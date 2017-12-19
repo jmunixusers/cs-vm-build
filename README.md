@@ -24,31 +24,31 @@ apt will require more extensive modifications.
 ## Installed packages and features
 
 ### Common
-* SFTP connection to stu
-* JDK/JRE 8
-* Wireless printing
-* Shortcuts to re-run tasks
 * Filezilla
+* JDK/JRE 8
+* SFTP connection to stu
+* Shortcuts to re-run tasks
+* Wireless printing
 
 ### CS101
+* Aptana
+* Finch robot
 * Mint packages (basic-prog-pkgs role)
   * artha
   * bless
   * geany
   * idle
+  * libreoffice
+  * logisim
   * meld
   * pinta
   * python-pygame
   * wireshark
-  * libreoffice
-  * logisim
-* Aptana
-* Finch robot
 
 ### CS149
-* JGrasp
 * DrJava
 * Eclipse
+* JGrasp
 
 ### CS159
 * Eclipse
@@ -57,31 +57,31 @@ apt will require more extensive modifications.
 * Mint packages (adv-prog-pkgs role)
   * Compilers and interpreters
     * build-essential
-    * gcc
     * g++
+    * gcc
     * gdb
-    * valgrind
     * logisim
+    * valgrind
   * Source control
     * git
     * gitg
     * mercurial
     * meld
   * Code editors
+    * astyle
+    * bvi
+    * check
+    * gedit
+    * indent
+    * nano
     * vim
     * vim-gnome
-    * gedit
-    * nano
-    * check
-    * bvi
-    * astyle
-    * indent
 
 ### CS354
-* ROS Kinetic
 * Gazebo7
-* Rviz
+* ROS Kinetic
 * Rosdep/catkin initialization
+* Rviz
 
 ## License
 
