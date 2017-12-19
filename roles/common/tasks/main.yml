@@ -46,6 +46,7 @@
     - libnotify-bin
     - openjdk-8-jdk
     - openjdk-8-source
+    - zenity
 - name: Touch VM profile
   copy:
     src: csvmprofile

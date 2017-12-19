@@ -1,5 +1,8 @@
 ---
 # tasks file for oem
+- name: Update apt cache
+  apt:
+      update_cache: yes
 - name: Remove unneeded stock packages
   apt: name={{ item }} state=absent purge=yes
   with_items: '{{ packages_to_remove }}'
@@ -17,6 +20,12 @@
 - name: Upgrade all installed packages
   apt:
       upgrade: safe
+- name: Install dependencies
+  apt:
+      name: "{{ item }}"
+      state: latest
+  with_items:
+      - zenity
 - name: Clean the apt database
   command: apt-get clean
   # This will always report as changed otherwise
