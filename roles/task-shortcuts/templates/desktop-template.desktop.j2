@@ -1,10 +1,8 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name={{ item.desc }}
-Comment=Configure packages and settings for {{ item.desc }}
-TryExec=ansible-pull
-Exec={{ uug_ansible_wrapper }} "{{ item.tags }}"
+Name=JMU CS VM Configuration
+Comment=Update and configure courses
+Exec={{ uug_ansible_wrapper }}
 Icon={{ base_path }}/jmu-tux.svg
-Categories=System;ConsoleOnly;
-Terminal=true
+Categories=System;
