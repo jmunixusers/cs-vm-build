@@ -1,2 +1,10 @@
 ---
 # handlers file for robot-pkgs
+
+- name: USB controllers warning
+  command: >-
+    zenity --warning --text {{ usb_warning_msg }}
+  become: yes
+  become_user: "{{ item.user }}"
+  with_items: "{{ real_users }}"
+  ignore_errors: yes
