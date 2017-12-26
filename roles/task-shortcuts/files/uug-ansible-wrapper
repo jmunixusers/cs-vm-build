@@ -1,50 +1,206 @@
 #!/usr/bin/env bash
 
+# A basic wrapper script for the cs-vm-build Ansible roles. This checks a few
+# things about the environment and if everything looks good, it pulls the
+# repo using ansible-pull and runs playbook with the requested tags.
+#
+# The tags to run must be passed to this script as a comma-separated list with
+# no spaces in $1. It is possible to override the branch and repo to pull by
+# specifying them in a vm_config file in the user's config dir. To override the
+# branch use FORCE_BRANCH and to override the URL use FORCE_GIT_URL. These may
+# also be set in the environment but anything in the configuration file will
+# take precendent. An effort is made to avoid running arbitrary commands that
+# exist within the configuration file; however, this cannot be entirely
+# guaranteed.
+
+## Global configuration variables
 repo_url="https://github.com/jmunixusers/cs-vm-build"
+user_config_file="${XDG_CONFIG_HOME:-$HOME/.config}/vm_config"
 
-error_text=$(cat <<- EOF
-    <b>ERROR</b>
-    There were errors running the playbook. Please try to run it again. If you
-    continue to experience issues, please report a bug on
-    <a href="${repo_url}/issues/new">GitHub</a>
+## Error message texts
+readonly error_text=$(cat <<- EOF
+<b>ERROR</b>
+There were errors running the playbook. Please try to run it again. If you
+continue to experience issues, please report a bug on <a href="${repo_url}/issues/new">GitHub</a>
 EOF
 )
 
-success_text=$(cat <<- EOF
-    <b>SUCCESS</b>
-    The script completed successfully.
+readonly success_text=$(cat <<- EOF
+<b>SUCCESS</b>
+The script completed successfully.
 EOF
 )
 
-root_text=$(cat <<- EOF
-    <b>WARNING</b>
-    It is recommended to not run this tool with root permissions.
+readonly root_text=$(cat <<- EOF
+b>WARNING</b>
+It is recommended to not run this tool with root permissions.
 EOF
 )
 
-no_args_text=$(cat <<- EOF
-    <b>ERROR</b>
-    Not enough informaton was provided.
+readonly no_branch_text=$(cat <<- EOF
+<b>ERROR</b>
+Unable to determine your operating system version. If you continue to experience
+this issue, please report a bug on <a href="${repo_url}/issues/new">GitHub</a>
 EOF
 )
 
-gksudo_msg="This tool makes modifications to your system. In order to run, it requires your password."
+readonly branch_does_not_exist_text=$(cat <<- EOF
+<b>ERROR</b>
+The branch specified in FORCE_BRANCH does not exist. Please check your
+configuration file at $user_config_file to verify the values are valid.
+EOF
+)
 
-if [ -z "$1" ]; then
-    zenity --error "${no_args_text}"
-    exit 1
-fi
+readonly release_not_supported=$(cat <<- EOF
+<b>ERROR</b>
+Your operating system version is not currently supported. If you are running
+Linux Mint, plese report a bug on <a href="${repo_url}/issues/new">GitHub</a>
+with the following text:
 
-if [ -$UID -eq 0 ]; then
-    zenity --warning "${root_text}"
-    exit 1
-fi
+$(cat /etc/os-release)
 
-if gksudo --message "$gksudo_msg" -- ansible-pull --url "$repo_url" --purge -i hosts -t "$1"; then
-    zenity --info --text="${success_text}"
-    exit_status=0
-else
-    zenity --error --text="${error_text}"
-    exit_status=1
-fi
-exit $exit_status
+EOF
+)
+
+readonly no_args_text=$(cat <<- EOF
+<b>ERROR</b>
+Not enough informaton was provided.
+EOF
+)
+
+readonly gksudo_msg=$(cat <<- EOF
+<b>Enter your password to perform administrative tasks</b>
+This tool makes modifications to your system. In order to run it, your password is required.
+EOF
+)
+
+readonly no_root_text=$(cat <<- EOF
+This requires that you authenticate with your password. Please try again.
+EOF
+)
+
+##
+# Display an error message using zenity that no arguments were provided to
+# the script. This is considered a fatal error. Once the dialog is acknowledged,
+# exit the script.
+##
+error_on_no_args() {
+    if [ -z "$1" ]; then
+        zenity --error --text="$no_args_text"
+        exit 1
+    fi
+}
+
+##
+# Warn the user using zenity if they are already root. This is not considered
+# fatal, but it is potentially serious enough to warn about. The user may also
+# receive a warning from gksudo that it got root without having to ask.
+##
+warn_on_root() {
+    if [ $UID -eq 0 ]; then
+        zenity --warning --text="$root_text"
+    fi
+}
+
+##
+# Determines the branch pass to ansible-pull. Initially checks for
+# /etc/os-release. If it exists, source it and initially set VERSION_CODENAME
+# to the branch. After, check if the user has specified a FORCE_BRANCH in
+# $user_config_file. If they have, set the branch to that. If at the end,
+# branch is empty, display a warning and exit.
+##
+load_branch() {
+    if [ -f "/etc/os-release" ]; then
+        source /etc/os-release;
+    fi
+    # Set branch to the release unless FORCE_BRANCH is set, then use that
+    branch="$VERSION_CODENAME"
+    if [ -n "$FORCE_BRANCH" ]; then
+        branch="$FORCE_BRANCH"
+    fi
+    # If branch is still empty, exit with an explanation
+    if [ -z "$branch" ]; then
+        zenity --error --text="$no_branch_text"
+        exit 1
+    fi
+    # If the branch selected does not exist on the remote, then give the user
+    # an error. If they did not override thr branch, tell them that their
+    # release is not yet supported. If they did override the branch, tell them
+    # to verify their configuration
+    if ! git ls-remote "$repo_url" | grep "$branch"; then
+        if [ -z "$FORCE_BRANCH" ]; then
+            zenity --error --text="$release_not_supported"
+        else
+            zenity --error --text="$branch_does_not_exist_text"
+        fi
+        exit 1
+    fi
+}
+
+##
+# Runs the playbook using ansible-pull and gets root permissions using gksudo.
+# The exit code of ansible-pull should be the exit code of gksudo which in
+# turn should be the exit code of the function.
+##
+run_playbook() {
+    gksudo --message "$gksudo_msg" -- \
+        ansible-pull --url "$repo_url"\
+        --checkout "$branch"\
+        --purge \
+        --inventory hosts\
+        --tags "$1"
+
+    playbook_status=$?
+}
+
+parse_user_config() {
+    if [ ! -f "$user_config_file" ]; then
+        return
+    fi
+    # Based on the code at http://wiki.bash-hackers.org/howto/conffile#secure_it
+    if grep -E -q -v '^#|^[^ ]*=[^;]*' "$user_config_file"; then
+        # Create a tmp file with mode 0600 to store the cleaned config in.
+        # This should strip any line not of the form VARIABLE=VALUE.
+        local tmp_file
+        tmp_file=$(mktemp "/tmp/csvm.XXXXXXXXXX")
+        grep -E '^#|^[^ ]*=[^;&]*'  "$user_config_file" > "$tmp_file"
+        user_config_file="$tmp_file"
+    fi
+    # Ensure that the configuration is still accessible before sourcing; also
+    # one last time ensure that we are not running as root when sourcing. If
+    # the current UID is 0, then just skip sourcing the config
+    if [ -f "$user_config_file" ] && [ $UID -ne 0 ]; then
+        source "$user_config_file"
+        if [ -n "$FORCE_GIT_URL" ]; then
+            repo_url="$FORCE_GIT_URL"
+        fi
+    fi
+    if [ -n "$tmp_file" ]; then
+        rm "$tmp_file"
+    fi
+}
+
+main() {
+    parse_user_config
+    error_on_no_args "$@"
+    warn_on_root
+    load_branch "$@"
+
+    run_playbook "$@"
+
+    if [ $playbook_status -eq 255 ]; then
+        zenity --info --text="$no_root_text"
+        exit_status=1
+    elif [ $playbook_status -eq 0 ]; then
+        zenity --info --text="$success_text"
+        exit_status=0
+    else
+        zenity --error --text="$error_text"
+        exit_status=1
+    fi
+
+    exit $exit_status
+}
+
+main "$@"
+
