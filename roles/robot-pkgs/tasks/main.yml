@@ -52,6 +52,14 @@
   become: yes
   become_user: "{{ item.user }}"
   with_items: "{{ real_users }}"
+- name: Copy documentation to desktop
+  copy:
+      src: usb-controllers.desktop
+      dest: "{{ item.homedir }}/Desktop/usb-controllers.desktop"
+      owner: "{{ item.uid }}"
+      group: "{{ item.gid }}"
+      mode: 0644
+  with_items: "{{ real_users }}"
 - name: Check for missing USB 2/3 controllers
   shell: lspci | grep -i -e EHCI -e xHCI
   register: lspci_output
