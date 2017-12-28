@@ -1,7 +1,7 @@
 # JMU UUG virtual machine build script
 This is an attempt to use Ansible to build the computer science student
 virtual machine. Extended end user documentation using these tasks and the VM
-is available [separately](https://jmunixusers.github.io/presentations/welcome-to-vm.html).
+is available [separately](https://jmunixusers.github.io/presentations/vm/).
 
 ```
 apt-get install ansible git
