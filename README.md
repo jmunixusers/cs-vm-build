@@ -29,6 +29,8 @@ apt will require more extensive modifications.
 * SFTP connection to stu
 * Shortcuts to re-run tasks
 * Wireless printing
+* Vim
+* Unzip
 
 ### CS101
 * Aptana
@@ -68,8 +70,6 @@ apt will require more extensive modifications.
     * gedit
     * indent
     * nano
-    * vim
-    * vim-gnome
   * Source control
     * git
     * gitg
