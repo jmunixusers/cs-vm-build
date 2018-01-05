@@ -28,6 +28,9 @@ apt will require more extensive modifications.
 * JDK/JRE 8
 * SFTP connection to stu
 * Shortcuts to re-run tasks
+* Unzip
+* Vim
+* Vim-Gnome
 * Wireless printing
 
 ### CS101
@@ -68,8 +71,6 @@ apt will require more extensive modifications.
     * gedit
     * indent
     * nano
-    * vim
-    * vim-gnome
   * Source control
     * git
     * gitg

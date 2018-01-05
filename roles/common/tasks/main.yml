@@ -46,6 +46,9 @@
     - libnotify-bin
     - openjdk-8-jdk
     - openjdk-8-source
+    - unzip    
+    - vim
+    - vim-gnome    
     - zenity
 - name: Touch VM profile
   copy:
