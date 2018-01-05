@@ -47,6 +47,7 @@
     - openjdk-8-jdk
     - openjdk-8-source
     - zenity
+    - vim    
 - name: Touch VM profile
   copy:
     src: csvmprofile
