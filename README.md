@@ -28,9 +28,10 @@ apt will require more extensive modifications.
 * JDK/JRE 8
 * SFTP connection to stu
 * Shortcuts to re-run tasks
-* Wireless printing
-* Vim
 * Unzip
+* Vim
+* Vim-Gnome
+* Wireless printing
 
 ### CS101
 * Aptana
