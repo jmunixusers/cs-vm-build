@@ -12,7 +12,7 @@
     file_mode: 0644
   when: icon_mode == 'user'
 - set_fact: bin_path="{{ base_path }}/vmtools/bin"
-- set_fact: uug_ansible_wrapper="{{ bin_path }}/uug-ansible-wrapper"
+- set_fact: uug_ansible_wrapper="{{ bin_path }}/uug_ansible_wrapper.py"
 
 - name: Create VMTools bin
   file:
@@ -20,7 +20,7 @@
       state: directory
 - name: Install Ansible wrapper script
   copy:
-      src: uug-ansible-wrapper
+      src: uug_ansible_wrapper.py
       dest: '{{ uug_ansible_wrapper }}'
       mode: 0755
 - name: Install JMU Tux icon
@@ -28,10 +28,9 @@
       src: jmu-tux.svg
       dest: "{{ base_path }}/jmu-tux.svg"
       mode: 0644
-- name: Copy shortcuts to skeleton desktop directory
+- name: Copy shortcut to desktop file directory
   template:
       src: desktop-template.desktop.j2
-      dest: "{{ icon_path }}/{{ item.tags }}.desktop"
+      dest: "{{ icon_path }}/jmucs_config.desktop"
       mode: "{{ file_mode }}" 
-  with_items: '{{ supported_courses }}'
 
