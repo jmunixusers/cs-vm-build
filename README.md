@@ -3,16 +3,19 @@ This is an attempt to use Ansible to build the computer science student
 virtual machine. Extended end user documentation using these tasks and the VM
 is available [separately](https://jmunixusers.github.io/presentations/vm/).
 
+Downloads can be found [here](https://w3.cs.jmu.edu/uug/)
+
 ```
 apt-get install ansible git
 git clone https://github.com/jmunixusers/cs-vm-build
 cd cs-vm-build
+git checkout sylvia
 ansible-playbook -i hosts -c local -K -t TAGS local.yml
 ```
 or directly from GitHub:
 
 ```
-ansible-pull -U https://github.com/jmunixusers/cs-vm-build --purge -i hosts -K -t TAGS
+ansible-pull -U https://github.com/jmunixusers/cs-vm-build -C sylvia --purge -i hosts -K -t TAGS
 ```
 where TAGS is a comma separated list (with no spaces) of
 cs101, cs149, cs159, cs261, or cs354 as appropriate.
