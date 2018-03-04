@@ -147,9 +147,9 @@ class AnsibleWrapperWindow(Gtk.Window):
         settings = Gtk.MenuItem("Settings\u2026")
         settings.connect("activate", self.show_settings)
         file_menu.append(settings)
-        quit = Gtk.MenuItem("Quit")
-        quit.connect("activate", Gtk.main_quit)
-        file_menu.append(quit)
+        quit_item = Gtk.MenuItem("Quit")
+        quit_item.connect("activate", Gtk.main_quit)
+        file_menu.append(quit_item)
 
         menu_bar.append(file_item)
 
@@ -226,11 +226,8 @@ class AnsibleWrapperWindow(Gtk.Window):
         about_dialog.set_website_label("Project GitHub page")
         about_dialog.set_version("2.0")
         about_dialog.set_license_type(Gtk.License.MIT_X11)
-        about_dialog.connect("response", self.on_close)
+        about_dialog.connect("response", on_dialog_close)
         about_dialog.show()
-
-    def on_close(self, action, _):
-        action.destroy()
 
     def sub_command_exited(self, _, exit_status):
         """Displays a dialog informing the user whether the gksudo and
@@ -312,6 +309,10 @@ class AnsibleWrapperWindow(Gtk.Window):
         except GLib.Error as error:
             logging.error("Unable to run ansible command.", exc_info=error)
             self.sub_command_exited(None, 1)
+
+
+def on_dialog_close(action, _):
+    action.destroy()
 
 
 def show_dialog(parent, dialog_type, buttons_type, header, message):
