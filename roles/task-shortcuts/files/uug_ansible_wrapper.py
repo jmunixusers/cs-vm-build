@@ -19,6 +19,7 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')
 from gi.repository import Gtk, Vte # noqa
 from gi.repository import GLib     # noqa
+from gi.repository import GdkPixbuf   # noqa
 
 # If no tags are passed to ansible-pull, all of them will be run and I am
 # uncertain of the outcome of passing -t with no tags. To avoid this, always
@@ -207,7 +208,9 @@ class AnsibleWrapperWindow(Gtk.Window):
     def show_about_dialog(self, _):
         about_dialog = Gtk.AboutDialog()
         try:
-            self.set_logo('computer')
+            about_dialog.set_logo(
+                    GdkPixbuf.Pixbuf.new_from_file_at_size("/opt/jmu-tux.svg",
+                                                           96, 96))
         except Exception as err:
             logging.error("Error", exc_info=err)
         about_dialog.set_transient_for(self)
