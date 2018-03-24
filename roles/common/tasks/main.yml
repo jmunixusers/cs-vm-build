@@ -8,21 +8,29 @@
   file:
     path: /usr/local/share/applications/
     state: directory
-- apt_repository:
-    repo: "{{ item }}"
-    state: absent
-    update_cache: no
-    filename: 'official-package-repositories'
-  with_items: "{{ delete_repos }}"
-- apt_repository:
-    repo: "{{ item }}"
-    state: present
-    update_cache: no
-    filename: 'official-package-repositories'
-  with_items: "{{ add_repos }}"
+- name: Check Ubuntu release
+  set_fact:
+    ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
+- name: Set Ubuntu mirrors
+  template:
+    src: ubuntu.j2
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0664
+  when: ansible_distribution == "Ubuntu"
+- name: Set Linux Mint mirrors
+  template:
+    src: mint.j2
+    dest: /etc/apt/sources.list.d/official-package-repositories.list
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == "Linuxmint"
 - name: Refresh apt cache
   apt:
     update_cache: yes
+  changed_when: False
 - name: Get users
   getent:
     database: passwd
