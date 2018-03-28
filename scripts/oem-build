@@ -1,29 +1,53 @@
 #!/usr/bin/env bash
 
+# Performs basic bootstrapping to prepare a machine for the main cs-vm-build
+# installation. Mostly, this installs a few dependencies and then runs an OEM
+# Ansible playbook.
+
+#--
+# Emits a message to the user preceeded by ==> to stdout.
+#
+# Expected parameters:
+#   $1: The string to print
+#--
 user () {
     echo "==> ${1}"
 }
 
+
+#---
+# Emits an error message and exits the script to stderr.
+#
+# Expected parameters:
+#  $1: The string to print
+#---
 error () {
-    echo "!!! ${1}"
-    echo "Exiting."
+    echo "!!! ${1}" 1>&2
+    echo "Exiting." 1>&2
     exit 1
 }
 
-user "==> Updating apt package cache"
-sudo apt-get update
+#---
+# Performs the actual preparation of the machine
+#---
+main () {
+    user "Updating apt package cache"
+    sudo apt-get update
 
-user "==> Installing ansible and git"
-sudo apt-get install --assume-yes ansible git\
-    || error "Unable to install ansible and git packages"
+    user "Installing ansible and git"
+    sudo apt-get install --assume-yes ansible git aptitude\
+        || error "Unable to install ansible and git packages"
 
-user "==> Running ansible OEM playbook"
-# Ensure this runs from the root directory of the Ansible git directory
-cd "$(dirname "$0")"/.. \
-    || error "Unable to cd to $(dirname "$0")/.."
-ansible-playbook -i hosts -c local -K -t oem oem.yml \
-    || error "Playbook failed to complete successfully"
+    user "Running ansible OEM playbook"
+    # Ensure this runs from the root directory of the Ansible git directory
+    cd "$(dirname "$0")"/.. \
+        || error "Unable to cd to $(dirname "$0")/.."
+    ansible-playbook -i hosts -c local -K -t oem oem.yml \
+        || error "Playbook failed to complete successfully"
 
-user "Filling disk with zeros to assist with compression"
-sudo dd if=/dev/zero of=/bigfile bs=1M; sudo sync; sudo rm /bigfile
+    user "Filling disk with zeros to assist with compression"
+    sudo dd if=/dev/zero of=/bigfile bs=1M; sudo sync; sudo rm /bigfile
+}
 
+# Actually run the main function
+main
