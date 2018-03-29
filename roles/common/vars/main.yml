@@ -3,12 +3,10 @@
 global_base_path: /opt
 global_profile_path: /opt/csvmprofile
 
-delete_repos:
-  - deb http://archive.ubuntu.com/ubuntu xenial main restricted universe multiverse
-  - deb http://archive.ubuntu.com/ubuntu xenial-updates main restricted universe multiverse
-  - deb http://archive.ubuntu.com/ubuntu xenial-backports main restricted universe multiverse
+ubuntu_mirrors:
+  - "https://mirror.cs.jmu.edu/pub/ubuntu"
+  - "http://us.archive.ubuntu.com/ubuntu"
 
-add_repos:
-  - deb http://us.archive.ubuntu.com/ubuntu xenial main restricted universe multiverse
-  - deb http://us.archive.ubuntu.com/ubuntu xenial-updates main restricted universe multiverse
-  - deb http://us.archive.ubuntu.com/ubuntu xenial-backports main restricted universe multiverse
+mint_mirrors:
+  - "https://mirror.cs.jmu.edu/pub/linuxmint/packages"
+  - "http://packages.linuxmint.com"
