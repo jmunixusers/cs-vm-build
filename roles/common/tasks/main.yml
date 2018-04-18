@@ -42,8 +42,12 @@
       'uid': item.value.1, 'gid': item.value.2 } ] }}
   with_dict: "{{ getent_passwd }}"
   when:
+    # Ideally, this would pull from useradd.conf to get the lower bound for
+    # regular user UIDs; however, 1000 is relatively universal
+    - item.value.1 >= 1000
     - item.value.4 is match ("^/home/")
     - item.value.5 != "/bin/false"
+    - item.value.5 != "/sbin/nologin"
 - name: Upgrade installed software
   apt:
       upgrade: safe
@@ -67,6 +71,14 @@
     group: root
     # prevent overwriting
     force: no
+- name: Ensure user home directory exists
+  file:
+    path: "{{ item.homedir }}"
+    mode: 0755
+    owner: "{{ item.uid }}"
+    group: "{{ item.gid }}"
+    state: directory
+  with_items: "{{ real_users }}"
 # dest becomes path in Ansible 2.3+
 - name: Add profile to user bashrc
   lineinfile:
@@ -74,4 +86,9 @@
     line: "source {{ global_profile_path }}"
     state: present
     insertafter: EOF
+    # We don't want to break things by having a very basic .bashrc that just
+    # sources our profile. We won't create the file if it doesn't exist and
+    # we can ignore any errors
+    create: no
+  ignore_errors: yes
   with_items: "{{ real_users }}"
