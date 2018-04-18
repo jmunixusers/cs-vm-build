@@ -42,7 +42,7 @@
       'uid': item.value.1, 'gid': item.value.2 } ] }}
   with_dict: "{{ getent_passwd }}"
   when:
-    - item.value.4 | match ("^/home/")
+    - item.value.4 is match ("^/home/")
     - item.value.5 != "/bin/false"
 - name: Upgrade installed software
   apt:
