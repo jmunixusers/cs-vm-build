@@ -18,7 +18,14 @@
   file:
       path: "{{ bin_path }}"
       state: directory
-- name: Install Ansible wrapper script
+# The policy file must go in /usr/share/polkit-1. It is the only location that
+# policykit checks
+- name: Install policykit policy for Ansible wrapper
+  copy:
+      src: edu.jmu.uug.ansiblewrapper.policy
+      dest: /usr/share/polkit-1/actions/
+      mode: 0644
+- name: Install Ansible wrapper GUI script
   copy:
       src: uug_ansible_wrapper.py
       dest: '{{ uug_ansible_wrapper }}'

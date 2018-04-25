@@ -230,27 +230,45 @@ class AnsibleWrapperWindow(Gtk.Window):
         about_dialog.show()
 
     def sub_command_exited(self, _, exit_status):
-        """Displays a dialog informing the user whether the gksudo and
+        """Displays a dialog informing the user whether the pkexec and
            ansible-pull commands completely successfully or not"""
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(True)
         self.cancel_button.set_sensitive(True)
         self.run_button.set_sensitive(True)
-
         if exit_status == 0:
             success_msg = "Your machine has been configured for: %s" \
                           % (",".join(TAGS))
             show_dialog(self, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                         "Complete", success_msg)
             logging.info("ansible-pull succeeded")
-        # 65280 should be the exit code if the gksudo dialog is dismissed
-        elif exit_status == 65280:
-            gksudo_err_msg = "Either an incorrect password was entered or" \
-                             " the password dialog was closed." \
-                             " Please try again"
+        # 126 should be the exit code if the pkexec dialog is dismissed and
+        # 127 is the exit code if authentication fails. All other exit codes
+        # come from the called application
+        # At the moment, this doesn't seem to work. Even though on the command
+        # line these exit codes seem to be correct, 32256 is what gets passed
+        # to this function when the dialog closes and 32512 is what gets passed
+        # when authentication fails.
+        # Because of that, we will accept those values for these scenarios and
+        # hopefully can remove the 32xxx values at some point in the future
+        elif exit_status == 126 or exit_status == 32256:
+            pkexec_err_msg = "Unable to authenticate due to the dialog being"\
+                             " closed. Please try again."
             show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
-                        "Unable to authenticate", gksudo_err_msg)
-            logging.warning("Unable to authenicate user")
+                        "Unable to authenticate", pkexec_err_msg)
+            logging.warning("User dismissed authentication dialog")
+        elif exit_status == 127 or exit_status == 32512:
+            pkexec_err_msg = "Unable to authenticate due to an incorrect" \
+                             " password or insufficient permissions." \
+                             " Plese try again." \
+                             "\nIf this issue continues to occur, copy" \
+                             " /opt/vmtools/logs/last_run.log and " \
+                             " ~/.cache/uug_ansible_wrapper.log" \
+                             " and <a href='%s'>create an issue</a>." \
+                             % (CURRENT_CONFIG['URL'])
+            show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
+                        "Unable to authenticate", pkexec_err_msg)
+            logging.error("Unable to authenticate user")
         else:
             ansible_err_msg = "There was an error while running the" \
                               " configuration tasks. Please try again." \
@@ -279,10 +297,6 @@ class AnsibleWrapperWindow(Gtk.Window):
             invalid_branch(self)
             return
 
-        gksudo_msg = "<b>Enter your password to configure your VM</b>" \
-                     "\nTo configure your virtual machine, administrator" \
-                     " privileges are required."
-
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(False)
 
@@ -294,8 +308,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         try:
             self.terminal.spawn_sync(Vte.PtyFlags.DEFAULT,
                                      os.environ['HOME'],
-                                     ["/usr/bin/gksudo", "--message",
-                                      gksudo_msg, "--",
+                                     ["/usr/bin/pkexec",
                                       "ansible-pull",
                                       "-U", CURRENT_CONFIG['URL'],
                                       "-C", CURRENT_CONFIG['RELEASE'],
