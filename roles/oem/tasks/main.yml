@@ -42,6 +42,16 @@
       src: welcome-to-vm.desktop
       dest: /etc/skel/Desktop/welcome-to-vm.desktop
       mode: 0644
+- name: Hide the mintwelcome window
+  file:
+      path: /etc/skel/.linuxmint/mintwelcome
+      mode: 0755
+      state: directory
+- name: Hide the mintwelcome window
+  file:
+      path: /etc/skel/.linuxmint/mintwelcome/norun.flag
+      mode: 0664
+      state: touch
 - name: Create the /usr/local/share/applications folder
   file:
       path: /usr/local/share/applications
