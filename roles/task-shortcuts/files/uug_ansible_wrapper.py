@@ -96,18 +96,20 @@ class AnsibleWrapperWindow(Gtk.Window):
         except GLib.GError as err:
             logging.warning("Unable to set Tux icon", exc_info=err)
 
-        self.set_border_width(10)
-
         # Create a box to contain all elements that will be added to the window
-        self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.add(self.vbox)
 
         self.create_toolbar()
 
+        contents = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        contents.set_border_width(10)
+
         label = Gtk.Label("Select the course configurations to add/update"
                           " (at this time roles cannot be removed).")
         label.set_alignment(0.0, 0.0)
-        self.vbox.pack_start(label, False, False, 0)
+
+        contents.pack_start(label, False, False, 0)
 
         courses_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         # This button doesn't do anything. Common is always run
@@ -126,7 +128,7 @@ class AnsibleWrapperWindow(Gtk.Window):
                 checkbox.set_active(True)
             checkbox.connect("toggled", self.on_button_toggled, tag)
             self.checkboxes.append(checkbox)
-        self.vbox.pack_start(courses_box, False, False, 0)
+        contents.pack_start(courses_box, False, False, 0)
 
         # Add run and cancel buttons
         button_box = Gtk.Box(spacing=6)
@@ -137,12 +139,13 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.cancel_button = Gtk.Button.new_with_mnemonic("_Quit")
         self.cancel_button.connect("clicked", Gtk.main_quit)
         button_box.pack_end(self.cancel_button, True, True, 0)
-        self.vbox.pack_end(button_box, False, True, 0)
+        contents.pack_end(button_box, False, True, 0)
 
         # Add the terminal to the window
         self.terminal = Vte.Terminal()
         self.terminal.connect("child-exited", self.sub_command_exited)
-        self.vbox.pack_end(self.terminal, True, True, 0)
+        contents.pack_end(self.terminal, True, True, 0)
+        self.vbox.pack_end(contents, True, True, 0)
 
     @classmethod
     def on_button_toggled(cls, button, name):
