@@ -28,9 +28,23 @@ error () {
 }
 
 #---
+# Exits the script if the current distro is not Linux Mint.
+#---
+assert_mint() {
+    source /etc/os-release
+    local mint_name="Linux Mint"
+    if [ "$NAME" != "$mint_name" ]; then
+        error "The OEM role is only compatible with ${mint_name}. Not $NAME"
+    fi
+}
+
+#---
 # Performs the actual preparation of the machine
 #---
 main () {
+
+    assert_mint
+
     user "Updating apt package cache"
     sudo apt-get update
 
