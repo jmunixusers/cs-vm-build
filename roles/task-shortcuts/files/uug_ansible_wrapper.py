@@ -3,9 +3,8 @@
    This tools creates a simple GUI for running ansible-pull with a
    predetermined set of tags. It displays the output from the ansible-pull
    command in a VTE within the GUI. It allows the user to override some things
-   in a configuration file (~/.config/vm_config). The branch to pull can be
-   overriden by setting FORCE_BRANCH and the URL to pull from can be overriden
-   with FORCE_GIT_URL
+   in a configuration file (~/.config/vm_config). The branch to pull and the
+   URL to pull from can be changed in the program's Settings.
 """
 
 import logging
@@ -13,6 +12,8 @@ import os
 import socket
 import subprocess
 import sys
+
+import json
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -25,13 +26,16 @@ from gi.repository import GdkPixbuf   # noqa
 # uncertain of the outcome of passing -t with no tags. To avoid this, always
 # ensure that common is run by adding it to this list and disabling the
 # checkbox
-TAGS = ["common"]
 # Map of course names to the Ansible tags
 COURSES = {'CS 101': 'cs101', 'CS 149': 'cs149', 'CS 159': 'cs159',
            'CS 261': 'cs261', 'CS 354': 'cs354'}
 USER_CONFIG_PATH = os.path.join(os.environ['HOME'], ".config", "vm_config")
-USER_CONFIG = {}
-CURRENT_CONFIG = {'RELEASE': None, 'URL': None}
+USER_CONFIG = {'git_branch': None,
+               'git_url': "https://github.com/jmunixusers/cs-vm-build",
+               # All roles the user has ever chosen
+               'roles_all_time': ["common"],
+               # Roles to be used for this particular run
+               'roles_this_run': ["common"]}
 
 
 def main():
@@ -52,14 +56,22 @@ def main():
         logging.error("Unable to open log file at %s. Logging on console"
                       " instead", user_log_file)
 
-    # Set the url, release, and user config ahead of showing the window so
-    # they can be displayed in labels
+    # The default value for the branch is the current distro release name.
+    # Set this before parsing the configuration. If it can't be detected,
+    # it should get set to None
+    USER_CONFIG['git_branch'] = get_distro_release_name()
+
+    # Parse the user's previous settings
     parse_user_config()
-    CURRENT_CONFIG['URL'] = get_remote_url()
-    try:
-        CURRENT_CONFIG['RELEASE'] = get_distro_release_name()
-    except ValueError:
-        logging.warning("The branch was unable to be detected.")
+
+    # If common got removed from the configuration, add it back to prevent
+    # potentially bad things from happening
+    if "common" not in USER_CONFIG['roles_this_run']:
+        USER_CONFIG['roles_this_run'].append("common")
+
+
+    # If a branch still isn't set, offer "master"
+    if not USER_CONFIG['git_branch']:
         unable_to_detect_branch()
 
     # Show the window and ensure when it's closed that the script terminates
@@ -92,13 +104,14 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         self.create_toolbar()
 
-        label = Gtk.Label("Select the courses you need configured on the VM")
+        label = Gtk.Label("Select the course configurations to add/update"
+                          " (at this time roles cannot be removed).")
         label.set_alignment(0.0, 0.0)
         self.vbox.pack_start(label, False, False, 0)
 
         courses_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         # This button doesn't do anything. Common is always run
-        refresh = Gtk.CheckButton("Refresh base configuration")
+        refresh = Gtk.CheckButton("Base configuration")
         refresh.set_tooltip_text("This option is required")
         refresh.set_active(True)
         refresh.set_sensitive(False)
@@ -108,8 +121,10 @@ class AnsibleWrapperWindow(Gtk.Window):
         for (course, tag) in sorted(COURSES.items()):
             checkbox = Gtk.CheckButton(course)
             checkbox.set_tooltip_text("Configure for %s" % course)
-            checkbox.connect("toggled", self.on_button_toggled, tag)
             courses_box.pack_start(checkbox, False, False, 0)
+            if tag in USER_CONFIG['roles_this_run']:
+                checkbox.set_active(True)
+            checkbox.connect("toggled", self.on_button_toggled, tag)
             self.checkboxes.append(checkbox)
         self.vbox.pack_start(courses_box, False, False, 0)
 
@@ -134,9 +149,9 @@ class AnsibleWrapperWindow(Gtk.Window):
         """Adds the name of the button that triggered this call to the list of
            tags that will be passed to ansible-pull"""
         if button.get_active():
-            TAGS.append(name)
+            USER_CONFIG['roles_this_run'].append(name)
         else:
-            TAGS.remove(name)
+            USER_CONFIG['roles_this_run'].remove(name)
 
     def create_toolbar(self):
         menu_bar = Gtk.MenuBar()
@@ -178,8 +193,8 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         branch_entry = Gtk.Entry()
         url_entry = Gtk.Entry()
-        branch_entry.set_text(CURRENT_CONFIG['RELEASE'])
-        url_entry.set_text(CURRENT_CONFIG['URL'])
+        branch_entry.set_text(USER_CONFIG['git_branch'])
+        url_entry.set_text(USER_CONFIG['git_url'])
         branch_entry.set_width_chars(40)
         url_entry.set_width_chars(40)
 
@@ -200,9 +215,9 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            CURRENT_CONFIG['RELEASE'] = branch_entry.get_text()
-            CURRENT_CONFIG['URL'] = url_entry.get_text()
-            write_config()
+            USER_CONFIG['git_branch'] = branch_entry.get_text()
+            USER_CONFIG['git_url'] = url_entry.get_text()
+            write_user_config()
         dialog.destroy()
 
     def show_about_dialog(self, _):
@@ -238,7 +253,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.run_button.set_sensitive(True)
         if exit_status == 0:
             success_msg = "Your machine has been configured for: %s" \
-                          % (",".join(TAGS))
+                          % (",".join(USER_CONFIG['roles_this_run']))
             show_dialog(self, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                         "Complete", success_msg)
             logging.info("ansible-pull succeeded")
@@ -265,7 +280,7 @@ class AnsibleWrapperWindow(Gtk.Window):
                              " /opt/vmtools/logs/last_run.log and " \
                              " ~/.cache/uug_ansible_wrapper.log" \
                              " and <a href='%s'>create an issue</a>." \
-                             % (CURRENT_CONFIG['URL'])
+                             % (USER_CONFIG['git_url'])
             show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
                         "Unable to authenticate", pkexec_err_msg)
             logging.error("Unable to authenticate user")
@@ -275,7 +290,7 @@ class AnsibleWrapperWindow(Gtk.Window):
                               "\nIf this issue continues to occur, copy" \
                               " /opt/vmtools/logs/last_run.log and" \
                               " <a href='%s'>create an issue</a>" \
-                              % (CURRENT_CONFIG['URL'])
+                              % (USER_CONFIG['git_url'])
             show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
                         "Error", ansible_err_msg)
             logging.error("ansible-pull failed")
@@ -303,17 +318,22 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.cancel_button.set_sensitive(False)
         self.run_button.set_sensitive(False)
 
-        logging.info("Running ansible-pull with flags: %s", ",".join(TAGS))
+        write_user_config()
+
+        logging.info("Running ansible-pull with flags: %s", ","
+                     .join(USER_CONFIG['roles_this_run']))
 
         try:
             self.terminal.spawn_sync(Vte.PtyFlags.DEFAULT,
                                      os.environ['HOME'],
                                      ["/usr/bin/pkexec",
                                       "ansible-pull",
-                                      "-U", CURRENT_CONFIG['URL'],
-                                      "-C", CURRENT_CONFIG['RELEASE'],
+                                      "-U", USER_CONFIG['git_url'],
+                                      "-C", USER_CONFIG['git_branch'],
                                       "--purge", "-i", "hosts",
-                                      "-t", ",".join(TAGS)],
+                                      "-t",
+                                      ","
+                                      .join(USER_CONFIG['roles_this_run'])],
                                      [],
                                      GLib.SpawnFlags.DO_NOT_REAP_CHILD,
                                      None,
@@ -362,9 +382,32 @@ def parse_simple_config(path, data):
         logging.info("Ignoring user configuration. It is not present")
 
 
+def parse_json_config(path, config):
+    try:
+        with open(path, "r") as config_file:
+            config.update(json.load(config_file))
+    except FileNotFoundError:
+        logging.info("User configuration file not present. Ignoring.")
+    except json.decoder.JSONDecodeError:
+        logging.info("User configuration is invalid. Ignoring.")
+
+
+def write_json_config(path, config):
+    with open(path, "w") as config_file:
+        # Make the written file relatively readable & writable by users
+        json.dump(config, config_file, indent=4, sort_keys=True)
+
+
 def parse_user_config():
     """Loads a user's configuration"""
-    parse_simple_config(USER_CONFIG_PATH, USER_CONFIG)
+    parse_json_config(USER_CONFIG_PATH, USER_CONFIG)
+
+    USER_CONFIG['roles_all_time'] = list(set(USER_CONFIG['roles_all_time']))
+    USER_CONFIG['roles_this_run'] += USER_CONFIG['roles_all_time']
+    # Remove duplicates from roles for this run
+    USER_CONFIG['roles_this_run'] = list(set(USER_CONFIG['roles_this_run']))
+
+    logging.info("Read config: %s from %s", USER_CONFIG, USER_CONFIG_PATH)
 
 
 def parse_os_release():
@@ -377,7 +420,7 @@ def parse_os_release():
 def get_distro_release_name():
     """Attempts to get the release name of the currently-running OS. It reads
        /etc/os-release and then regardless of whether or not a release has
-       been found, if FORCE_BRANCH exists in ~/.config/vm_config that will be
+       been found, if the user has specified a preferred branch, that will be
        returned. If nothing is found, a ValueError is raised."""
     release = ""
 
@@ -388,28 +431,10 @@ def get_distro_release_name():
         logging.debug("VERSION_CODENAME is not in /etc/os_release."
                       "Full file contents: %s", os_release_config)
 
-    if 'FORCE_BRANCH' in USER_CONFIG:
-        user_branch = USER_CONFIG['FORCE_BRANCH']
-        if user_branch:
-            release = user_branch
-        else:
-            logging.warning("User set a branch ('%s') but it is invalid",
-                            user_branch)
-
     if release == "" or release == " " or release is None:
         logging.warning("No valid release was detected")
-        raise ValueError("Version could not be detected")
 
     return release
-
-
-def get_remote_url():
-    """Checks if the user has specified a FORCE_GIT_URL in their config file.
-       If so, that is returned. Otherwise, the default jmunixusers URL is
-       returned"""
-    if 'FORCE_GIT_URL' in USER_CONFIG:
-        return USER_CONFIG['FORCE_GIT_URL']
-    return "https://github.com/jmunixusers/cs-vm-build"
 
 
 def validate_branch():
@@ -417,12 +442,12 @@ def validate_branch():
        Returns true if branch exists on remote. This may be subject to false
        postivies, but that should not be an issue"""
     output = subprocess.run(["/usr/bin/git", "ls-remote",
-                             CURRENT_CONFIG['URL']],
+                             USER_CONFIG['git_url']],
                             stdout=subprocess.PIPE)
 
     ls_remote_output = output.stdout.decode("utf-8")
 
-    return CURRENT_CONFIG['RELEASE'] in ls_remote_output
+    return USER_CONFIG['git_branch'] in ls_remote_output
 
 
 def invalid_branch(parent):
@@ -433,8 +458,8 @@ def invalid_branch(parent):
                      " release of Linux Mint, you may submit"\
                      " <a href='%(1)s'>an issue</a> requesting support for" \
                      " the release listed above" \
-                     % {'0': CURRENT_CONFIG['RELEASE'],
-                        '1': CURRENT_CONFIG['URL']}
+                     % {'0': USER_CONFIG['git_branch'],
+                        '1': USER_CONFIG['git_url']}
     show_dialog(parent, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
                 "Invalid Release", bad_branch_msg)
     return
@@ -444,6 +469,7 @@ def unable_to_detect_branch():
     """Displays a dialog to ask the user if they would like to use the master
        branch. If the user clicks yes, release is set to master. If the user
        says no, the script exits"""
+    logging.info("Branch could not be detected. Offering master")
     master_prompt = "The version of your OS could not be determined." \
                     " Would you like to use the master branch?" \
                     " This is very dangerous"
@@ -453,7 +479,7 @@ def unable_to_detect_branch():
         logging.info("The user chose not to use master")
         sys.exit(1)
     else:
-        CURRENT_CONFIG['RELEASE'] = "master"
+        USER_CONFIG['git_branch'] = "master"
         logging.info("Release set to master")
 
 
@@ -472,14 +498,23 @@ def is_online():
         return False
 
 
-def write_config():
+def write_user_config():
     """
     Writes the user's configuration out to the configuration file. This
     allows configuration changes to persist across invocations.
     """
-    with open(USER_CONFIG_PATH, "w+") as config:
-        print("FORCE_GIT_URL = %s" % CURRENT_CONFIG['URL'], file=config)
-        print("FORCE_BRANCH = %s" % CURRENT_CONFIG['RELEASE'], file=config)
+
+    # Add all new roles to cummulative roles and also remove duplicates before
+    # writing -- must be a list since sets cannot be serialized with JSON
+    USER_CONFIG['roles_this_run'] = list(set(USER_CONFIG['roles_this_run']))
+    USER_CONFIG['roles_all_time'] += USER_CONFIG['roles_this_run']
+    # Since there could now be duplicates in roles_all_time, remove them
+    USER_CONFIG['roles_all_time'] = list(set(USER_CONFIG['roles_all_time']))
+
+    logging.info("Writing user configuration %s to %s", USER_CONFIG,
+                 USER_CONFIG_PATH)
+
+    write_json_config(USER_CONFIG_PATH, USER_CONFIG)
 
 
 if __name__ == "__main__":
