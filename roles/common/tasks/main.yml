@@ -39,15 +39,15 @@
     real_users: >-
       {{ real_users|default([]) +
       [ {'user': item.key, 'homedir': item.value.4,
-      'uid': item.value.1, 'gid': item.value.2 } ] }}
+      'uid': item.value.1 | int, 'gid': item.value.2 } ] }}
   with_dict: "{{ getent_passwd }}"
   when:
     # Ideally, this would pull from useradd.conf to get the lower bound for
     # regular user UIDs; however, 1000 is relatively universal
-    - item.value.1 >= 1000
+    - item.value.1 | int >= 1000
     - item.value.4 is match ("^/home/")
     - item.value.5 != "/bin/false"
-    - item.value.5 != "/sbin/nologin"
+    - item.value.5 != "/usr/sbin/nologin"
 - name: Upgrade installed software
   apt:
       upgrade: safe
