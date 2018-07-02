@@ -26,7 +26,7 @@
     owner: root
     group: root
     mode: 0644
-  when: ansible_distribution == "Linuxmint"
+  when: ansible_distribution == "Linuxmint" or ansible_distribution == "Linux Mint"
 - name: Refresh apt cache
   apt:
     update_cache: yes
