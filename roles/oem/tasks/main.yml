@@ -3,7 +3,7 @@
 - name: Ensure this in Linux Mint
   assert:
       that:
-        - "ansible_distribution == 'Linuxmint'"
+        - "ansible_distribution == 'Linuxmint' or ansible_distribution == 'Linux Mint'"
 - name: Update apt cache
   apt:
       update_cache: yes
