@@ -143,6 +143,7 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         # Add the terminal to the window
         self.terminal = Vte.Terminal()
+        self.terminal.set_sensitive(False)
         self.terminal.connect("child-exited", self.sub_command_exited)
         contents.pack_end(self.terminal, True, True, 0)
         self.vbox.pack_end(contents, True, True, 0)
