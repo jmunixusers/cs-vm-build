@@ -1,5 +1,9 @@
 ---
 # tasks file for jgrasp
+- name: Install jGRASP dependencies
+  apt:
+    name: lsb-core
+    state: latest
 - name: Check JGrasp
   stat:
     path: '{{ jgrasp.zip }}'
