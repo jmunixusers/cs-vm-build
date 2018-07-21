@@ -50,7 +50,7 @@ apt will require more extensive modifications.
 ### CS149
 * DrJava
 * Eclipse
-* JGrasp
+* jGRASP
 
 ### CS159
 * Eclipse
