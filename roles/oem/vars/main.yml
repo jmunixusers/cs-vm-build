@@ -7,67 +7,40 @@ packages_to_install:
 
 # https://github.com/jmunixusers/cs-vm-build/issues/11#issuecomment-347015788 
 packages_to_remove:
-    - libreoffice-common
-    - thunderbird*
-    - hexchat*
-    - pidgin*
-    - transmission*
-    - gimp*
-    - pix*
-    - rhythmbox*
-    - tomboy
     - bluez*
-    - simple-scan
-    - xplayer*
-    - vlc*
-    - openvpn
     - btrfs-tools
-    - mono-*
-    - xscreensaver-*
-    - fonts-noto-cjk
-    - mint-backgrounds-sarah
-    - mint-backgrounds-serena
-    - libllvm3.8
+    - fonts*gujr*
+    - fonts*guru*
     - fonts-beng*
     - fonts-deva*
     - fonts-gargi*
+    - fonts-gubbi
     - fonts-gujr*
     - fonts-guru*
-    - fonts*guru*
-    - fonts*gujr*
-    - fonts-gubbi
     - fonts-kacst*
-    - fonts-khmeros-core
     - fonts-kalapi
-    - fonts-lohit-*
+    - fonts-khmeros-core
     - fonts-lao
+    - fonts-lklug-sinhala
+    - fonts-lohit-*
     - fonts-nakula
     - fonts-nanum
-    - fonts-lklug-sinhala
     - fonts-navilu
+    - fonts-noto-cjk
+    - fonts-orya-extra
     - fonts-pagul
     - fonts-sahadeva
-    - fonts-orya-extra
     - fonts-samyak-*
     - fonts-sarai
-    - fonts-tlwg-*
-    - fonts-wqy-microhei
     - fonts-sil-*
     - fonts-smc
     - fonts-takao-pgothic
     - fonts-telu-extra
     - fonts-tibetan-machine
-    - myspell-en-au
-    - myspell-en-gb
-    - myspell-en-za
-    - myspell-es
-    - myspell-it
-    - myspell-pt*
-    - wbritish
-    - hyphen-de
-    - hypgen-fr
-    - hyphen-it
-    - hyphen-ru
+    - fonts-tlwg-*
+    - fonts-wqy-microhei
+    - gimp*
+    - hexchat*
     - hunspell-de-at
     - hunspell-de-ch
     - hunspell-de-de
@@ -78,5 +51,32 @@ packages_to_remove:
     - hunspell-fr-classical
     - hunspell-it
     - hunspell-ru
+    - hypgen-fr
+    - hyphen-de
+    - hyphen-it
+    - hyphen-ru
+    - libllvm3.8
+    - libreoffice-common
     - mint-artwork-mate
+    - mint-backgrounds-sarah
+    - mint-backgrounds-serena
     - mint-backgrounds-sonya
+    - mono-*
+    - myspell-en-au
+    - myspell-en-gb
+    - myspell-en-za
+    - myspell-es
+    - myspell-it
+    - myspell-pt*
+    - openvpn
+    - pidgin*
+    - pix*
+    - rhythmbox*
+    - simple-scan
+    - thunderbird*
+    - tomboy
+    - transmission*
+    - vlc*
+    - wbritish
+    - xplayer*
+    - xscreensaver-*
