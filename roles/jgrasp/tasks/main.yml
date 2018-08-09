@@ -28,3 +28,5 @@
     src: jgrasp.desktop.j2
     dest: /usr/local/share/applications/jgrasp.desktop
     mode: 0644
+  notify:
+    - Update desktop menu

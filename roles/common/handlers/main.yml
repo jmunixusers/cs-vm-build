@@ -1,5 +1,8 @@
 ---
 # handlers file for common
+- name: Update desktop menu
+  command:
+    /usr/bin/update-desktop-database
 - name: Suggest restart
   command: >-
     notify-send -u critical "JMU Software Change" 

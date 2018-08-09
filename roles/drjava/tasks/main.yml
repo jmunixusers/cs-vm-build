@@ -20,6 +20,8 @@
     src: drjava.desktop.j2
     dest: /usr/local/share/applications/drjava.desktop
     mode: 0644
+  notify:
+    - Update desktop menu
 - name: Install DrJava start script
   template:
     src: drjava.sh.j2

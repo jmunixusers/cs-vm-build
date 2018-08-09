@@ -31,3 +31,5 @@
     src: eclipse.desktop.j2
     dest: /usr/local/share/applications/eclipse.desktop
     mode: 0644
+  notify:
+    - Update desktop menu
