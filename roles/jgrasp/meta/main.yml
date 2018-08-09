@@ -1,6 +1,6 @@
 galaxy_info:
   author: Unix Users Group
-  description: Installs the JGrasp IDE
+  description: Installs the jGRASP IDE
   company: James Madison University
   license: MIT
   min_ansible_version: 2.1

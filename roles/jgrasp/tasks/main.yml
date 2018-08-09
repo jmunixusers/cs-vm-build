@@ -4,26 +4,26 @@
   apt:
     name: lsb-core
     state: latest
-- name: Check JGrasp
+- name: Check jGRASP
   stat:
     path: '{{ jgrasp.zip }}'
   register: st
 - block:
-    - name: Fetch JGrasp zip
+    - name: Fetch jGRASP zip
       get_url:
         url: '{{ jgrasp.url }}'
         dest: '{{ jgrasp.zip }}'
         force: yes
-    - name: Remove old JGrasp directory
+    - name: Remove old jGRASP directory
       file:
         path: '{{ jgrasp.install_path }}'
         state: absent
-    - name: Unpack JGrasp zip
+    - name: Unpack jGRASP zip
       unarchive:
         dest: '{{ global_base_path }}'
         src: '{{ jgrasp.zip }}'
   when: st.stat.checksum|default("") != jgrasp.hash
-- name: Install JGrasp desktop icon
+- name: Install jGRASP desktop icon
   template:
     src: jgrasp.desktop.j2
     dest: /usr/local/share/applications/jgrasp.desktop
