@@ -68,6 +68,13 @@ packages_to_remove:
     - myspell-es
     - myspell-it
     - myspell-pt*
+    - mythes-de
+    - mythes-de-ch
+    - mythes-en-au
+    - mythes-fr
+    - mythes-it
+    - mythes-pt-pt
+    - mythes-ru
     - openvpn
     - pidgin*
     - pix*
