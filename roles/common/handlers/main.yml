@@ -9,6 +9,8 @@
     "Changes have been made to your machine that 
     will only take effect when log out or when 
     you reboot. Please do this immediately."
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ item.uid }}"
   become: yes
   become_user: "{{ item.user }}"
   with_items: "{{ real_users }}"

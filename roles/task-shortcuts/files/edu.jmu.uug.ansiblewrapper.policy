@@ -18,6 +18,9 @@
             <allow_active>auth_admin_keep</allow_active>
         </defaults>
         <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/ansible-pull</annotate>
+        <!-- Allows pkexec to copy $DISPLAY and $XAUTHORITY, needed for
+             GUI-related things such as notify-send -->
+        <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
     </action>
 
 </policyconfig>
