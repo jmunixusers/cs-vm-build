@@ -1,0 +1,57 @@
+.TH Y86REF 1 "AUGUST 2018" Linux "User Manuals"
+.SH NAME
+y86ref \- y86 mini-elf file interactions reference solution
+.SH SYNOPSIS
+.B y86ref
+[\fIOPTION\/\fR]... 
+.IR file
+.SH DESCRIPTION
+.B y86ref
+reads .o files made for the imaginary y86 processor architecture, and prints 
+information based on flags given. This is a reference solution to the PAs
+assigned over the course of the semester.
+.SH OPTIONS
+.TP
+.BR \-h \fR
+display usage information
+.TP
+.BR \-H \fR
+show the Mini-ELF header
+.TP
+.BR \-a \fR
+show all information about the program with brief virtual memory output
+.TP
+.BR \-f \fR
+show all information about the program with full virtual memory output
+.TP
+.BR \-m \fR
+briefly display virtual memory
+.TP
+.BR \-M \fR
+display all contents of the virtual memory
+.TP
+.BR \-s \fR
+show the program headers in the file
+.TP 
+.BR \-d \fR
+display the assembly operations contained in all code segments of the file
+.TP
+.BR \-D \fR
+display the data segments contained in any read only or read write segment in
+the file.
+.TP
+.BR \-e \fR
+execute the y86 program
+.TP
+.BR \-E \fR
+execute the y86 program in debug trace mode
+.SH NOTES
+Specific questions about
+.BR y86ref
+or your programming assignments should be directed to your CS261 professor.
+.SH "SEE ALSO"
+.BR gdb(1),
+.BR hexdump(1),
+.BR objdump(1),
+.BR readelf(1),
+.BR elf(5)

@@ -14,3 +14,4 @@
     - { role: drjava, tags: ["cs149"] }
     - { role: finch, tags: ["cs101"] }
     - { role: task-shortcuts, tags: always, icon_mode: user }
+    - { role: y86, tags: ["cs261"] }
