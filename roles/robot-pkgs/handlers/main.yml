@@ -4,6 +4,8 @@
 - name: USB controllers warning
   command: >-
     zenity --warning --text {{ usb_warning_msg }}
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ item.uid }}"
   become: yes
   become_user: "{{ item.user }}"
   with_items: "{{ real_users }}"
