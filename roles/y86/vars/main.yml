@@ -1,0 +1,13 @@
+---
+y86_dir: '{{ global_base_path }}/y86'
+y86_bin_dir: '{{ y86_dir }}/bin'
+y86_man_dir: '{{ y86_dir }}/man'
+y86_man1_dir: '{{ y86_dir }}/man/man1'
+
+y86_binaries:
+    - y86ref
+    - ysim
+    - yas
+
+y86_manpages:
+    - y86ref.1
