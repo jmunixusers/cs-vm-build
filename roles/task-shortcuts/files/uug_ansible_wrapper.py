@@ -36,10 +36,13 @@ USER_CONFIG = {'git_branch': None,
                'roles_all_time': ["common"],
                # Roles to be used for this particular run
                'roles_this_run': ["common"]}
+NAME = "JMU CS VM Configuration"
+VERSION = "Fall 2018"
 
 
 def main():
     """Sets up logging and starts the GUI"""
+
     # Configure logging. Log to a file and create it if it doesn't exist. If
     # it cannot be opened, then fall back to logging on the console
     user_log_file = os.path.join(os.environ['HOME'], ".cache",
@@ -82,13 +85,15 @@ def main():
 
 
 class AnsibleWrapperWindow(Gtk.Window):
-    """The main window for the program. Includes a series of checkboxes for
-       courses as well as a VTE to show the output of the Ansible command"""
+    """
+    The main window for the program. Includes a series of checkboxes for
+    courses as well as a VTE to show the output of the Ansible command
+    """
 
     checkboxes = []
 
     def __init__(self):
-        Gtk.Window.__init__(self, title="JMU CS VM Configuration")
+        Gtk.Window.__init__(self, title=NAME)
 
         # Attempt to use tux as the icon. If it fails, that's okay
         try:
@@ -106,18 +111,20 @@ class AnsibleWrapperWindow(Gtk.Window):
         contents.set_border_width(10)
 
         label = Gtk.Label("Select the course configurations to add/update"
-                          " (at this time roles cannot be removed).")
+                          " (at this time courses cannot be removed).")
         label.set_alignment(0.0, 0.0)
 
         contents.pack_start(label, False, False, 0)
 
         courses_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+
         # This button doesn't do anything. Common is always run
         refresh = Gtk.CheckButton("Base configuration")
         refresh.set_tooltip_text("This option is required")
         refresh.set_active(True)
         refresh.set_sensitive(False)
         courses_box.pack_start(refresh, False, False, 0)
+
         # Add a checkbox for every course; sorting is necessary because
         # dictionaries do not guarantee that order is preserved
         for (course, tag) in sorted(COURSES.items()):
@@ -126,7 +133,7 @@ class AnsibleWrapperWindow(Gtk.Window):
             courses_box.pack_start(checkbox, False, False, 0)
             if tag in USER_CONFIG['roles_this_run']:
                 checkbox.set_active(True)
-            checkbox.connect("toggled", self.on_button_toggled, tag)
+            checkbox.connect("toggled", self.on_course_toggled, tag)
             self.checkboxes.append(checkbox)
         contents.pack_start(courses_box, False, False, 0)
 
@@ -149,20 +156,34 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.vbox.pack_end(contents, True, True, 0)
 
     @classmethod
-    def on_button_toggled(cls, button, name):
-        """Adds the name of the button that triggered this call to the list of
-           tags that will be passed to ansible-pull"""
+    def on_course_toggled(cls, button, name):
+        """
+        Adds the course to or removes the course from the list of courses to
+        provision based on whether the checkbox was checked or unchecked
+        respectively.
+
+        :param button: The checkbox that triggered the action
+        :param name: The name of the course associated with button
+        """
+
         if button.get_active():
             USER_CONFIG['roles_this_run'].append(name)
         else:
             USER_CONFIG['roles_this_run'].remove(name)
 
     def create_toolbar(self):
+        """
+        Initializes the window's toolbar.
+        """
+
         menu_bar = Gtk.MenuBar()
+
+        # Create the File menu
         file_menu = Gtk.Menu()
         file_item = Gtk.MenuItem("File")
         file_item.set_submenu(file_menu)
 
+        # Add settings and quit items to the File menu
         settings = Gtk.MenuItem("Settings\u2026")
         settings.connect("activate", self.show_settings)
         file_menu.append(settings)
@@ -172,18 +193,25 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         menu_bar.append(file_item)
 
+        # Create the Help menu
         help_menu = Gtk.Menu()
         help_item = Gtk.MenuItem("Help")
         help_item.set_submenu(help_menu)
 
+        # Add about item to the Help menu
         about = Gtk.MenuItem("About")
         about.connect("activate", self.show_about_dialog)
         help_menu.append(about)
 
         menu_bar.append(help_item)
+
         self.vbox.pack_start(menu_bar, False, False, 0)
 
     def show_settings(self, _):
+        """
+        Displays a dialog for changing the program's settings.
+        """
+
         dialog = Gtk.Dialog(title="Settings", parent=self,
                             flags=Gtk.DialogFlags.MODAL)
         grid = Gtk.Grid()
@@ -195,19 +223,19 @@ class AnsibleWrapperWindow(Gtk.Window):
         url_label.set_justify(Gtk.Justification.RIGHT)
         url_label.set_halign(Gtk.Align.END)
 
-        branch_entry = Gtk.Entry()
-        url_entry = Gtk.Entry()
-        branch_entry.set_text(USER_CONFIG['git_branch'])
-        url_entry.set_text(USER_CONFIG['git_url'])
-        branch_entry.set_width_chars(40)
-        url_entry.set_width_chars(40)
+        branch_field = Gtk.Entry()
+        url_field = Gtk.Entry()
+        branch_field.set_text(USER_CONFIG['git_branch'])
+        url_field.set_text(USER_CONFIG['git_url'])
+        branch_field.set_width_chars(40)
+        url_field.set_width_chars(40)
 
         grid.add(branch_label)
-        grid.attach_next_to(branch_entry, branch_label, Gtk.PositionType.RIGHT,
+        grid.attach_next_to(branch_field, branch_label, Gtk.PositionType.RIGHT,
                             1, 1)
         grid.attach_next_to(url_label, branch_label, Gtk.PositionType.BOTTOM,
                             1, 1)
-        grid.attach_next_to(url_entry, url_label, Gtk.PositionType.RIGHT, 1, 1)
+        grid.attach_next_to(url_field, url_label, Gtk.PositionType.RIGHT, 1, 1)
         dialog.get_content_area().pack_end(grid, False, False, 0)
         dialog.add_button(Gtk.STOCK_OK, Gtk.ResponseType.OK)
         dialog.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
@@ -219,12 +247,16 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            USER_CONFIG['git_branch'] = branch_entry.get_text()
-            USER_CONFIG['git_url'] = url_entry.get_text()
+            USER_CONFIG['git_branch'] = branch_field.get_text()
+            USER_CONFIG['git_url'] = url_field.get_text()
             write_user_config()
         dialog.destroy()
 
     def show_about_dialog(self, _):
+        """
+        Displays the About dialog.
+        """
+
         about_dialog = Gtk.AboutDialog()
         try:
             about_dialog.set_logo(
@@ -233,7 +265,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         except Exception as err:
             logging.error("Error", exc_info=err)
         about_dialog.set_transient_for(self)
-        about_dialog.set_program_name("JMU CS VM Configuration")
+        about_dialog.set_program_name(NAME)
         about_dialog.set_copyright("Copyright \xa9 2018 JMU Unix Users"
                                    " Group")
         about_dialog.set_comments("A tool for configuring virtual machines"
@@ -243,14 +275,17 @@ class AnsibleWrapperWindow(Gtk.Window):
         about_dialog.set_authors(["JMU Unix Users Group"])
         about_dialog.set_website("https://github.com/jmunixusers/cs-vm-build")
         about_dialog.set_website_label("Project GitHub page")
-        about_dialog.set_version("2.0")
+        about_dialog.set_version(VERSION)
         about_dialog.set_license_type(Gtk.License.MIT_X11)
         about_dialog.connect("response", on_dialog_close)
         about_dialog.show()
 
     def sub_command_exited(self, _, exit_status):
-        """Displays a dialog informing the user whether the pkexec and
-           ansible-pull commands completely successfully or not"""
+        """
+        Displays a dialog informing the user whether the pkexec and
+        ansible-pull commands completely successfully or not.
+        """
+
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(True)
         self.cancel_button.set_sensitive(True)
@@ -279,12 +314,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         elif exit_status == 127 or exit_status == 32512:
             pkexec_err_msg = "Unable to authenticate due to an incorrect" \
                              " password or insufficient permissions." \
-                             " Plese try again." \
-                             "\nIf this issue continues to occur, copy" \
-                             " /opt/vmtools/logs/last_run.log and " \
-                             " ~/.cache/uug_ansible_wrapper.log" \
-                             " and <a href='%s'>create an issue</a>." \
-                             % (USER_CONFIG['git_url'])
+                             " Plese try again."
             show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
                         "Unable to authenticate", pkexec_err_msg)
             logging.error("Unable to authenticate user")
@@ -300,14 +330,16 @@ class AnsibleWrapperWindow(Gtk.Window):
             logging.error("ansible-pull failed")
 
     def on_run_clicked(self, _):
-        """Begins the process of running the command in the VTE and disables
-           the run and cancel buttons so that they cannot be used while the
-           command is running"""
+        """
+        Performs various checks and then runs the commands in VTE. The run
+        and quit buttons are disabled as are all the checkboxes.
+        """
+
         if not is_online():
-            no_internet_msg = "It appears that you are not able to access" \
-                              " the Internet. This tools requires that you" \
-                              " be online please check your settings and try" \
-                              " again"
+            no_internet_msg = ("It appears that you are not able to access"
+                               " the Internet. This tool requires that you"
+                               " be online. Please check your settings and try"
+                               " again.")
             show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
                         "No Internet connection", no_internet_msg)
             return
@@ -327,36 +359,46 @@ class AnsibleWrapperWindow(Gtk.Window):
         logging.info("Running ansible-pull with flags: %s", ","
                      .join(USER_CONFIG['roles_this_run']))
 
+        # spawn_sync will not perform a path lookup; however, pkexec will
+        cmd_args = ['/usr/bin/pkexec', 'ansible-pull',
+                    '--url', USER_CONFIG['git_url'],
+                    '--checkout', USER_CONFIG['git_branch'],
+                    '--purge', '--inventory', 'hosts',
+                    '--tags', ",".join(USER_CONFIG['roles_this_run'])]
+
         try:
             self.terminal.spawn_sync(Vte.PtyFlags.DEFAULT,
-                                     os.environ['HOME'],
-                                     ["/usr/bin/pkexec",
-                                      "ansible-pull",
-                                      "-U", USER_CONFIG['git_url'],
-                                      "-C", USER_CONFIG['git_branch'],
-                                      "--purge", "-i", "hosts",
-                                      "-t",
-                                      ","
-                                      .join(USER_CONFIG['roles_this_run'])],
-                                     [],
+                                     os.environ['HOME'], cmd_args, [],
                                      GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                     None,
-                                     None,
-                                     )
+                                     None, None)
         except GLib.Error as error:
             logging.error("Unable to run ansible command.", exc_info=error)
             self.sub_command_exited(None, 1)
 
 
 def on_dialog_close(action, _):
+    """
+    Destroys the dialog.
+    """
+
     action.destroy()
 
 
 def show_dialog(parent, dialog_type, buttons_type, header, message):
-    """Shows a dialog to the user with the provided header, message, and
-       buttons. The message is always displated with format_secondary_markup
-       and therefore will passed through Pango. It should be escaped properly
     """
+    Shows a dialog to the user with the provided header, message, and
+    buttons. The message is always displayed with format_secondary_markup
+    and therefore will passed through Pango. It should be escaped properly.
+
+    :param parent: The parent GTK window to associate with the dialog
+    :param dialog_type: The type of GTK dialog to display
+    :param buttons_type: The GTK buttons type to use for the dialog
+    :param header: The text to display in the dialog's header
+    :param message: The text to display in the main part of the dialog
+
+    :returns: The user's response to the dialog
+    """
+
     dialog = Gtk.MessageDialog(parent, 0, dialog_type, buttons_type, header)
     dialog.format_secondary_markup(message)
     response = dialog.run()
@@ -365,45 +407,77 @@ def show_dialog(parent, dialog_type, buttons_type, header, message):
 
 
 def parse_simple_config(path, data):
-    """Loads the user's configuration into the user_config global variable"""
+    """
+    Parses a simple INI-like config. Only lines with assignments are permitted
+    and it can't handle sections like INI has. Lines with # as the first
+    non-space character are comments.
+
+    :param path: The path to the configuration file
+    :param data: The dictionary to store the data in
+    """
+
     try:
         with open(path, "r") as config:
             for line in config:
-                # Allow comments
-                if line.strip().startswith("#"):
+                # Allow comments at beginning of lines
+                if line.lstrip().startswith("#"):
                     continue
                 # Ignore any line without an assignment
                 if "=" not in line:
+                    logging.warning("Config entry has no assignment: %s", line)
                     continue
-                # Ignore lines with too many/few = signs
+                # Store the key and value. The string before the first = is
+                # the key, and everything else ends up in the value (even if
+                # there are multiple = on the line).
                 try:
-                    (key, val) = line.split("=")
+                    split = line.split("=")
+                    key = split[0]
+                    val = "".join(split[1:])
                     data[key.strip()] = val.strip()
                 except ValueError:
                     logging.warning("Invalid entry in config file: %s", line)
                     continue
-    except FileNotFoundError:
+    except FileNotFoundError as fne:
         logging.info("Ignoring user configuration. It is not present")
 
 
 def parse_json_config(path, config):
+    """
+    Loads the data in the file at the provided path into a dictionary.
+
+    :param path: The path to the JSON file
+    :param config: The dictionary to update with data from the JSON file
+    """
+
     try:
         with open(path, "r") as config_file:
             config.update(json.load(config_file))
-    except FileNotFoundError:
-        logging.info("User configuration file not present. Ignoring.")
-    except json.decoder.JSONDecodeError:
-        logging.info("User configuration is invalid. Ignoring.")
+    except FileNotFoundError as fne:
+        logging.info("User configuration file not present. Ignoring.",
+                     exc_info=fne)
+    except json.decoder.JSONDecodeError as jde:
+        logging.info("User configuration is invalid. Ignoring.",
+                     exc_info=jde)
 
 
 def write_json_config(path, config):
+    """
+    Writes a dictionary to a file at the provided at path in JSON format.
+
+    :param path: The path of the file to write the dictionary to
+    :param config: The dictionary to write. Must be serializable as JSON
+    """
+
     with open(path, "w") as config_file:
         # Make the written file relatively readable & writable by users
         json.dump(config, config_file, indent=4, sort_keys=True)
 
 
 def parse_user_config():
-    """Loads a user's configuration"""
+    """
+    Loads a user's configuration.
+    """
+
     parse_json_config(USER_CONFIG_PATH, USER_CONFIG)
 
     USER_CONFIG['roles_all_time'] = list(set(USER_CONFIG['roles_all_time']))
@@ -415,17 +489,27 @@ def parse_user_config():
 
 
 def parse_os_release():
-    """Loads the data in /etc/os-release"""
+    """
+    Loads the data in /etc/os-release.
+
+    :returns: A dictionary with the data parsed from /etc/os-release
+    """
+
     config = {}
     parse_simple_config("/etc/os-release", config)
     return config
 
 
 def get_distro_release_name():
-    """Attempts to get the release name of the currently-running OS. It reads
-       /etc/os-release and then regardless of whether or not a release has
-       been found, if the user has specified a preferred branch, that will be
-       returned. If nothing is found, a ValueError is raised."""
+    """
+    Attempts to get the release name of the currently-running OS. It reads
+    /etc/os-release and then regardless of whether or not a release has
+    been found, if the user has specified a preferred branch, that will be
+    returned.
+
+    :returns: The name of the Linux distro's release
+    """
+
     release = ""
 
     os_release_config = parse_os_release()
@@ -435,16 +519,21 @@ def get_distro_release_name():
         logging.debug("VERSION_CODENAME is not in /etc/os_release."
                       "Full file contents: %s", os_release_config)
 
-    if release == "" or release == " " or release is None:
+    if release.lstrip() == "" or release is None:
         logging.warning("No valid release was detected")
 
     return release
 
 
 def validate_branch():
-    """Checks the branch passed in against the branches available on remote.
-       Returns true if branch exists on remote. This may be subject to false
-       postivies, but that should not be an issue"""
+    """
+    Checks the branch passed in against the branches available on remote.
+    Returns true if branch exists on remote. This may be subject to false
+    postivies, but that should not be an issue.
+
+    :returns: Whether the chosen branch exists on the git remote
+    """
+
     output = subprocess.run(["/usr/bin/git", "ls-remote",
                              USER_CONFIG['git_url']],
                             stdout=subprocess.PIPE)
@@ -455,7 +544,12 @@ def validate_branch():
 
 
 def invalid_branch(parent):
-    """Displays a dialog if the branch choses does not exist on the remote"""
+    """
+    Displays a dialog if the branch choses does not exist on the remote
+
+    :param parent: The parent GTK window for the error dialog
+    """
+
     bad_branch_msg = "The release chosen does not exist at the project URL." \
                      " Please check the settings listed below and try again." \
                      "\nRelease: %(0)s\nURL: %(1)s\nIf you're using a current"\
@@ -470,15 +564,19 @@ def invalid_branch(parent):
 
 
 def unable_to_detect_branch():
-    """Displays a dialog to ask the user if they would like to use the master
-       branch. If the user clicks yes, release is set to master. If the user
-       says no, the script exits"""
+    """
+    Displays a dialog to ask the user if they would like to use the master
+    branch. If the user clicks yes, release is set to master. If the user
+    says no, the script exits
+    """
+
     logging.info("Branch could not be detected. Offering master")
     master_prompt = "The version of your OS could not be determined." \
                     " Would you like to use the master branch?" \
-                    " This is very dangerous"
+                    " This can be very dangerous."
     response = show_dialog(None, Gtk.MessageType.ERROR, Gtk.ButtonsType.YES_NO,
                            "OS detection error", master_prompt)
+
     if response != Gtk.ResponseType.YES:
         logging.info("The user chose not to use master")
         sys.exit(1)
@@ -487,18 +585,22 @@ def unable_to_detect_branch():
         logging.info("Release set to master")
 
 
-def is_online():
-    """Checks if the user is able to reach a selected hostname."""
-    # Since the user will probably be pulling a significant amount of data
-    # from this host, it should be a decent host to use to check connectivity
-    test_hostname = "packages.linuxmint.com"
+def is_online(hostname="packages.linuxmint.com"):
+    """
+    Checks if the user is able to reach a selected hostname.
+
+    :param hostname: The hostname to test against.
+    Default is packages.linuxmint.com.
+    :returns: True if able to connect or False otherwise.
+    """
+
     try:
-        host = socket.gethostbyname(test_hostname)
+        host = socket.gethostbyname(hostname)
         test_connection = socket.create_connection((host, 80), 2)
         test_connection.close()
         return True
     except OSError as err:
-        logging.warning("%s is unreachable.", test_hostname, exc_info=err)
+        logging.warning("%s is unreachable.", hostname, exc_info=err)
         return False
 
 
