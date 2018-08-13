@@ -7,7 +7,6 @@
       owner: root
       group: root
       mode: 0755
-      recurse: yes
   with_items:
       - '{{ y86_bin_dir }}'
       - '{{ y86_man_dir }}'
