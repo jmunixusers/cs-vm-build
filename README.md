@@ -15,7 +15,7 @@ or directly from GitHub:
 ansible-pull -U https://github.com/jmunixusers/cs-vm-build --purge -i hosts -K -t TAGS
 ```
 where TAGS is a comma separated list (with no spaces) of
-cs101, cs149, cs159, cs261, or cs354 as appropriate.
+cs101, cs149, cs159, cs261, and/or cs354 as appropriate.
 
 This was developed on and for Linux Mint, but can be adapted to any Debian-based
 distribution with minimal changes. Adaptions for distributions that do not use
@@ -25,12 +25,13 @@ apt will require more extensive modifications.
 
 ### Common
 * Filezilla
-* JDK/JRE 8
+* JDK/JRE 8 & 10-11
 * SFTP connection to stu
 * Shortcuts to re-run tasks
 * Unzip
 * Vim
 * Vim-Gnome
+* VM management script
 * Wireless printing
 
 ### CS101
@@ -76,6 +77,11 @@ apt will require more extensive modifications.
     * gitg
     * mercurial
     * meld
+* y86 tools
+    * Assembler (`yas`)
+    * Reference solution (`y86ref`)
+    * Reference solution manual page (`y86ref(1)`)
+    * Simulator (`ysim`)
 
 ### CS354
 * Gazebo7
