@@ -15,3 +15,6 @@ deb {{ mirror }} {{ ubuntu_release }}-security main restricted universe multiver
 deb {{ mirror }} {{ ansible_distribution_release }} main upstream import backport
 
 {% endfor %}
+
+# Parter repository (necessary for optional media codecs)
+deb http://archive.canonical.com/ubuntu bionic partner
