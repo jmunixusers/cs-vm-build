@@ -8,7 +8,7 @@
     - fonts-crosextra-caladea
     - fonts-crosextra-carlito
     - geany
-    - idle
+    - idle-python3.6
     - libreoffice
     - libreoffice-templates
     - libreoffice-style-tango
@@ -48,5 +48,5 @@
   lineinfile: 
     dest: '{{ item.homedir }}/.config/mimeapps.list'
     regexp: '^text/x-python='
-    line: 'text/x-python=idle-python2.7.desktop;gedit.desktop;pluma.desktop'
+    line: 'text/x-python=idle-python3.6.desktop;gedit.desktop;pluma.desktop'
   with_items: "{{ real_users }}"
