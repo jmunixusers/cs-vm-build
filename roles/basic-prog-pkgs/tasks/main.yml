@@ -5,6 +5,7 @@
   with_items:
     - artha
     - bless
+    - chromium-browser
     - fonts-crosextra-caladea
     - fonts-crosextra-carlito
     - geany
@@ -14,7 +15,8 @@
     - libreoffice-style-tango
     - logisim
     - meld
-    - pinta
+    - sqlitebrowser
+    - thonny
     - wireshark
 - name: Copy idlerc prefs
   copy:
@@ -24,14 +26,6 @@
     group: '{{ item.gid }}'
     # Quotes are requred due to a bug in Ansible 2.1
     directory_mode: "0750"
-    mode: 0640
-  with_items: "{{ real_users }}"
-- name: Copy lab worksheet
-  copy:
-    src: Lab04-Worksheet.txt
-    dest: '{{ item.homedir }}'
-    owner: '{{ item.uid }}'
-    group: '{{ item.gid }}'
     mode: 0640
   with_items: "{{ real_users }}"
 - name: Copy mimeapps Idle pref
