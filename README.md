@@ -35,17 +35,19 @@ apt will require more extensive modifications.
 * Wireless printing
 
 ### CS101
-* Aptana
+* Eclipse
 * Finch robot
 * Mint packages (basic-prog-pkgs role)
   * artha
   * bless
+  * chromium-browser
   * geany
-  * idle
+  * idle-python3.6
   * libreoffice
   * logisim
   * meld
-  * pinta
+  * sqlitebrowser
+  * thonny
   * wireshark
 
 ### CS149

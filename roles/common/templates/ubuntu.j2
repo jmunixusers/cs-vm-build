@@ -8,3 +8,6 @@ deb {{ mirror }} {{ ubuntu_release }}-backports main restricted universe multive
 deb {{ mirror }} {{ ubuntu_release }}-security main restricted universe multiverse
 
 {% endfor %}
+
+# Parter repository (necessary for optional media codecs)
+deb http://archive.canonical.com/ubuntu bionic partner
