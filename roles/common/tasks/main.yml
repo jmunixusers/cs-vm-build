@@ -92,3 +92,14 @@
     create: no
   ignore_errors: yes
   with_items: "{{ real_users }}"
+# Remove this as soon as
+# https://bugs.launchpad.net/ubuntu/+source/openjdk-lts/+bug/1788250
+# is fixed.
+- name: Fix Java AWT applications
+  copy:
+    src: atk-fix.properties
+    dest: "/etc/java-11-openjdk/accessibility.properties"
+    mode: 0644
+    owner: root
+    group: root
+    force: yes
