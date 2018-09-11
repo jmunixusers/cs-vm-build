@@ -8,6 +8,8 @@ ros_repos:
 
 ros_packages:
     - ros-melodic-desktop-full
+    - ros-melodic-sound-play
+    - ros-melodic-ar-track-alvar
     - gazebo9
     - rviz
     - g++
