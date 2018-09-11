@@ -3,8 +3,8 @@
 
 # Keep UMD first to prefer downloads from there
 ros_repos:
-  - deb http://mirror.umd.edu/packages.ros.org/ros/ubuntu xenial main
-  - deb http://packages.ros.org/ros/ubuntu xenial main
+  - deb http://mirror.umd.edu/packages.ros.org/ros/ubuntu bionic main
+  - deb http://packages.ros.org/ros/ubuntu bionic main
 
 ros_packages:
     - ros-melodic-desktop-full
