@@ -7,8 +7,8 @@ ros_repos:
   - deb http://packages.ros.org/ros/ubuntu xenial main
 
 ros_packages:
-    - ros-kinetic-desktop-full
-    - gazebo7
+    - ros-melodic-desktop-full
+    - gazebo9
     - rviz
     - g++
 

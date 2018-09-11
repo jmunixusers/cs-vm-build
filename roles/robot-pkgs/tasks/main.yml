@@ -24,8 +24,8 @@
     dest: '{{ global_profile_path }}'
     marker: "## {mark} ROS profile entries ##"
     block: |
-      source /opt/ros/kinetic/setup.bash
-      export TURTLEBOT_3D_SENSOR=kinect
+      source /opt/ros/melodic/setup.bash
+      export TURTLEBOT_3D_SENSOR=melodic
   notify:
   - Suggest restart
 - name: Init rosdep if missing
@@ -45,7 +45,7 @@
     group: '{{ item.gid }}'
   with_items: "{{ real_users }}"
 - name: Init Catkin workspace
-  shell: source /opt/ros/kinetic/setup.bash && catkin_make
+  shell: source /opt/ros/melodic/setup.bash && catkin_make
   args:
     executable: /bin/bash
     chdir: '{{ item.homedir }}/catkin_ws/'
