@@ -1,9 +1,5 @@
 ---
 # tasks file for robot-pkgs
-- name: Install fonts-khmeros-core package
-  apt: name={{ item }} state=latest
-  with_items:
-    - fonts-khmeros-core
 - name: Add ROS key
   apt_key:
     keyserver: ha.pool.sks-keyservers.net
