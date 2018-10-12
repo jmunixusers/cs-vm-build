@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-   This tools creates a simple GUI for running ansible-pull with a
-   predetermined set of tags. It displays the output from the ansible-pull
-   command in a VTE within the GUI. It allows the user to override some things
-   in a configuration file (~/.config/vm_config). The branch to pull and the
-   URL to pull from can be changed in the program's Settings.
+This tools creates a simple GUI for running ansible-pull with a
+predetermined set of tags. It displays the output from the ansible-pull
+command in a VTE within the GUI. It allows the user to override some things
+in a configuration file (~/.config/vm_config). The branch to pull and the
+URL to pull from can be changed in the program's Settings.
 """
 
 import logging
@@ -41,7 +41,9 @@ VERSION = "Fall 2018"
 
 
 def main():
-    """Sets up logging and starts the GUI"""
+    """
+    Sets up logging and starts the GUI
+    """
 
     # Configure logging. Log to a file and create it if it doesn't exist. If
     # it cannot be opened, then fall back to logging on the console
