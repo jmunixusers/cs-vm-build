@@ -42,7 +42,6 @@ assert_mint() {
 # Performs the actual preparation of the machine
 #---
 main () {
-
     assert_mint
 
     user "Updating apt package cache"
@@ -59,6 +58,8 @@ main () {
     ansible-playbook -i hosts -c local -K -t oem oem.yml \
         || error "Playbook failed to complete successfully"
 
+    user "Preparing to fill disk with zeros to assist with compression"
+    read -n1 -r -p "Press any key to continue or ^C to exit" junk
     user "Filling disk with zeros to assist with compression"
     sudo dd if=/dev/zero of=/bigfile bs=1M; sudo sync; sudo rm /bigfile
 }
