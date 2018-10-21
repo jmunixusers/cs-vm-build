@@ -80,6 +80,7 @@ packages_to_remove:
     - pix*
     - rhythmbox*
     - simple-scan
+    - timeshift
     - thunderbird*
     - tomboy
     - transmission*
