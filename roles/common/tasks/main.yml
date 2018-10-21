@@ -58,6 +58,7 @@
     - libnotify-bin
     - openjdk-8-jdk
     - openjdk-8-source
+    - python-psutil
     - unzip    
     - vim
     - vim-gnome    
@@ -92,3 +93,11 @@
     create: no
   ignore_errors: yes
   with_items: "{{ real_users }}"
+- name: Remove Timeshift warning
+  dconf:
+      key: "/com/linuxmint/updates/warn-about-timeshift"
+      value: "false"
+      state: present
+  become: yes
+  become_user: "{{ item.user }}"
+  loop: "{{ real_users }}"
