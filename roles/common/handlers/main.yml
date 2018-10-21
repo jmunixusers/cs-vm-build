@@ -14,3 +14,9 @@
   become: yes
   become_user: "{{ item.user }}"
   with_items: "{{ real_users }}"
+- name: Restart update manager
+  shell:
+    nohup mintupdate-launcher
+  become: yes
+  become_user: "{{ item.user }}"
+  loop: "{{ real_users }}"
