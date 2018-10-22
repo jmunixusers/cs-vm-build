@@ -91,6 +91,28 @@ apt will require more extensive modifications.
 * Rosdep/catkin initialization
 * Rviz
 
+## CS361
+* Mint packages (adv-prog-pkgs role)
+  * Compilers and interpreters
+    * build-essential
+    * g++
+    * gcc
+    * gdb
+    * logisim
+    * valgrind
+  * Code editors
+    * astyle
+    * bvi
+    * check
+    * gedit
+    * indent
+    * nano
+  * Source control
+    * git
+    * gitg
+    * mercurial
+    * meld
+
 ## License
 
 This project is licensed under the MIT license. See LICENSE for more

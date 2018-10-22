@@ -1,6 +1,0 @@
----
-# Tasks file for C-build-dependencies
-- name: Install build-dependencies
-  apt:
-	  name: build-dependencies
-	  state: latest
