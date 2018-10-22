@@ -86,8 +86,8 @@ apt will require more extensive modifications.
     * Simulator (`ysim`)
 
 ### CS354
-* Gazebo7
-* ROS Kinetic
+* Gazebo9
+* ROS Melodic
 * Rosdep/catkin initialization
 * Rviz
 
