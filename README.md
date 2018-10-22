@@ -91,7 +91,7 @@ apt will require more extensive modifications.
 * Rosdep/catkin initialization
 * Rviz
 
-## CS361
+### CS361
 * Mint packages (adv-prog-pkgs role)
   * Compilers and interpreters
     * build-essential
