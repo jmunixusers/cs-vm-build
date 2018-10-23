@@ -8,5 +8,5 @@
     XDG_RUNTIME_DIR: "/run/user/{{ item.uid }}"
   become: yes
   become_user: "{{ item.user }}"
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
   ignore_errors: yes
