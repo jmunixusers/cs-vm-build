@@ -2,7 +2,7 @@
 # tasks file for adv-prog-pkgs
 - name: Install advanced language packages
   apt: name={{ item }} state=latest
-  with_items:
+  loop:
     - build-essential
     - g++
     - gcc
@@ -11,14 +11,14 @@
     - valgrind
 - name: Install source control packages
   apt: name={{ item }} state=latest
-  with_items:
+  loop:
     - git
     - gitg
     - mercurial
     - meld
 - name: Install code editor packages
   apt: name={{ item }} state=latest
-  with_items:
+  loop:
     - astyle
     - bvi
     - check
