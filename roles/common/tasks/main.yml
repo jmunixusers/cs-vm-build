@@ -34,6 +34,7 @@
 - name: Get users
   getent:
     database: passwd
+ # fix this after Ansible 2.6
 - name: Build real user list
   set_fact:
     real_users: >-
@@ -53,7 +54,7 @@
       upgrade: safe
 - name: Install required dependencies
   apt: name={{ item }} state=latest
-  with_items:
+  loop:
     - default-jdk
     - libnotify-bin
     - openjdk-8-jdk
@@ -79,7 +80,7 @@
     owner: "{{ item.uid }}"
     group: "{{ item.gid }}"
     state: directory
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 # dest becomes path in Ansible 2.3+
 - name: Add profile to user bashrc
   lineinfile:
@@ -92,7 +93,7 @@
     # we can ignore any errors
     create: no
   ignore_errors: yes
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Remove Timeshift warning
   dconf:
       key: "/com/linuxmint/updates/warn-about-timeshift"
