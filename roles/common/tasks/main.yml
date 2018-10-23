@@ -53,17 +53,8 @@
   apt:
       upgrade: safe
 - name: Install required dependencies
-  apt: name={{ item }} state=latest
-  loop:
-    - default-jdk
-    - libnotify-bin
-    - openjdk-8-jdk
-    - openjdk-8-source
-    - python-psutil
-    - unzip    
-    - vim
-    - vim-gnome    
-    - zenity
+  apt: name={{ common_dependencies }} state=latest
+ 
 - name: Touch VM profile
   copy:
     src: csvmprofile

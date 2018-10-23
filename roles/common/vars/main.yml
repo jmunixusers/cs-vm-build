@@ -10,3 +10,14 @@ ubuntu_mirrors:
 mint_mirrors:
   - "https://mirror.cs.jmu.edu/pub/linuxmint/packages"
   - "http://packages.linuxmint.com"
+
+common_dependencies:
+  - default-jdk
+  - libnotify-bin
+  - openjdk-8-jdk
+  - openjdk-8-source
+  - python-psutil
+  - unzip    
+  - vim
+  - vim-gnome    
+  - zenity
