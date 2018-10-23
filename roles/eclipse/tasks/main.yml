@@ -2,7 +2,7 @@
 # tasks file for eclipse
 - name: Remove Mint Eclipse
   apt: name={{ item }} state=absent
-  with_items:
+  loop:
     - eclipse-jdt
     - eclipse-platform
     - eclipse-platform-data
