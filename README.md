@@ -58,7 +58,7 @@ apt will require more extensive modifications.
 ### CS159
 * Eclipse
 
-### CS261
+### CS261 / CS361
 * Mint packages (adv-prog-pkgs role)
   * Compilers and interpreters
     * build-essential
@@ -90,28 +90,6 @@ apt will require more extensive modifications.
 * ROS Kinetic
 * Rosdep/catkin initialization
 * Rviz
-
-### CS361
-* Mint packages (adv-prog-pkgs role)
-  * Compilers and interpreters
-    * build-essential
-    * g++
-    * gcc
-    * gdb
-    * logisim
-    * valgrind
-  * Code editors
-    * astyle
-    * bvi
-    * check
-    * gedit
-    * indent
-    * nano
-  * Source control
-    * git
-    * gitg
-    * mercurial
-    * meld
 
 ## License
 
