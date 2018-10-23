@@ -2,7 +2,7 @@
 # tasks file for wireless-printing
 - name: Install printer packages
   apt: name={{ item }} state=latest
-  with_items:
+  loop:
     - cups
     - cups-client
 # The service must be running for lpadmin commands to work
