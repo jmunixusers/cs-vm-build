@@ -1,2 +1,23 @@
 ---
 # vars file for adv-prog-pkgs
+adv_prog_pkgs_adv_lang:
+  - build-essential
+  - g++
+  - gcc
+  - gdb
+  - logisim
+  - valgrind
+
+adv_prog_pkgs_souce_control:
+  - git
+  - gitg
+  - mercurial
+  - meld
+
+adv_prog_pkgs_code_editor:
+  - astyle
+  - bvi
+  - check
+  - gedit
+  - indent
+  - nano
