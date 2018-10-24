@@ -16,8 +16,7 @@
   apt:
     update_cache: yes
 - name: Install robot development packages
-  apt: name={{ item }} state=latest
-  loop: "{{ ros_packages }}"
+  apt: name={{ ros_packages }} state=latest
 # Dest becomes path in Ansible 2.3+
 - name: Create ROS profile entries
   blockinfile:
