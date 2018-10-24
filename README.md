@@ -85,6 +85,12 @@ apt will require more extensive modifications.
     * Reference solution manual page (`y86ref(1)`)
     * Simulator (`ysim`)
 
+### CS354
+* Gazebo9
+* ROS Melodic
+* Rosdep/catkin initialization
+* Rviz
+
 ### CS361
 * Mint packages (adv-prog-pkgs role)
   * Compilers and interpreters
@@ -106,12 +112,6 @@ apt will require more extensive modifications.
     * gitg
     * mercurial
     * meld
-
-### CS354
-* Gazebo9
-* ROS Melodic
-* Rosdep/catkin initialization
-* Rviz
 
 ## License
 
