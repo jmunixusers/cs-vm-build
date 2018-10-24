@@ -85,6 +85,28 @@ apt will require more extensive modifications.
     * Reference solution manual page (`y86ref(1)`)
     * Simulator (`ysim`)
 
+### CS261
+* Mint packages (adv-prog-pkgs role)
+  * Compilers and interpreters
+    * build-essential
+    * g++
+    * gcc
+    * gdb
+    * logisim
+    * valgrind
+  * Code editors
+    * astyle
+    * bvi
+    * check
+    * gedit
+    * indent
+    * nano
+  * Source control
+    * git
+    * gitg
+    * mercurial
+    * meld
+
 ### CS354
 * Gazebo9
 * ROS Melodic
