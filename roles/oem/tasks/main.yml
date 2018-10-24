@@ -21,9 +21,8 @@
       upgrade: safe
 - name: Install dependencies
   apt:
-      name: "{{ item }}"
+      name: "{{ packages_to_install }}"
       state: latest
-  loop: '{{ packages_to_install }}'
 - name: Clean the apt database
   command: apt-get clean
   # This will always report as changed otherwise
