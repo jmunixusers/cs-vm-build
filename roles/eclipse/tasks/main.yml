@@ -11,6 +11,8 @@
       get_url:
         url: '{{ eclipse.url }}'
         dest: '{{ eclipse.zip }}'
+        timeout: 30
+        retries: 10
         force: yes
     - name: Remove old Eclipse directory
       file:
