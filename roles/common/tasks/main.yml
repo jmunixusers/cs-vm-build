@@ -34,7 +34,7 @@
 - name: Get users
   getent:
     database: passwd
- # fix this after Ansible 2.6
+ # fix this after Ansible 2.6, use loop: "{{ getent_passwd|dict2items }}"
 - name: Build real user list
   set_fact:
     real_users: >-
