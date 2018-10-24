@@ -35,14 +35,14 @@
   command: rosdep update
   become: yes
   become_user: "{{ item.user }}"
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Create Catkin workspace directory
   file:
     path: '{{ item.homedir }}/catkin_ws/src/'
     state: directory
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Init Catkin workspace
   shell: source /opt/ros/{{ros_release}}/setup.bash && catkin_make
   args:
@@ -50,7 +50,7 @@
     chdir: '{{ item.homedir }}/catkin_ws/'
   become: yes
   become_user: "{{ item.user }}"
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Copy documentation to desktop
   copy:
       src: usb-controllers.desktop
@@ -58,7 +58,7 @@
       owner: "{{ item.uid }}"
       group: "{{ item.gid }}"
       mode: 0644
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Check for missing USB 2/3 controllers
   shell: lspci | grep -i -e EHCI -e xHCI
   register: lspci_output
