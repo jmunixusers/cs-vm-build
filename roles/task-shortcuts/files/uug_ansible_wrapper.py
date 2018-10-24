@@ -28,7 +28,7 @@ from gi.repository import GdkPixbuf   # noqa
 # checkbox
 # Map of course names to the Ansible tags
 COURSES = {'CS 101': 'cs101', 'CS 149': 'cs149', 'CS 159': 'cs159',
-           'CS 261': 'cs261', 'CS 361': 'cs361',  'CS 354': 'cs354'}
+           'CS 261': 'cs261', 'CS 354': 'cs354', 'CS 361': 'cs361'}
 USER_CONFIG_PATH = os.path.join(os.environ['HOME'], ".config", "vm_config")
 USER_CONFIG = {'git_branch': None,
                'git_url': "https://github.com/jmunixusers/cs-vm-build",
