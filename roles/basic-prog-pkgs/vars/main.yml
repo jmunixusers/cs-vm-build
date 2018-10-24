@@ -1,7 +1,7 @@
 ---
 # vars file for basic-prog-pkgs
 basic_prog_pkgs_intro_development:
- -artha
+ - artha
  - bless
  - chromium-browser
  - fonts-crosextra-caladea
