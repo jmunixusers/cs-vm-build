@@ -4,7 +4,7 @@
   apt: name={{ adv_prog_pkgs_adv_lang }} state=latest
 
 - name: Install source control packages
-  apt: name={{   adv_prog_pkgs_souce_control }} state=latest
+  apt: name={{ adv_prog_pkgs_souce_control }} state=latest
 
 - name: Install code editor packages
   apt: name={{ adv_prog_pkgs_code_editor }} state=latest
