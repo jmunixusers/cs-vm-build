@@ -85,7 +85,7 @@ apt will require more extensive modifications.
     * Reference solution manual page (`y86ref(1)`)
     * Simulator (`ysim`)
 
-### CS261
+### CS361
 * Mint packages (adv-prog-pkgs role)
   * Compilers and interpreters
     * build-essential
