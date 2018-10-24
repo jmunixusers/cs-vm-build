@@ -1,2 +1,18 @@
 ---
 # vars file for basic-prog-pkgs
+basic_prog_pkgs_intro_development:
+ - artha
+ - bless
+ - chromium-browser
+ - fonts-crosextra-caladea
+ - fonts-crosextra-carlito
+ - geany
+ - idle-python3.6
+ - libreoffice
+ - libreoffice-templates
+ - libreoffice-style-tango
+ - logisim
+ - meld
+ - sqlitebrowser
+ - thonny
+ - wireshark

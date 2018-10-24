@@ -34,6 +34,7 @@
 - name: Get users
   getent:
     database: passwd
+ # fix this after Ansible 2.6, use loop: "{{ getent_passwd|dict2items }}"
 - name: Build real user list
   set_fact:
     real_users: >-
@@ -52,17 +53,8 @@
   apt:
       upgrade: safe
 - name: Install required dependencies
-  apt: name={{ item }} state=latest
-  with_items:
-    - default-jdk
-    - libnotify-bin
-    - openjdk-8-jdk
-    - openjdk-8-source
-    - python-psutil
-    - unzip    
-    - vim
-    - vim-gnome    
-    - zenity
+  apt: name={{ common_dependencies }} state=latest
+ 
 - name: Touch VM profile
   copy:
     src: csvmprofile
@@ -79,7 +71,7 @@
     owner: "{{ item.uid }}"
     group: "{{ item.gid }}"
     state: directory
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 # dest becomes path in Ansible 2.3+
 - name: Add profile to user bashrc
   lineinfile:
@@ -92,7 +84,7 @@
     # we can ignore any errors
     create: no
   ignore_errors: yes
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Remove Timeshift warning
   dconf:
       key: "/com/linuxmint/updates/warn-about-timeshift"

@@ -12,7 +12,7 @@
       owner: '{{ item.uid }}'
       group: '{{ item.gid }}'
       mode: 0750
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Copy template default Filezilla configuration
   template:
       src: fzdefaults.xml.j2
@@ -20,7 +20,7 @@
       owner: '{{ item.uid }}'
       group: '{{ item.gid }}'
       mode: 0640
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Attempt to copy Filezilla filters
   copy:
       src: filters.xml
@@ -30,5 +30,5 @@
       mode: 0640
       # Don't overwrite any filters the user already has
       force: no
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 

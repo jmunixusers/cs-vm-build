@@ -1,27 +1,10 @@
 ---
 # tasks file for adv-prog-pkgs
 - name: Install advanced language packages
-  apt: name={{ item }} state=latest
-  with_items:
-    - build-essential
-    - g++
-    - gcc
-    - gdb
-    - logisim
-    - valgrind
+  apt: name={{ adv_prog_pkgs_adv_lang }} state=latest
+
 - name: Install source control packages
-  apt: name={{ item }} state=latest
-  with_items:
-    - git
-    - gitg
-    - mercurial
-    - meld
+  apt: name={{ adv_prog_pkgs_souce_control }} state=latest
+
 - name: Install code editor packages
-  apt: name={{ item }} state=latest
-  with_items:
-    - astyle
-    - bvi
-    - check
-    - gedit
-    - indent
-    - nano
+  apt: name={{ adv_prog_pkgs_code_editor }} state=latest

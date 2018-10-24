@@ -1,23 +1,8 @@
 ---
 # tasks file for basic-prog-pkgs
 - name: Install introductory development packages
-  apt: name={{ item }} state=latest
-  with_items:
-    - artha
-    - bless
-    - chromium-browser
-    - fonts-crosextra-caladea
-    - fonts-crosextra-carlito
-    - geany
-    - idle-python3.6
-    - libreoffice
-    - libreoffice-templates
-    - libreoffice-style-tango
-    - logisim
-    - meld
-    - sqlitebrowser
-    - thonny
-    - wireshark
+  apt: name={{ basic_prog_pkgs_intro_development }} state=latest
+
 - name: Copy idlerc prefs
   copy:
     src: .idlerc
@@ -27,7 +12,7 @@
     # Quotes are requred due to a bug in Ansible 2.1
     directory_mode: "0750"
     mode: 0640
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 - name: Copy mimeapps Idle pref
   copy:
     src: mimeapps.list
@@ -36,11 +21,11 @@
     group: '{{ item.gid }}'
     mode: 0640
     force: no
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"
 # Dest becomes path in Ansible 2.3+
 - name: Set Idle pref in existing mimeapps
   lineinfile: 
     dest: '{{ item.homedir }}/.config/mimeapps.list'
     regexp: '^text/x-python='
     line: 'text/x-python=idle-python3.6.desktop;gedit.desktop;pluma.desktop'
-  with_items: "{{ real_users }}"
+  loop: "{{ real_users }}"

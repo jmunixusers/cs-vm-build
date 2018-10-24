@@ -1,12 +1,7 @@
 ---
 # tasks file for eclipse
 - name: Remove Mint Eclipse
-  apt: name={{ item }} state=absent
-  with_items:
-    - eclipse-jdt
-    - eclipse-platform
-    - eclipse-platform-data
-    - eclipse-rcp
+  apt: name={{ eclipse_remove_mint }} state=absent
 - name: Check Eclipse
   stat:
     path: '{{ eclipse.zip }}'

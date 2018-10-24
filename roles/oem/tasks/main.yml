@@ -8,8 +8,7 @@
   apt:
       update_cache: yes
 - name: Remove unneeded stock packages
-  apt: name={{ item }} state=absent purge=yes
-  with_items: '{{ packages_to_remove }}'
+  apt: name={{ packages_to_remove }} state=absent purge=yes
 - name: Remove unused dependencies
   apt:
       # A name must be specified in Ansible 2.1.1.0 or you get a cryptic error
@@ -22,9 +21,8 @@
       upgrade: safe
 - name: Install dependencies
   apt:
-      name: "{{ item }}"
+      name: "{{ packages_to_install }}"
       state: latest
-  with_items: '{{ packages_to_install }}'
 - name: Clean the apt database
   command: apt-get clean
   # This will always report as changed otherwise

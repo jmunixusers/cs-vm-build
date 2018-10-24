@@ -7,3 +7,9 @@ eclipse:
   hash: '433998aeaab2b9fb13a092e2edf87166e7d404f5'
   zip: '{{ global_base_path }}/eclipse.tar.gz'
   install_path: '{{ global_base_path }}/eclipse'
+
+eclipse_remove_mint:
+  - eclipse-jdt
+  - eclipse-platform
+  - eclipse-platform-data
+  - eclipse-rcp
