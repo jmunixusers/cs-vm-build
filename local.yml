@@ -3,7 +3,8 @@
   hosts: all
   become: true
   roles:
-    - { role: common, tags: always }
+    - { role: common, tags: always, icon_mode: user }
+    - { role: user, tags: always }
     - { role: wireless-printing, tags: always }
     - { role: filezilla, tags: always }
     - { role: basic-prog-pkgs, tags: ["cs101"] }
@@ -13,5 +14,4 @@
     - { role: jgrasp, tags: ["cs149"] }
     - { role: drjava, tags: ["cs149"] }
     - { role: finch, tags: ["cs101"] }
-    - { role: task-shortcuts, tags: always, icon_mode: user }
     - { role: y86, tags: ["cs261"] }

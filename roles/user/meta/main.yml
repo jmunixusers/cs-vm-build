@@ -1,6 +1,6 @@
 galaxy_info:
   author: Unix Users Group
-  description: Installs the shortcuts to easily re-run the VM tasks
+  description: Performs the basic configuration for the JMU CS Virtual Machine
   company: James Madison University
   license: MIT
   min_ansible_version: 2.1
@@ -12,6 +12,6 @@ galaxy_info:
     #
     # NOTE: A tag is limited to a single word comprised of alphanumeric characters.
     #       Maximum 20 tags per role.
-#TODO Add common as a dependency
+#TODO Add user as a dependency
 dependencies: []
 

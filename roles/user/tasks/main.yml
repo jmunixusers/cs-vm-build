@@ -1,0 +1,96 @@
+---
+# tasks file for user
+- name: Create opt directory
+  file:
+    path: /opt/
+    state: directory
+- name: Create local applications directory
+  file:
+    path: /usr/local/share/applications/
+    state: directory
+- name: Check Ubuntu release
+  set_fact:
+    ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
+- name: Set Ubuntu mirrors
+  template:
+    src: ubuntu.j2
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0664
+  when: ansible_distribution == "Ubuntu"
+- name: Set Linux Mint mirrors
+  template:
+    src: mint.j2
+    dest: /etc/apt/sources.list.d/official-package-repositories.list
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == "Linuxmint" or ansible_distribution == "Linux Mint"
+- name: Refresh apt cache
+  apt:
+    update_cache: yes
+  changed_when: False
+- name: Get users
+  getent:
+    database: passwd
+ # fix this after Ansible 2.6, use loop: "{{ getent_passwd|dict2items }}"
+- name: Build real user list
+  set_fact:
+    real_users: >-
+      {{ real_users|default([]) +
+      [ {'user': item.key, 'homedir': item.value.4,
+      'uid': item.value.1 | int, 'gid': item.value.2 } ] }}
+  with_dict: "{{ getent_passwd }}"
+  when:
+    # Ideally, this would pull from useradd.conf to get the lower bound for
+    # regular user UIDs; however, 1000 is relatively universal
+    - item.value.1 | int >= 1000
+    - item.value.4 is match ("^/home/")
+    - item.value.5 != "/bin/false"
+    - item.value.5 != "/usr/sbin/nologin"
+- name: Upgrade installed software
+  apt:
+      upgrade: safe
+- name: Install required dependencies
+  apt: name={{ user_dependencies }} state=latest
+ 
+- name: Touch VM profile
+  copy:
+    src: csvmprofile
+    dest: '{{ global_profile_path }}'
+    mode: 0644
+    owner: root
+    group: root
+    # prevent overwriting
+    force: no
+- name: Ensure user home directory exists
+  file:
+    path: "{{ item.homedir }}"
+    mode: 0755
+    owner: "{{ item.uid }}"
+    group: "{{ item.gid }}"
+    state: directory
+  loop: "{{ real_users }}"
+# dest becomes path in Ansible 2.3+
+- name: Add profile to user bashrc
+  lineinfile:
+    dest: '{{ item.homedir }}/.bashrc'
+    line: "source {{ global_profile_path }}"
+    state: present
+    insertafter: EOF
+    # We don't want to break things by having a very basic .bashrc that just
+    # sources our profile. We won't create the file if it doesn't exist and
+    # we can ignore any errors
+    create: no
+  ignore_errors: yes
+  loop: "{{ real_users }}"
+- name: Remove Timeshift warning
+  dconf:
+      key: "/com/linuxmint/updates/warn-about-timeshift"
+      value: "false"
+      state: present
+  become: yes
+  become_user: "{{ item.user }}"
+  loop: "{{ real_users }}"
+  notify: Restart update manager

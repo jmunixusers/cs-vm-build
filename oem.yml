@@ -4,4 +4,4 @@
   become: true
   roles:
     - { role: oem, tags: ["oem"] }
-    - { role: task-shortcuts, tags: ["oem"], icon_mode: oem }
+    - { role: common, tags: ["oem"], icon_mode: oem }

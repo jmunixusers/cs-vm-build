@@ -1,6 +1,6 @@
 galaxy_info:
   author: Unix Users Group
-  description: Performs the basic configuration for the JMU CS Virtual Machine
+  description: Installs the shortcuts to easily re-run the VM tasks
   company: James Madison University
   license: MIT
   min_ansible_version: 2.1
