@@ -18,26 +18,34 @@ import json
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')
-from gi.repository import Gtk, Vte # noqa
-from gi.repository import GLib     # noqa
-from gi.repository import GdkPixbuf   # noqa
+from gi.repository import Gtk, Vte
+from gi.repository import GLib
+from gi.repository import GdkPixbuf
 
 # If no tags are passed to ansible-pull, all of them will be run and I am
 # uncertain of the outcome of passing -t with no tags. To avoid this, always
 # ensure that common is run by adding it to this list and disabling the
 # checkbox
 # Map of course names to the Ansible tags
-COURSES = {'CS 101': 'cs101', 'CS 149': 'cs149', 'CS 159': 'cs159',
-           'CS 261': 'cs261', 'CS 354': 'cs354', 'CS 361': 'cs361'}
+COURSES = {
+    'CS 101': 'cs101',
+    'CS 149': 'cs149',
+    'CS 159': 'cs159',
+    'CS 261': 'cs261',
+    'CS 354': 'cs354',
+    'CS 361': 'cs361',
+}
 USER_CONFIG_PATH = os.path.join(os.environ['HOME'], ".config", "vm_config")
-USER_CONFIG = {'git_branch': None,
-               'git_url': "https://github.com/jmunixusers/cs-vm-build",
-               # All roles the user has ever chosen
-               'roles_all_time': ["common"],
-               # Roles to be used for this particular run
-               'roles_this_run': ["common"]}
+USER_CONFIG = {
+    'git_branch': None,
+    'git_url': "https://github.com/jmunixusers/cs-vm-build",
+    # All roles the user has ever chosen
+    'roles_all_time': ["common"],
+    # Roles to be used for this particular run
+    'roles_this_run': ["common"],
+}
 NAME = "JMU CS VM Configuration"
-VERSION = "Fall 2018"
+VERSION = "Spring 2019"
 
 
 def main():
@@ -47,19 +55,25 @@ def main():
 
     # Configure logging. Log to a file and create it if it doesn't exist. If
     # it cannot be opened, then fall back to logging on the console
-    user_log_file = os.path.join(os.environ['HOME'], ".cache",
-                                 "uug_ansible_wrapper.log")
+    user_log_file = os.path.join(
+        os.environ['HOME'], ".cache", "uug_ansible_wrapper.log"
+    )
     try:
-        logging.basicConfig(format="%(asctime)s - %(levelname)s: %(message)s",
-                            datefmt="%Y-%m-%d-%H-%M",
-                            filename=user_log_file,
-                            filemode="w+",
-                            level=logging.INFO)
+        logging.basicConfig(
+            format="%(asctime)s - %(levelname)s: %(message)s",
+            datefmt="%Y-%m-%d-%H-%M",
+            filename=user_log_file,
+            filemode="w+",
+            level=logging.INFO
+        )
     except OSError:
-        logging.basicConfig(format="%(levelname)s: %(message)s",
-                            level=logging.INFO)
-        logging.error("Unable to open log file at %s. Logging on console"
-                      " instead", user_log_file)
+        logging.basicConfig(
+            format="%(levelname)s: %(message)s", level=logging.INFO
+        )
+        logging.error(
+            "Unable to open log file at %s. Logging on console"
+            " instead", user_log_file
+        )
 
     # The default value for the branch is the current distro release name.
     # Set this before parsing the configuration. If it can't be detected,
@@ -73,7 +87,6 @@ def main():
     # potentially bad things from happening
     if "common" not in USER_CONFIG['roles_this_run']:
         USER_CONFIG['roles_this_run'].append("common")
-
 
     # If a branch still isn't set, offer "master"
     if not USER_CONFIG['git_branch']:
@@ -112,8 +125,10 @@ class AnsibleWrapperWindow(Gtk.Window):
         contents = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         contents.set_border_width(10)
 
-        label = Gtk.Label("Select the course configurations to add/update"
-                          " (at this time courses cannot be removed).")
+        label = Gtk.Label(
+            "Select the course configurations to add/update"
+            "(at this time courses cannot be removed)."
+        )
         label.set_alignment(0.0, 0.0)
 
         contents.pack_start(label, False, False, 0)
@@ -219,8 +234,9 @@ class AnsibleWrapperWindow(Gtk.Window):
         Displays a dialog for changing the program's settings.
         """
 
-        dialog = Gtk.Dialog(title="Settings", parent=self,
-                            flags=Gtk.DialogFlags.MODAL)
+        dialog = Gtk.Dialog(
+            title="Settings", parent=self, flags=Gtk.DialogFlags.MODAL
+        )
         grid = Gtk.Grid()
         branch_label = Gtk.Label("Branch:")
         branch_label.set_justify(Gtk.Justification.RIGHT)
@@ -238,10 +254,12 @@ class AnsibleWrapperWindow(Gtk.Window):
         url_field.set_width_chars(40)
 
         grid.add(branch_label)
-        grid.attach_next_to(branch_field, branch_label, Gtk.PositionType.RIGHT,
-                            1, 1)
-        grid.attach_next_to(url_label, branch_label, Gtk.PositionType.BOTTOM,
-                            1, 1)
+        grid.attach_next_to(
+            branch_field, branch_label, Gtk.PositionType.RIGHT, 1, 1
+        )
+        grid.attach_next_to(
+            url_label, branch_label, Gtk.PositionType.BOTTOM, 1, 1
+        )
         grid.attach_next_to(url_field, url_label, Gtk.PositionType.RIGHT, 1, 1)
         dialog.get_content_area().pack_end(grid, False, False, 0)
         dialog.add_button(Gtk.STOCK_OK, Gtk.ResponseType.OK)
@@ -267,18 +285,20 @@ class AnsibleWrapperWindow(Gtk.Window):
         about_dialog = Gtk.AboutDialog()
         try:
             about_dialog.set_logo(
-                    GdkPixbuf.Pixbuf.new_from_file_at_size("/opt/jmu-tux.svg",
-                                                           96, 96))
+                GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    "/opt/jmu-tux.svg", 96, 96
+                )
+            )
         except Exception as err:
             logging.error("Error", exc_info=err)
         about_dialog.set_transient_for(self)
         about_dialog.set_program_name(NAME)
-        about_dialog.set_copyright("Copyright \xa9 2018 JMU Unix Users"
-                                   " Group")
-        about_dialog.set_comments("A tool for configuring virtual machines"
-                                  " for use in the JMU Department of Computer"
-                                  " Science, maintained by the Unix Users"
-                                  " Group")
+        about_dialog.set_copyright("Copyright \xa9 2018 JMU Unix Users Group")
+        about_dialog.set_comments(
+            "A tool for configuring virtual machines for use in the "
+            "JMU Department of Computer Science, "
+            "maintained by the Unix Users Group"
+        )
         about_dialog.set_authors(["JMU Unix Users Group"])
         about_dialog.set_website("https://github.com/jmunixusers/cs-vm-build")
         about_dialog.set_website_label("Project GitHub page")
@@ -298,10 +318,14 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.cancel_button.set_sensitive(True)
         self.run_button.set_sensitive(True)
         if exit_status == 0:
-            success_msg = "Your machine has been configured for: %s" \
-                          % (",".join(USER_CONFIG['roles_this_run']))
-            show_dialog(self, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
-                        "Complete", success_msg)
+            success_msg = (
+                "Your machine has been configured for: %s" %
+                (",".join(USER_CONFIG['roles_this_run']))
+            )
+            show_dialog(
+                self, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Complete",
+                success_msg
+            )
             logging.info("ansible-pull succeeded")
         # 126 should be the exit code if the pkexec dialog is dismissed and
         # 127 is the exit code if authentication fails. All other exit codes
@@ -315,25 +339,32 @@ class AnsibleWrapperWindow(Gtk.Window):
         elif exit_status == 126 or exit_status == 32256:
             pkexec_err_msg = "Unable to authenticate due to the dialog being"\
                              " closed. Please try again."
-            show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
-                        "Unable to authenticate", pkexec_err_msg)
+            show_dialog(
+                self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
+                "Unable to authenticate", pkexec_err_msg
+            )
             logging.warning("User dismissed authentication dialog")
         elif exit_status == 127 or exit_status == 32512:
             pkexec_err_msg = "Unable to authenticate due to an incorrect" \
                              " password or insufficient permissions." \
                              " Plese try again."
-            show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
-                        "Unable to authenticate", pkexec_err_msg)
+            show_dialog(
+                self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
+                "Unable to authenticate", pkexec_err_msg
+            )
             logging.error("Unable to authenticate user")
         else:
-            ansible_err_msg = "There was an error while running the" \
-                              " configuration tasks. Please try again." \
-                              "\nIf this issue continues to occur, copy" \
-                              " /opt/vmtools/logs/last_run.log and" \
-                              " <a href='%s'>create an issue</a>" \
-                              % (USER_CONFIG['git_url'])
-            show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
-                        "Error", ansible_err_msg)
+            ansible_err_msg = (
+                "There was an error while running the configuration tasks. "
+                "Please try again."
+                "\nIf this issue continues to occur, copy"
+                " /opt/vmtools/logs/last_run.log and"
+                " <a href='%s'>create an issue</a>" % (USER_CONFIG['git_url'])
+            )
+            show_dialog(
+                self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, "Error",
+                ansible_err_msg
+            )
             logging.error("ansible-pull failed")
 
     def on_run_clicked(self, _):
@@ -343,12 +374,15 @@ class AnsibleWrapperWindow(Gtk.Window):
         """
 
         if not is_online():
-            no_internet_msg = ("It appears that you are not able to access"
-                               " the Internet. This tool requires that you"
-                               " be online. Please check your settings and try"
-                               " again.")
-            show_dialog(self, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
-                        "No Internet connection", no_internet_msg)
+            no_internet_msg = (
+                "It appears that you are not able to access the Internet. "
+                "This tool requires that you be online. "
+                "Please check your settings and try again."
+            )
+            show_dialog(
+                self, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
+                "No Internet connection", no_internet_msg
+            )
             return
 
         if not validate_branch():
@@ -363,21 +397,31 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         write_user_config()
 
-        logging.info("Running ansible-pull with flags: %s", ","
-                     .join(USER_CONFIG['roles_this_run']))
+        logging.info(
+            "Running ansible-pull with flags: %s",
+            ",".join(USER_CONFIG['roles_this_run'])
+        )
 
         # spawn_sync will not perform a path lookup; however, pkexec will
-        cmd_args = ['/usr/bin/pkexec', 'ansible-pull',
-                    '--url', USER_CONFIG['git_url'],
-                    '--checkout', USER_CONFIG['git_branch'],
-                    '--purge', '--inventory', 'hosts',
-                    '--tags', ",".join(USER_CONFIG['roles_this_run'])]
+        cmd_args = [
+            '/usr/bin/pkexec',
+            'ansible-pull',
+            '--url',
+            USER_CONFIG['git_url'],
+            '--checkout',
+            USER_CONFIG['git_branch'],
+            '--purge',
+            '--inventory',
+            'hosts',
+            '--tags',
+            ",".join(USER_CONFIG['roles_this_run']),
+        ]
 
         try:
-            self.terminal.spawn_sync(Vte.PtyFlags.DEFAULT,
-                                     os.environ['HOME'], cmd_args, [],
-                                     GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                                     None, None)
+            self.terminal.spawn_sync(
+                Vte.PtyFlags.DEFAULT, os.environ['HOME'], cmd_args, [],
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None
+            )
         except GLib.Error as error:
             logging.error("Unable to run ansible command.", exc_info=error)
             self.sub_command_exited(None, 1)
@@ -460,11 +504,11 @@ def parse_json_config(path, config):
         with open(path, "r") as config_file:
             config.update(json.load(config_file))
     except FileNotFoundError as fne:
-        logging.info("User configuration file not present. Ignoring.",
-                     exc_info=fne)
+        logging.info(
+            "User configuration file not present. Ignoring.", exc_info=fne
+        )
     except json.decoder.JSONDecodeError as jde:
-        logging.info("User configuration is invalid. Ignoring.",
-                     exc_info=jde)
+        logging.info("User configuration is invalid. Ignoring.", exc_info=jde)
 
 
 def write_json_config(path, config):
@@ -523,8 +567,10 @@ def get_distro_release_name():
     if 'VERSION_CODENAME' in os_release_config:
         release = os_release_config['VERSION_CODENAME']
     else:
-        logging.debug("VERSION_CODENAME is not in /etc/os_release."
-                      "Full file contents: %s", os_release_config)
+        logging.debug(
+            "VERSION_CODENAME is not in /etc/os_release. "
+            "Full file contents: %s", os_release_config
+        )
 
     if release.lstrip() == "" or release is None:
         logging.warning("No valid release was detected")
@@ -541,9 +587,10 @@ def validate_branch():
     :returns: Whether the chosen branch exists on the git remote
     """
 
-    output = subprocess.run(["/usr/bin/git", "ls-remote",
-                             USER_CONFIG['git_url']],
-                            stdout=subprocess.PIPE)
+    output = subprocess.run(
+        ["/usr/bin/git", "ls-remote", USER_CONFIG['git_url']],
+        stdout=subprocess.PIPE
+    )
 
     ls_remote_output = output.stdout.decode("utf-8")
 
@@ -557,16 +604,21 @@ def invalid_branch(parent):
     :param parent: The parent GTK window for the error dialog
     """
 
-    bad_branch_msg = "The release chosen does not exist at the project URL." \
-                     " Please check the settings listed below and try again." \
-                     "\nRelease: %(0)s\nURL: %(1)s\nIf you're using a current"\
-                     " release of Linux Mint, you may submit"\
-                     " <a href='%(1)s'>an issue</a> requesting support for" \
-                     " the release listed above" \
-                     % {'0': USER_CONFIG['git_branch'],
-                        '1': USER_CONFIG['git_url']}
-    show_dialog(parent, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
-                "Invalid Release", bad_branch_msg)
+    bad_branch_msg = (
+        "The release chosen does not exist at the project URL."
+        " Please check the settings listed below and try again."
+        "\nRelease: %(0)s\nURL: %(1)s\nIf you're using a current"
+        " release of Linux Mint, you may submit"
+        " <a href='%(1)s'>an issue</a> requesting support for"
+        " the release listed above" % {
+            '0': USER_CONFIG['git_branch'],
+            '1': USER_CONFIG['git_url']
+        }
+    )
+    show_dialog(
+        parent, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
+        "Invalid Release", bad_branch_msg
+    )
     return
 
 
@@ -578,11 +630,14 @@ def unable_to_detect_branch():
     """
 
     logging.info("Branch could not be detected. Offering master")
-    master_prompt = "The version of your OS could not be determined." \
-                    " Would you like to use the master branch?" \
-                    " This can be very dangerous."
-    response = show_dialog(None, Gtk.MessageType.ERROR, Gtk.ButtonsType.YES_NO,
-                           "OS detection error", master_prompt)
+    master_prompt = (
+        "The version of your OS could not be determined."
+        " Would you like to use the master branch? This can be very dangerous."
+    )
+    response = show_dialog(
+        None, Gtk.MessageType.ERROR, Gtk.ButtonsType.YES_NO,
+        "OS detection error", master_prompt
+    )
 
     if response != Gtk.ResponseType.YES:
         logging.info("The user chose not to use master")
@@ -624,8 +679,9 @@ def write_user_config():
     # Since there could now be duplicates in roles_all_time, remove them
     USER_CONFIG['roles_all_time'] = list(set(USER_CONFIG['roles_all_time']))
 
-    logging.info("Writing user configuration %s to %s", USER_CONFIG,
-                 USER_CONFIG_PATH)
+    logging.info(
+        "Writing user configuration %s to %s", USER_CONFIG, USER_CONFIG_PATH
+    )
 
     write_json_config(USER_CONFIG_PATH, USER_CONFIG)
 
