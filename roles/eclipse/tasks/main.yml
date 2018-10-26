@@ -13,15 +13,15 @@
         dest: '{{ eclipse.zip }}'
         timeout: 30
         force: yes
-		register: eclout
-		ignore_errors: true
-	- name: Fetch Eclipse bundle from backup server
-	  get_url:
-		url: '{{ eclipse.urlbck }}'
-		dest: '{{ eclipse.zip }}'
-		timeout: 30
-		force: yes
-		when: "'FAILED' in eclout.stderr"
+        register: eclout
+        ignore_errors: true
+    - name: Fetch Eclipse bundle from backup server
+      get_url:
+        url: '{{ eclipse.urlbck }}'
+        dest: '{{ eclipse.zip }}'
+        timeout: 30
+        force: yes
+        when: "'FAILED' in eclout.stderr"
     - name: Remove old Eclipse directory
       file:
         path: '{{ eclipse.install_path }}'
