@@ -21,7 +21,7 @@
         dest: '{{ eclipse.zip }}'
         timeout: 30
         force: yes
-      when: "'FAILED' in eclout.stderr"
+      when: eclout.failed
     - name: Remove old Eclipse directory
       file:
         path: '{{ eclipse.install_path }}'
