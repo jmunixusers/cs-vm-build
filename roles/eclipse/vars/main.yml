@@ -4,7 +4,7 @@ eclipse:
   # Ensure the URL does not specify a mirror and that &r=1 is at the end, which
   # directly links to the file and not the web page with a download button
   url: 'https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/photon/R/eclipse-java-photon-R-linux-gtk-x86_64.tar.gz&r=1'
-  url_backup: 'http://mirror.cc.vt.edu/pub/eclipse/technology/epp/downloads/release/photon/R/eclipse-java-photon-R-linux-gtk-x86_64.tar.gz'
+  url_backup: 'https://mirror.cc.vt.edu/pub/eclipse/technology/epp/downloads/release/photon/R/eclipse-java-photon-R-linux-gtk-x86_64.tar.gz'
   hash: '433998aeaab2b9fb13a092e2edf87166e7d404f5'
   zip: '{{ global_base_path }}/eclipse.tar.gz'
   install_path: '{{ global_base_path }}/eclipse'
