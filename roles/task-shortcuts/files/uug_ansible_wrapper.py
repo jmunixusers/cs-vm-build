@@ -28,7 +28,7 @@ from gi.repository import GdkPixbuf   # noqa
 # checkbox
 # Map of course names to the Ansible tags
 COURSES = {'CS 101': 'cs101', 'CS 149': 'cs149', 'CS 159': 'cs159',
-           'CS 261': 'cs261', 'CS 354': 'cs354'}
+           'CS 261': 'cs261', 'CS 354': 'cs354', 'CS 361': 'cs361'}
 USER_CONFIG_PATH = os.path.join(os.environ['HOME'], ".config", "vm_config")
 USER_CONFIG = {'git_branch': None,
                'git_url': "https://github.com/jmunixusers/cs-vm-build",
@@ -152,7 +152,12 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         # Add the terminal to the window
         self.terminal = Vte.Terminal()
-        self.terminal.set_sensitive(False)
+        # Prevent the user from entering text or ^C
+        self.terminal.set_input_enabled(False)
+        # Ensure that if text is written, the user sees it
+        self.terminal.set_scroll_on_output(True)
+        # Ensure that all lines can be seen (default is only 512)
+        self.terminal.set_scrollback_lines(-1)
         self.terminal.connect("child-exited", self.sub_command_exited)
         contents.pack_end(self.terminal, True, True, 0)
         self.vbox.pack_end(contents, True, True, 0)
