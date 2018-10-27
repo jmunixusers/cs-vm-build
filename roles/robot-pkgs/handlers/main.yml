@@ -3,7 +3,7 @@
 
 - name: USB controllers warning
   command: >-
-    zenity --warning --text {{ usb_warning_msg }}
+    zenity --warning --text {{ usb_warning_msg }} --width=300 --height=200
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ item.uid }}"
   become: yes
