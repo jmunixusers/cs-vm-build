@@ -661,7 +661,7 @@ def warn_wrong_release_branch(parent):
     logging.info("The chosen branch is < OS releae. Warning user about switching branches")
     warning_prompt = (
         "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
-        "You should consider upgrading braches. The correct configuration settings for your release version of Linux Mint is:"
+        "You should consider upgrading branches. The recommended configuration settings for your release version of Linux Mint are:"
         "\nRelease: %(0)s and URL: %(1)s" % {
             '0': get_distro_release_name(),
             '1': USER_CONFIG['git_url']
