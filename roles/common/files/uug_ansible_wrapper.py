@@ -675,7 +675,7 @@ def warn_using_master_branch(parent):
     Displays a dialog to warn the user that their current branch in the configuration tool is the development branch master.
     """
 
-    logging.info("The chosen branch is the development bracnch master. Warning user about switching branches")
+    logging.info("The chosen branch is the development branch master. Warning user about switching branches")
     warning_prompt = (
         "You are currently an unstable development branch (master) of the configuration tool. "
         "You should consider switching to the release branch for your Linux Mint version. "
