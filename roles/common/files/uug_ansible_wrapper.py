@@ -388,6 +388,14 @@ class AnsibleWrapperWindow(Gtk.Window):
         if not validate_branch():
             invalid_branch(self)
             return
+        
+        if (get_distro_release_name() > USER_CONFIG['git_branch']) and (USER_CONFIG['git_url'] == "https://github.com/jmunixusers/cs-vm-build") and (USER_CONFIG['git_branch'] != "master"):
+            warn_wrong_release_branch(self)
+        elif (get_distro_release_name() < USER_CONFIG['git_branch']) and (USER_CONFIG['git_url'] == "https://github.com/jmunixusers/cs-vm-build") and (USER_CONFIG['git_branch'] != "master"):
+            warn_wrong_release_branch(self)
+
+        if (USER_CONFIG['git_branch'] == "master") and (USER_CONFIG['git_url'] == "https://github.com/jmunixusers/cs-vm-build"):
+            warn_using_master_branch(self)
 
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(False)
@@ -596,7 +604,6 @@ def validate_branch():
 
     return USER_CONFIG['git_branch'] in ls_remote_output
 
-
 def invalid_branch(parent):
     """
     Displays a dialog if the branch choses does not exist on the remote
@@ -621,7 +628,6 @@ def invalid_branch(parent):
     )
     return
 
-
 def unable_to_detect_branch():
     """
     Displays a dialog to ask the user if they would like to use the master
@@ -645,6 +651,42 @@ def unable_to_detect_branch():
     else:
         USER_CONFIG['git_branch'] = "master"
         logging.info("Release set to master")
+
+def warn_wrong_release_branch(parent):
+    """
+    Displays a dialog to warn the user that their current branch in the configuration tool does not
+    match their os rlease version.
+    """
+
+    logging.info("The chosen branch is < OS releae. Warning user about switching branches")
+    warning_prompt = (
+        "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
+        "You should consider upgrading braches. The correct configuration settings for your release version of Linux Mint is:"
+        "\nRelease: %(0)s and URL: %(1)s" % {
+            '0': get_distro_release_name(),
+            '1': USER_CONFIG['git_url']
+        }
+    )
+    show_dialog(parent, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+                           "Current branch is outdated", warning_prompt)
+
+def warn_using_master_branch(parent):
+    """
+    Displays a dialog to warn the user that their current branch in the configuration tool is the development branch master.
+    """
+
+    logging.info("The chosen branch is the development bracnch master. Warning user about switching branches")
+    warning_prompt = (
+        "You are currently an unstable development branch (master) of the configuration tool. "
+        "You should consider switching to the release branch for your Linux Mint version. "
+        "The correct configuration settings for your release version of Linux Mint is:" 
+        "\nRelease: %(0)s and URL: %(1)s" % {
+            '0': get_distro_release_name(),
+            '1': USER_CONFIG['git_url']
+        }
+    )
+    show_dialog(parent, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+                           "Current branch is development branch master", warning_prompt)
 
 
 def is_online(hostname="packages.linuxmint.com"):
