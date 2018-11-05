@@ -1,0 +1,76 @@
+{
+  "variables": {
+    "vm_name": "JMU Linux Mint",
+    "semester": "Fa18",
+    "mint_version": "19",
+
+    "output_dir": "{{pwd}}/artifacts",
+    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable",
+    "iso_file": "linuxmint-19-cinnamon-64bit.iso",
+
+    "ssh_user": "root",
+    "ssh_pass": "packer"
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "output_directory": "{{user `output_dir`}}/ova",
+      "vm_name": "{{user `vm_name`}} {{user `semester`}}",
+      "vmdk_name": "{{user `vm_name`}} {{user `semester`}}",
+
+      "iso_urls": [
+        "file://{{pwd}}/sources/{{user `iso_file`}}",
+        "{{user `mirror_url`}}/{{user `mint_version`}}/{{user `iso_file`}}"
+      ],
+      "iso_checksum_type": "sha256",
+      "iso_checksum_url": "{{user `mirror_url`}}/{{user `mint_version`}}/sha256sum.txt",
+
+      "guest_os_type": "ubuntu-64",
+      "disk_size": "20480",
+      "disk_type_id": 0,
+      
+      "boot_wait": "5s",
+      "boot_key_interval": "1ms",
+      "boot_command": [
+        "<esc><wait><esc><wait>",
+        "/casper/vmlinuz",
+
+        " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+        " automatic-ubiquity",
+        " debug-ubiquity",
+        " interface=auto",
+        " keymap=us",
+        " modules=network-console",
+        " network-console/password-again=packer",
+        " network-console/password=packer",
+
+        " boot=casper initrd=/casper/initrd.lz quiet splash --",
+        "<enter>"
+      ],
+
+      "http_directory": "http",
+
+      "format": "ova",
+
+      "network_adapter_type": "vmxnet3",
+      "vmx_data": {
+        "memsize": 2048,
+        "numvcpus": 2,
+        "ethernet0.pcislotnumber": "32",
+      },
+
+      "ssh_username": "{{user `ssh_user`}}",
+      "ssh_password": "{{user `ssh_pass`}}",
+      "ssh_timeout": "100m",
+      "shutdown_command": "shutdown -h now"
+    }
+  ],
+  "provisioners": [
+  ],
+  "post-processors": [
+    {
+      "type": "checksum",
+      "output": "{{user `output_dir`}}/{{.BuildName}}_{{.BuilderType}}.{{.ChecksumType}}sum"
+    }
+  ]
+}
