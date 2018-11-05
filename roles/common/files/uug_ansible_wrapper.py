@@ -9,6 +9,7 @@ URL to pull from can be changed in the program's Settings.
 
 import logging
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -46,7 +47,7 @@ USER_CONFIG = {
 }
 NAME = "JMU CS VM Configuration"
 VERSION = "Spring 2019"
-
+DEFAULT_GIT_REMOTE = "https://github.com/jmunixusers/cs-vm-build"
 
 def main():
     """
@@ -183,7 +184,6 @@ class AnsibleWrapperWindow(Gtk.Window):
         Adds the course to or removes the course from the list of courses to
         provision based on whether the checkbox was checked or unchecked
         respectively.
-
         :param button: The checkbox that triggered the action
         :param name: The name of the course associated with button
         """
@@ -389,14 +389,98 @@ class AnsibleWrapperWindow(Gtk.Window):
             invalid_branch(self)
             return
         
-        if (get_distro_release_name() > USER_CONFIG['git_branch']) and (USER_CONFIG['git_url'] == "https://github.com/jmunixusers/cs-vm-build") and (USER_CONFIG['git_branch'] != "master"):
-            warn_wrong_release_branch(self)
-        elif (get_distro_release_name() < USER_CONFIG['git_branch']) and (USER_CONFIG['git_url'] == "https://github.com/jmunixusers/cs-vm-build") and (USER_CONFIG['git_branch'] != "master"):
-            warn_wrong_release_branch(self)
-
-        if (USER_CONFIG['git_branch'] == "master") and (USER_CONFIG['git_url'] == "https://github.com/jmunixusers/cs-vm-build"):
-            warn_using_master_branch(self)
-
+        system_version = get_distro_release_name()
+        chosen_branch = USER_CONFIG['git_branch']
+        chosen_remote = USER_CONFIG['git_url']
+        branch_mismatch = system_version != chosen_branch
+        looks_minty = re.compile(r"[a-z]+a").fullmatch(system_version)
+    
+        output = subprocess.run(
+            ["/usr/bin/git", "ls-remote", '--heads', USER_CONFIG['git_url']],
+            stdout=subprocess.PIPE
+        )
+    
+        ls_remote = output.stdout.decode("utf-8")
+       
+        system_exists = system_version in ls_remote
+        chosen_exists = chosen_branch in ls_remote
+        
+        if chosen_remote == DEFAULT_GIT_REMOTE:
+            if (chosen_branch == "master"):
+                warning_prompt = (
+                    "You are currently on an unstable development branch (master) of the configuration tool. "
+                    "You should consider switching to the release branch for your Linux Mint version. "
+                    "The recommended configuration settings for your release version of Linux Mint are:" 
+                    "\nRelease: %(0)s and URL: %(1)s" % {
+                        '0': get_distro_release_name(),
+                        '1': DEFAULT_GIT_REMOTE
+                    }
+                )
+                show_dialog(
+                    self, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+                    "Current branch is the development branch master", warning_prompt
+                )
+            elif branch_mismatch and looks_minty and system_exists and chosen_exists:
+                warning_prompt = (
+                    "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
+                    "You should consider upgrading branches. "
+                    "The recommended configuration settings for your release version of Linux Mint are:"
+                    "\nRelease: %(0)s and URL: %(1)s" % {
+                        '0': system_version,
+                        '1': DEFAULT_GIT_REMOTE
+                    }
+                )
+                show_dialog(
+                    self, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+                    "Current branch is outdated", warning_prompt
+                )
+                return
+            elif branch_mismatch and looks_minty and (system_exists) and (not chosen_exists):
+                no_version_msg = (
+                    "Your current Linux Mint version does not exist as a branch on the specified remote url. "
+                    "You should consider switching to the master branch. "
+                    "The recommended configuration settings for your release version of Linux Mint are:" 
+                    "\nRelease: %(0)s and URL: %(1)s" % {
+                        '0': system_version,
+                        '1': DEFAULT_GIT_REMOTE
+                    }
+                )
+                show_dialog(
+                    self, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+                    "Linux Mint version not found on URL", no_version_msg
+                )
+                return
+            elif system_exists and (not chosen_exists):
+                bad_branch_msg = (
+                    "Your currently chosen branch does not exist on the chosen url. "
+                    "You should fix your remote url or switch to a branch that exist on that url. "
+                    "The recommended configuration settings for your release version of Linux Mint are:" 
+                    "\nRelease: %(0)s and URL: %(1)s" % {
+                        '0': system_version,
+                        '1': DEFAULT_GIT_REMOTE
+                    }
+                )
+                show_dialog(
+                    self, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+                    "branch does not exist on specified remote URL", bad_branch_msg
+                )
+                return
+            elif (not system_exists) and (not chosen_exists):
+                bad_branch_msg = (
+                    "We do not support your current OS and the branch chosen does not exist on the chosen remote URL. "
+                    "You should consider switching to the master branch. "
+                    "The recommended configuration settings for your release version of Linux Mint are:" 
+                    "\nRelease: %(0)s and URL: %(1)s" % {
+                        '0': "master",
+                        '1': DEFAULT_GIT_REMOTE
+                    }
+                )
+                show_dialog(
+                    self, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+                    "OS not supported and branch not found", bad_branch_msg
+                )
+                return
+        
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(False)
 
@@ -448,13 +532,11 @@ def show_dialog(parent, dialog_type, buttons_type, header, message):
     Shows a dialog to the user with the provided header, message, and
     buttons. The message is always displayed with format_secondary_markup
     and therefore will passed through Pango. It should be escaped properly.
-
     :param parent: The parent GTK window to associate with the dialog
     :param dialog_type: The type of GTK dialog to display
     :param buttons_type: The GTK buttons type to use for the dialog
     :param header: The text to display in the dialog's header
     :param message: The text to display in the main part of the dialog
-
     :returns: The user's response to the dialog
     """
 
@@ -470,7 +552,6 @@ def parse_simple_config(path, data):
     Parses a simple INI-like config. Only lines with assignments are permitted
     and it can't handle sections like INI has. Lines with # as the first
     non-space character are comments.
-
     :param path: The path to the configuration file
     :param data: The dictionary to store the data in
     """
@@ -503,7 +584,6 @@ def parse_simple_config(path, data):
 def parse_json_config(path, config):
     """
     Loads the data in the file at the provided path into a dictionary.
-
     :param path: The path to the JSON file
     :param config: The dictionary to update with data from the JSON file
     """
@@ -522,7 +602,6 @@ def parse_json_config(path, config):
 def write_json_config(path, config):
     """
     Writes a dictionary to a file at the provided at path in JSON format.
-
     :param path: The path of the file to write the dictionary to
     :param config: The dictionary to write. Must be serializable as JSON
     """
@@ -550,7 +629,6 @@ def parse_user_config():
 def parse_os_release():
     """
     Loads the data in /etc/os-release.
-
     :returns: A dictionary with the data parsed from /etc/os-release
     """
 
@@ -565,7 +643,6 @@ def get_distro_release_name():
     /etc/os-release and then regardless of whether or not a release has
     been found, if the user has specified a preferred branch, that will be
     returned.
-
     :returns: The name of the Linux distro's release
     """
 
@@ -591,7 +668,6 @@ def validate_branch():
     Checks the branch passed in against the branches available on remote.
     Returns true if branch exists on remote. This may be subject to false
     postivies, but that should not be an issue.
-
     :returns: Whether the chosen branch exists on the git remote
     """
 
@@ -604,10 +680,10 @@ def validate_branch():
 
     return USER_CONFIG['git_branch'] in ls_remote_output
 
+
 def invalid_branch(parent):
     """
     Displays a dialog if the branch choses does not exist on the remote
-
     :param parent: The parent GTK window for the error dialog
     """
 
@@ -627,6 +703,7 @@ def invalid_branch(parent):
         "Invalid Release", bad_branch_msg
     )
     return
+
 
 def unable_to_detect_branch():
     """
@@ -652,47 +729,10 @@ def unable_to_detect_branch():
         USER_CONFIG['git_branch'] = "master"
         logging.info("Release set to master")
 
-def warn_wrong_release_branch(parent):
-    """
-    Displays a dialog to warn the user that their current branch in the configuration tool does not
-    match their os rlease version.
-    """
-
-    logging.info("The chosen branch is < OS releae. Warning user about switching branches")
-    warning_prompt = (
-        "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
-        "You should consider upgrading branches. The recommended configuration settings for your release version of Linux Mint are:"
-        "\nRelease: %(0)s and URL: %(1)s" % {
-            '0': get_distro_release_name(),
-            '1': USER_CONFIG['git_url']
-        }
-    )
-    show_dialog(parent, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
-                           "Current branch is outdated", warning_prompt)
-
-def warn_using_master_branch(parent):
-    """
-    Displays a dialog to warn the user that their current branch in the configuration tool is the development branch master.
-    """
-
-    logging.info("The chosen branch is the development branch master. Warning user about switching branches")
-    warning_prompt = (
-        "You are currently on an unstable development branch (master) of the configuration tool. "
-        "You should consider switching to the release branch for your Linux Mint version. "
-        "The correct configuration settings for your release version of Linux Mint is:" 
-        "\nRelease: %(0)s and URL: %(1)s" % {
-            '0': get_distro_release_name(),
-            '1': USER_CONFIG['git_url']
-        }
-    )
-    show_dialog(parent, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
-                           "Current branch is development branch master", warning_prompt)
-
 
 def is_online(hostname="packages.linuxmint.com"):
     """
     Checks if the user is able to reach a selected hostname.
-
     :param hostname: The hostname to test against.
     Default is packages.linuxmint.com.
     :returns: True if able to connect or False otherwise.
