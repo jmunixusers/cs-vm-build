@@ -39,7 +39,7 @@ COURSES = {
 USER_CONFIG_PATH = os.path.join(os.environ['HOME'], ".config", "vm_config")
 USER_CONFIG = {
     'git_branch': None,
-    'git_url': "https://github.com/jmunixusers/cs-vm-build",
+    'git_url': DEFAULT_GIT_REMOTE,
     # All roles the user has ever chosen
     'roles_all_time': ["common"],
     # Roles to be used for this particular run
