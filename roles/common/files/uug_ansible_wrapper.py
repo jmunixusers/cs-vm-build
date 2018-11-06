@@ -435,7 +435,7 @@ class AnsibleWrapperWindow(Gtk.Window):
                     "Current branch is outdated", warning_prompt
                 )
                 return
-            elif branch_mismatch and looks_minty and (system_exists) and (not chosen_exists):
+            elif branch_mismatch and looks_minty and system_exists and (not chosen_exists):
                 no_version_msg = (
                     "Your current Linux Mint version does not exist as a branch on the specified remote url. "
                     "You should consider switching to the master branch. "
