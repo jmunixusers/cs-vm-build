@@ -666,7 +666,7 @@ def valdiate_config_settings(self):
             self, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, header, warning_prompt
         )
             
-    return warning_bool
+    return warning_prompt is None
 
 
 def validate_branch():
