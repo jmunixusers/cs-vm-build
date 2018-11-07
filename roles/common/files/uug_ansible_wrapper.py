@@ -390,7 +390,7 @@ class AnsibleWrapperWindow(Gtk.Window):
             return
         
         if not validate_config_settings(self):
-            return
+            continue
         
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(False)
@@ -595,7 +595,6 @@ def valdiate_config_settings(self):
     
     header = None
     warning_prompt = None
-    warning_bool = None
     
     system_exists = system_version in ls_remote
     chosen_exists = chosen_branch in ls_remote
@@ -623,7 +622,6 @@ def valdiate_config_settings(self):
                 }
             )
             header = "Current branch is outdated"
-            warning_bool = False
         elif branch_mismatch and looks_minty and system_exists and (not chosen_exists):
             warning_prompt = (
                 "Your current Linux Mint version does not exist as a branch on the specified remote url. "
@@ -635,7 +633,6 @@ def valdiate_config_settings(self):
                 }
             )
             header = "Linux Mint version not found on URL"
-            warning_bool = False
         elif system_exists and (not chosen_exists):
             warning_prompt = (
                 "Your currently chosen branch does not exist on the chosen url. "
@@ -647,7 +644,6 @@ def valdiate_config_settings(self):
                 }
             )
             header = "Branch does not exist on specified remote URL"
-            warning_bool = False
         elif (not system_exists) and (not chosen_exists):
             warning_prompt = (
                 "We do not support your current OS and the branch chosen does not exist on the chosen remote URL. "
@@ -659,7 +655,6 @@ def valdiate_config_settings(self):
                 }
             )
             header = "OS not supported and branch not found"
-            warning_bool = False
         
     if header and warning_prompt:
         show_dialog(
