@@ -611,7 +611,7 @@ def valdiate_config_settings(self):
                     '1': DEFAULT_GIT_REMOTE
                 }
             )
-            header = "using testing branch master"
+            header = "Using testing branch master"
         elif branch_mismatch and looks_minty and system_exists and chosen_exists:
             warning_prompt = (
                 "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
