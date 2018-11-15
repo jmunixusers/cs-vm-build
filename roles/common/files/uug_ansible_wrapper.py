@@ -389,7 +389,7 @@ class AnsibleWrapperWindow(Gtk.Window):
             invalid_branch(self)
             return
         
-        if not validate_config_settings(self):
+        if not validate_branch_settings(self):
             logging.warn("Non-optimal user branch settings.")
         
         for checkbox in self.checkboxes:
