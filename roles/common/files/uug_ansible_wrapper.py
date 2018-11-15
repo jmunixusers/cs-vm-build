@@ -574,7 +574,7 @@ def get_distro_release_name():
     return release
 
 
-def valdiate_config_settings(self):
+def validate_branch_settings(self):
     """
     Warns the user of an error in the settings of the VM configuration. 
     :returns: a boolean indicating if the system should return or continue
