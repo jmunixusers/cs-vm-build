@@ -390,7 +390,7 @@ class AnsibleWrapperWindow(Gtk.Window):
             return
         
         if not validate_config_settings(self):
-            continue
+            logging.warn("Non-optimal user branch settings.")
         
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(False)
