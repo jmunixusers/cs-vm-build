@@ -14,7 +14,6 @@ user () {
     echo "==> ${1}"
 }
 
-
 #---
 # Emits an error message and exits the script to stderr.
 #
@@ -39,16 +38,42 @@ assert_mint() {
 }
 
 #---
+# Installs VirtualBox Guest Additions if ISO file is present
+#---
+install_additions() {
+    ISOFILE=/home/oem/VBoxGuestAdditions.iso
+
+    if [ -f $ISOFILE ]; then
+        mkdir /home/oem/additions
+        mount -o loop,ro $ISOFILE /home/oem/additions
+
+        # Guest additions installation returns error 2 on success
+        /home/oem/additions/VBoxLinuxAdditions.run || true
+
+        umount /home/oem/additions
+        rm $ISOFILE
+    fi
+}
+
+#---
 # Performs the actual preparation of the machine
 #---
 main () {
+    if ! [ $(id -u) = 0 ]; then
+        error "Not running as root. Retry with sudo"
+        exit 1
+    fi
+
     assert_mint
 
+    user "Attempting to install VBox Guest Additions"
+    install_additions
+
     user "Updating apt package cache"
-    sudo apt-get update
+    apt-get update
 
     user "Installing ansible and git"
-    sudo apt-get install --assume-yes ansible git aptitude\
+    apt-get install --assume-yes ansible git aptitude\
         || error "Unable to install ansible and git packages"
 
     user "Running ansible OEM playbook"
