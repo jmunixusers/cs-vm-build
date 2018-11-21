@@ -23,6 +23,8 @@ from gi.repository import Gtk, Vte
 from gi.repository import GLib
 from gi.repository import GdkPixbuf
 
+DEFAULT_GIT_REMOTE = "https://github.com/jmunixusers/cs-vm-build"
+
 # If no tags are passed to ansible-pull, all of them will be run and I am
 # uncertain of the outcome of passing -t with no tags. To avoid this, always
 # ensure that common is run by adding it to this list and disabling the
@@ -47,7 +49,6 @@ USER_CONFIG = {
 }
 NAME = "JMU CS VM Configuration"
 VERSION = "Spring 2019"
-DEFAULT_GIT_REMOTE = "https://github.com/jmunixusers/cs-vm-build"
 
 def main():
     """
@@ -599,62 +600,76 @@ def validate_branch_settings(self):
     system_exists = system_version in ls_remote
     chosen_exists = chosen_branch in ls_remote
         
-    if chosen_remote == DEFAULT_GIT_REMOTE:
-        if (chosen_branch == "master"):
-            warning_prompt = (
-                "You are currently on an unstable development branch (master) of the configuration tool. "
-                "You should consider switching to the release branch for your Linux Mint version. "
-                "The recommended configuration settings for your release version of Linux Mint are:" 
-                "\nRelease: %(0)s and URL: %(1)s" % {
-                    '0': get_distro_release_name(),
-                    '1': DEFAULT_GIT_REMOTE
-                }
-            )
-            header = "Using testing branch master"
-        elif branch_mismatch and looks_minty and system_exists and chosen_exists:
-            warning_prompt = (
-                "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
-                "You should consider upgrading branches. "
-                "The recommended configuration settings for your release version of Linux Mint are:"
-                "\nRelease: %(0)s and URL: %(1)s" % {
-                    '0': system_version,
-                    '1': DEFAULT_GIT_REMOTE
-                }
-            )
-            header = "Current branch is outdated"
-        elif branch_mismatch and looks_minty and system_exists and (not chosen_exists):
-            warning_prompt = (
-                "Your current Linux Mint version does not exist as a branch on the specified remote url. "
-                "You should consider switching to the master branch. "
-                "The recommended configuration settings for your release version of Linux Mint are:" 
-                "\nRelease: %(0)s and URL: %(1)s" % {
-                    '0': system_version,
-                    '1': DEFAULT_GIT_REMOTE
-                }
-            )
-            header = "Linux Mint version not found on URL"
-        elif system_exists and (not chosen_exists):
-            warning_prompt = (
-                "Your currently chosen branch does not exist on the chosen url. "
-                "You should fix your remote url or switch to a branch that exist on that url. "
-                "The recommended configuration settings for your release version of Linux Mint are:" 
-                "\nRelease: %(0)s and URL: %(1)s" % {
-                    '0': system_version,
-                    '1': DEFAULT_GIT_REMOTE
-                }
-            )
-            header = "Branch does not exist on specified remote URL"
-        elif (not system_exists) and (not chosen_exists):
-            warning_prompt = (
-                "We do not support your current OS and the branch chosen does not exist on the chosen remote URL. "
-                "You should consider switching to the master branch. "
-                "The recommended configuration settings for your release version of Linux Mint are:" 
-                "\nRelease: %(0)s and URL: %(1)s" % {
-                    '0': "master",
-                    '1': DEFAULT_GIT_REMOTE
-                }
-            )
-            header = "OS not supported and branch not found"
+    if chosen_remote != DEFAULT_GIT_REMOTE:
+        return True
+    
+    if (chosen_branch == "master"):
+        warning_prompt = (
+            "You are currently on an unstable development branch (master) of the configuration tool. "
+            "You should consider switching to the release branch for your Linux Mint version. "
+            "The recommended configuration settings for your release version of Linux Mint are:" 
+            "\nRelease: %(0)s and URL: %(1)s" % {
+                '0': get_distro_release_name(),
+                '1': DEFAULT_GIT_REMOTE
+            }
+        )
+        header = "Using testing branch master"
+    elif branch_mismatch and looks_minty and system_exists and chosen_exists:
+        warning_prompt = (
+            "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
+            "You should consider upgrading branches. "
+            "The recommended configuration settings for your release version of Linux Mint are:"
+            "\nRelease: %(0)s and URL: %(1)s" % {
+                '0': system_version,
+                '1': DEFAULT_GIT_REMOTE
+            }
+        )
+        header = "Current branch is outdated"
+    elif branch_mismatch and looks_minty and (not system_exists) and chosen_exists:
+        warning_prompt = (
+            "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
+            "However, your current Linux Mint version does not exist as a branch on the specified remote url. "
+            "You should consider switching to the master branch. "
+            "The recommended configuration settings for your release version of Linux Mint are:"
+            "\nRelease: %(0)s and URL: %(1)s" % {
+                '0': "master",
+                '1': DEFAULT_GIT_REMOTE
+            }
+        )
+        header = "Current branch is outdated"
+    elif branch_mismatch and looks_minty and system_exists and (not chosen_exists):
+        warning_prompt = (
+            "Your current Linux Mint version does not exist as a branch on the specified remote url. "
+            "You should consider switching to the master branch. "
+            "The recommended configuration settings for your release version of Linux Mint are:" 
+            "\nRelease: %(0)s and URL: %(1)s" % {
+                '0': "master",
+                '1': DEFAULT_GIT_REMOTE
+            }
+        )
+        header = "Linux Mint version not found on URL"
+    elif system_exists and (not chosen_exists):
+        warning_prompt = (
+            "Your currently chosen branch does not exist on the chosen url. "
+            "You should fix your remote url or switch to a branch that exist on that url. "
+            "The recommended configuration settings for your release version of Linux Mint are:" 
+            "\nRelease: %(0)s and URL: %(1)s" % {
+                '0': system_version,
+                '1': DEFAULT_GIT_REMOTE
+            }
+        )
+        header = "Branch does not exist on specified remote URL"
+    elif (not system_exists) and (not chosen_exists):
+        warning_prompt = (
+            "We do not support your current OS and the branch chosen does not exist on the chosen remote URL. "
+            "You should consider switching to the master branch. "
+            "The recommended configuration settings for your release version of Linux Mint are:" 
+            "\nRelease: %(0)s and URL: %(1)s" % {
+                '0': "master",
+                '1': DEFAULT_GIT_REMOTE
+            }
+        )
+        header = "OS not supported and branch not found"
         
     if header and warning_prompt:
         show_dialog(
