@@ -14,8 +14,6 @@ mint_mirrors:
 user_dependencies:
   - default-jdk
   - libnotify-bin
-  - openjdk-8-jdk
-  - openjdk-8-source
   - python-psutil
   - unzip    
   - vim

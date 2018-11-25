@@ -1,7 +1,0 @@
----
-# vars file for DrJava
-drjava:
-  url: 'https://sourceforge.net/projects/drjava/files/1.%20DrJava%20Stable%20Releases/drjava-beta-20160913-225446.jar/download'
-  hash: '3f0f4ade34b4e330d9a039368ddd04b424c43f43'
-  install_path: '{{ global_base_path }}/drjava'
-  jar: '{{ global_base_path }}/drjava/drjava.jar'
