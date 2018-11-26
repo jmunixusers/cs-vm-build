@@ -18,6 +18,11 @@
   file:
       path: "{{ bin_path }}"
       state: directory
+- name: Ensure desktop icon directory exists
+  file:
+      path: "{{ icon_path }}"
+      state: directory
+      mode: 0755
 # The policy file must go in /usr/share/polkit-1. It is the only location that
 # policykit checks
 - name: Install policykit policy for Ansible wrapper
