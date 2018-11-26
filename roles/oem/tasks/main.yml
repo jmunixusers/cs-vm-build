@@ -1,5 +1,6 @@
 ---
 # tasks file for oem
+
 - name: Ensure this in Linux Mint
   assert:
       that:
@@ -23,13 +24,6 @@
   apt:
       name: "{{ packages_to_install }}"
       state: latest
-- name: Clean the apt database
-  command: apt-get clean
-  # This will always report as changed otherwise
-  changed_when: False
-  args:
-    warn: no
-  when: "ansible_virtualization_role == 'guest'"
 - name: Ensure skeleton Desktop directory exists
   file:
       path: /etc/skel/Desktop
@@ -62,13 +56,6 @@
       mode: 0755
       owner: root
       group: staff
-- name: Validate missing USB 2/3 controllers
-  shell: lspci | grep -i -e EHCI -e xHCI
-  register: lspci_output
-  failed_when: lspci_output.rc == 0
-  changed_when: False
-  when: "ansible_virtualization_role == 'guest'"
-- name: Fill disk with zeros to assist with compression
-  shell: dd if=/dev/zero of=/bigfile bs=1M; sync; rm /bigfile
-  changed_when: False
+# Some tasks should only be run when running as a guest OS.
+- include_tasks: vm_only.yml
   when: "ansible_virtualization_role == 'guest'"

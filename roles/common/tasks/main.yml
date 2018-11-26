@@ -1,6 +1,9 @@
 ---
 # tasks file for common
 
+# All tasks in this file should be able to be run as part of the OEM or common
+# role without error as common is used in both of those.
+
 - set_fact:
     base_path: "{{ oem_base_path }}"
     icon_path: "/etc/skel/Desktop"
