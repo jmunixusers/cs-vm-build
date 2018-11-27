@@ -25,7 +25,7 @@ apt will require more extensive modifications.
 
 ### Common
 * Filezilla
-* JDK/JRE 8 & 10-11
+* JDK/JRE 10-11
 * SFTP connection to stu
 * Shortcuts to re-run tasks
 * Unzip
