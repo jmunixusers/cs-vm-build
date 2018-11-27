@@ -3,5 +3,5 @@
   hosts: all
   become: true
   roles:
-    - { role: oem, tags: ["oem"] }
     - { role: common, tags: ["oem"], icon_mode: oem }
+    - { role: oem, tags: ["oem"] }
