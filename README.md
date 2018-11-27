@@ -51,7 +51,6 @@ apt will require more extensive modifications.
   * wireshark
 
 ### CS149
-* DrJava
 * Eclipse
 * jGRASP
 
