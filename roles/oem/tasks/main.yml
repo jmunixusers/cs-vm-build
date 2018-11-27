@@ -24,11 +24,6 @@
   apt:
       name: "{{ packages_to_install }}"
       state: latest
-- name: Ensure skeleton Desktop directory exists
-  file:
-      path: /etc/skel/Desktop
-      state: directory
-      mode: 0750
 - name: Ensure log directory exists
   file:
       path: /opt/vmtools/logs
