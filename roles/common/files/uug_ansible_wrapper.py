@@ -90,14 +90,17 @@ def main():
     if "common" not in USER_CONFIG['roles_this_run']:
         USER_CONFIG['roles_this_run'].append("common")
 
-    # If a branch still isn't set, offer "master"
     if not USER_CONFIG['git_branch']:
-        unable_to_detect_branch()
+        USER_CONFIG['git_branch'] = "master"
 
     # Show the window and ensure when it's closed that the script terminates
     win = AnsibleWrapperWindow()
     win.connect("delete-event", Gtk.main_quit)
     win.show_all()
+
+    if not validate_branch_settings(win):
+        logging.warn("Non-optimal user branch settings.")
+
     Gtk.main()
 
 
@@ -390,9 +393,6 @@ class AnsibleWrapperWindow(Gtk.Window):
             invalid_branch(self)
             return
         
-        if not validate_branch_settings(self):
-            logging.warn("Non-optimal user branch settings.")
-        
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(False)
 
@@ -575,7 +575,7 @@ def get_distro_release_name():
     return release
 
 
-def validate_branch_settings(self):
+def validate_branch_settings(parent):
     """
     Warns the user of an error in the settings of the VM configuration. 
     :returns: a boolean indicating if the system should return or continue
@@ -673,7 +673,7 @@ def validate_branch_settings(self):
         
     if header and warning_prompt:
         show_dialog(
-            self, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, header, warning_prompt
+            parent, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, header, warning_prompt
         )
             
     return warning_prompt is None
@@ -719,31 +719,6 @@ def invalid_branch(parent):
         "Invalid Release", bad_branch_msg
     )
     return
-
-
-def unable_to_detect_branch():
-    """
-    Displays a dialog to ask the user if they would like to use the master
-    branch. If the user clicks yes, release is set to master. If the user
-    says no, the script exits
-    """
-
-    logging.info("Branch could not be detected. Offering master")
-    master_prompt = (
-        "The version of your OS could not be determined."
-        " Would you like to use the master branch? This can be very dangerous."
-    )
-    response = show_dialog(
-        None, Gtk.MessageType.ERROR, Gtk.ButtonsType.YES_NO,
-        "OS detection error", master_prompt
-    )
-
-    if response != Gtk.ResponseType.YES:
-        logging.info("The user chose not to use master")
-        sys.exit(1)
-    else:
-        USER_CONFIG['git_branch'] = "master"
-        logging.info("Release set to master")
 
 
 def is_online(hostname="packages.linuxmint.com"):
