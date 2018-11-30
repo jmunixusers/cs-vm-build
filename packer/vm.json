@@ -4,6 +4,11 @@
     "semester": "Fa18",
     "mint_version": "19",
 
+    "git_repo": "https://github.com/jmunixusers/cs-vm-build",
+    "git_branch": "master",
+
+    "headless": "true",
+
     "output_dir": "{{pwd}}/artifacts",
     "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable",
     "iso_file": "linuxmint-19-cinnamon-64bit-v2.iso",
@@ -14,7 +19,7 @@
   "builders": [
     {
       "type": "virtualbox-iso",
-      "headless": true,
+      "headless": "{{user `headless`}}",
 
       "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--audioout", "on" ],
@@ -83,7 +88,7 @@
       "export DEBIAN_FRONTEND=noninteractive",
       "apt-get update",
       "apt-get install -y git ansible aptitude",
-      "git clone -b master https://github.com/jmunixusers/cs-vm-build",
+      "git clone -b {{user `git_branch`}} {{user `git_repo`}}",
       "cd /home/oem/cs-vm-build/scripts",
       "./oem-build",
       "/usr/sbin/oem-config-prepare"
