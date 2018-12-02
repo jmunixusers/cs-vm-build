@@ -3,14 +3,6 @@
 global_base_path: /opt
 global_profile_path: /opt/csvmprofile
 
-ubuntu_mirrors:
-  - "https://mirror.cs.jmu.edu/pub/ubuntu"
-  - "http://us.archive.ubuntu.com/ubuntu"
-
-mint_mirrors:
-  - "https://mirror.cs.jmu.edu/pub/linuxmint/packages"
-  - "http://packages.linuxmint.com"
-
 user_dependencies:
   - default-jdk
   - libnotify-bin

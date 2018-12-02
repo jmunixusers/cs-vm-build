@@ -16,6 +16,9 @@
   when: icon_mode == 'user'
 - set_fact: bin_path="{{ base_path }}/vmtools/bin"
 - set_fact: uug_ansible_wrapper="{{ bin_path }}/uug_ansible_wrapper.py"
+- name: Check Ubuntu release
+  set_fact:
+    ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
 
 - name: Create VMTools bin
   file:
@@ -47,5 +50,25 @@
   template:
       src: desktop-template.desktop.j2
       dest: "{{ icon_path }}/jmucs_config.desktop"
-      mode: "{{ file_mode }}" 
+      mode: "{{ file_mode }}"
 
+- name: Set Ubuntu mirrors
+  template:
+    src: ubuntu.j2
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0664
+  when: ansible_distribution == "Ubuntu"
+- name: Set Linux Mint mirrors
+  template:
+    src: mint.j2
+    dest: /etc/apt/sources.list.d/official-package-repositories.list
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == "Linuxmint" or ansible_distribution == "Linux Mint"
+- name: Refresh apt cache
+  apt:
+    update_cache: yes
+  changed_when: False
