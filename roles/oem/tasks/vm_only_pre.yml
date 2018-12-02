@@ -1,0 +1,5 @@
+---
+
+# Tasks for the oem role to run at the beginning of playbook execution
+- name: Remove unneeded stock packages
+  apt: name={{ packages_to_remove }} state=absent purge=yes

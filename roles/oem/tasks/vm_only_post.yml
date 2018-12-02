@@ -1,6 +1,7 @@
 ---
 
-# Tasks to only be run on virtualized guest OSes.
+# Tasks to only be run on virtualized guest OSes at the end of playbook
+# execution
 
 # The apt database can be fairly large and make the image unnecessarily large
 # so removing it before shipping allows us to ship a smaller image.
