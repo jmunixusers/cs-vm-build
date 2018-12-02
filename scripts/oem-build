@@ -52,6 +52,8 @@ install_additions() {
 
         umount /home/oem/additions
         rm "$isofile"
+    else
+        user "VirtualBox Additions disk missing. Skipping installation."
     fi
 }
 
@@ -76,11 +78,13 @@ main () {
     apt-get install --assume-yes ansible git aptitude\
         || error "Unable to install ansible and git packages"
 
+    mkdir -p /opt/vmtools/logs
+
     user "Running ansible OEM playbook"
     # Ensure this runs from the root directory of the Ansible git directory
     cd "$(dirname "$0")"/.. \
         || error "Unable to cd to $(dirname "$0")/.."
-    ansible-playbook -i hosts -c local -K -t oem oem.yml \
+    ansible-playbook -i hosts -c local -t oem oem.yml \
         || error "Playbook failed to complete successfully"
 }
 
