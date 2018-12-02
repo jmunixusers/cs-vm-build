@@ -25,7 +25,6 @@
         ["modifyvm", "{{.Name}}", "--audioout", "on" ],
         ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional" ],
         ["modifyvm", "{{.Name}}", "--cpus", "2"],
-        ["modifyvm", "{{.Name}}", "--macaddress1", "020304050607"],
         ["modifyvm", "{{.Name}}", "--memory", "2048"],
         ["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
         ["modifyvm", "{{.Name}}", "--pae", "on"],
