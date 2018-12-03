@@ -31,7 +31,7 @@
       upgrade: safe
 - name: Install required dependencies
   apt: name={{ user_dependencies }} state=latest
- 
+
 - name: Touch VM profile
   copy:
     src: csvmprofile
