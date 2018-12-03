@@ -5,11 +5,8 @@
   assert:
       that:
         - "ansible_distribution == 'Linuxmint' or ansible_distribution == 'Linux Mint'"
-- name: Update apt cache
-  apt:
-      update_cache: yes
 - include_tasks: vm_only_pre.yml
-  when: "ansible_virtualization_role == 'guest'" 
+  when: "ansible_virtualization_role == 'guest'"
 - name: Remove unused dependencies
   apt:
       autoremove: yes

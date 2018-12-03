@@ -5,7 +5,7 @@
     /usr/bin/update-desktop-database
 - name: Suggest restart
   command: >-
-    notify-send -u critical "JMU Software Change" 
+    notify-send -u critical "JMU Software Change"
     "Changes have been made to your machine that 
     will only take effect when you log out or 
     when you reboot. Please do this immediately."

@@ -24,7 +24,7 @@
   loop: "{{ real_users }}"
 # Dest becomes path in Ansible 2.3+
 - name: Set Idle pref in existing mimeapps
-  lineinfile: 
+  lineinfile:
     dest: '{{ item.homedir }}/.config/mimeapps.list'
     regexp: '^text/x-python='
     line: 'text/x-python=idle-python3.6.desktop;gedit.desktop;pluma.desktop'
