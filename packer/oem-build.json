@@ -62,7 +62,7 @@
         "<esc><wait><esc><wait>",
         "/casper/vmlinuz",
 
-        " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+        " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
         " automatic-ubiquity",
         " debug-ubiquity",
         " keymap=us",
