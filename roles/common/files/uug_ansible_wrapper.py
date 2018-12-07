@@ -584,99 +584,178 @@ def validate_branch_settings(parent):
     system_version = get_distro_release_name()
     chosen_branch = USER_CONFIG['git_branch']
     chosen_remote = USER_CONFIG['git_url']
+    master_okay = USER_CONFIG.get('ignore_master', False)
     branch_mismatch = system_version != chosen_branch
-    looks_minty = re.compile(r"[a-z]+a").fullmatch(system_version)
+    looks_minty = re.compile(r"[a-z]+a").fullmatch(chosen_branch)
     
     output = subprocess.run(
         ["/usr/bin/git", "ls-remote", '--heads', USER_CONFIG['git_url']],
         stdout=subprocess.PIPE
     )
-    
+
     ls_remote = output.stdout.decode("utf-8")
-    
+
+    remote_refs = []
+    for ref in ls_remote.split('\n'):
+        remote_refs.append(ref.split('/')[-1])
+
+    logging.info("Available branches: %s", ", ".join(remote_refs))
+
     header = None
     warning_prompt = None
     
-    system_exists = system_version in ls_remote
-    chosen_exists = chosen_branch in ls_remote
-        
+    system_exists = system_version in remote_refs
+    chosen_exists = chosen_branch in remote_refs
+
+    # We only validate when the default remote is chosen -- if it's not we
+    # cannot make any assumptions about branches
     if chosen_remote != DEFAULT_GIT_REMOTE:
+        logging.debug(
+            "Not checking branches -- unsupported remote (%s) set",
+            chosen_remote
+        )
         return True
     
-    if (chosen_branch == "master"):
+    # These are branches that should be handled specially
+    if chosen_branch == "master" and system_exists and not master_okay:
+        # The user wants to run master, but there is a release for their distro
+        header = "Unstable release selected"
         warning_prompt = (
-            "You are currently on an unstable development branch (master) of the configuration tool. "
-            "You should consider switching to the release branch for your Linux Mint version. "
-            "The recommended configuration settings for your release version of Linux Mint are:" 
-            "\nRelease: %(0)s and URL: %(1)s" % {
-                '0': get_distro_release_name(),
-                '1': DEFAULT_GIT_REMOTE
+            "You have selected an unstable development branch (master) of the"
+            " configuration tool. It is recommended to use the release branch"
+            " of this tool that corresponds to your Linux Mint version."
+            " Consider changing your settings to match the following:"
+            "\nRelease: %(release)s\nURL: %(url)s" % {
+                'release': system_version,
+                'url': USER_CONFIG['git_url'],
             }
         )
-        header = "Using testing branch master"
-    elif branch_mismatch and looks_minty and system_exists and chosen_exists:
+
+        display_ignorable_warning(
+            header, warning_prompt, parent, 'ignore_master'
+        )
+        return False;
+
+    if branch_mismatch and looks_minty and system_exists:
+        # The user wants to use a minty-looking branch, but there is a branch
+        # specifically for their distro available
+        header = "Incompatiable Linux Mint release"
         warning_prompt = (
-            "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
-            "You should consider upgrading branches. "
-            "The recommended configuration settings for your release version of Linux Mint are:"
-            "\nRelease: %(0)s and URL: %(1)s" % {
-                '0': system_version,
-                '1': DEFAULT_GIT_REMOTE
+            "You have selected a version of the configuration tool meant for"
+            " a different Linux Mint release. It is recommended to switch to"
+            " the release branch that corresponds to your Linux Mint version."
+            " Consider changing your settings to match the following:"
+            "\nRelease: %(release)s\nURL: %(url)s" % {
+                'release': system_version,
+                'url': USER_CONFIG['git_url'],
             }
         )
-        header = "Current branch is outdated"
-    elif branch_mismatch and looks_minty and (not system_exists) and chosen_exists:
+    elif system_exists and not chosen_exists:
+        header = "Chosen release unavailable"
         warning_prompt = (
-            "You are using a version of the configuration tool meant for a different release of Linux Mint. " 
-            "However, your current Linux Mint version does not exist as a branch on the specified remote url. "
-            "You should consider switching to the master branch. "
-            "The recommended configuration settings for your release version of Linux Mint are:"
-            "\nRelease: %(0)s and URL: %(1)s" % {
-                '0': "master",
-                '1': DEFAULT_GIT_REMOTE
+            "You have selected a release of the configuration tool that does"
+            " not exist on the git URL you have specified. It is recommended"
+            " that you switch to the release branch that corresponds to your"
+            " Linux Mint release on the UUG git repository."
+            " Consider changing your settings to match the following:"
+            "\nRelease: %(release)s\nURL: %(url)s" % {
+                'release': system_version,
+                'url': DEFAULT_GIT_REMOTE,
             }
         )
-        header = "Current branch is outdated"
-    elif branch_mismatch and looks_minty and system_exists and (not chosen_exists):
+    elif looks_minty and not (branch_mismatch or chosen_exists):
+        header = "Chosen release not available"
         warning_prompt = (
-            "Your current Linux Mint version does not exist as a branch on the specified remote url. "
-            "You should consider switching to the master branch. "
-            "The recommended configuration settings for your release version of Linux Mint are:" 
-            "\nRelease: %(0)s and URL: %(1)s" % {
-                '0': "master",
-                '1': DEFAULT_GIT_REMOTE
+            "You have selected a release of the configuration tool that does"
+            " not exist on the git URL you have specified; however, your"
+            " current version of Linux Mint is not yet supported. It is"
+            " recommended that you switch to the master (testing) branch."
+            " Consider changing your settings to match the following:"
+            "\nRelease: %(release)s\nURL: %(url)s" % {
+                'release': 'master',
+                'url': USER_CONFIG['git_url'],
             }
         )
-        header = "Linux Mint version not found on URL"
-    elif system_exists and (not chosen_exists):
+    elif branch_mismatch and looks_minty and not system_exists:
+        # The user wants to use a minty-looking branch, but it doesn't match
+        # the system and we don't support what they want to run.
+        header = "Incompatible Linux Mint release"
         warning_prompt = (
-            "Your currently chosen branch does not exist on the chosen url. "
-            "You should fix your remote url or switch to a branch that exist on that url. "
-            "The recommended configuration settings for your release version of Linux Mint are:" 
-            "\nRelease: %(0)s and URL: %(1)s" % {
-                '0': system_version,
-                '1': DEFAULT_GIT_REMOTE
+            "You have selected a version of the configuration tool meant for"
+            " a different Linux Mint release; however, we are unable to"
+            " completely support your Linux Mint release at this time."
+            " It is recommended to switch to the master (testing) branch."
+            " Consider changing your settings to match the following:"
+            "\nRelease: %(release)s\nURL: %(url)s" % {
+                'release': 'master',
+                'url': USER_CONFIG['git_url'],
             }
         )
-        header = "Branch does not exist on specified remote URL"
-    elif (not system_exists) and (not chosen_exists):
+    elif branch_mismatch and not (system_exists or chosen_exists):
+        header = "Chosen release unavailable"
         warning_prompt = (
-            "We do not support your current OS and the branch chosen does not exist on the chosen remote URL. "
-            "You should consider switching to the master branch. "
-            "The recommended configuration settings for your release version of Linux Mint are:" 
-            "\nRelease: %(0)s and URL: %(1)s" % {
-                '0': "master",
-                '1': DEFAULT_GIT_REMOTE
+            "You have selected a version of the configuration tool that does"
+            " not support your version of Linux Mint; however, there is not"
+            " a release that supports your version of Linux Mint available"
+            " yet. It is recommended to switch to the master (testing) branch."
+            " Consider changing your settings to match the following:"
+            "\nRelease: %(release)s\nURL: %(url)s" % {
+                'release': 'master',
+                'url': USER_CONFIG['git_url'],
             }
         )
-        header = "OS not supported and branch not found"
-        
+
     if header and warning_prompt:
         show_dialog(
-            parent, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, header, warning_prompt
+            parent, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, header,
+            warning_prompt
         )
-            
+
     return warning_prompt is None
+
+
+def display_ignorable_warning(title, message, parent, settings_key):
+    """
+    Displays a warning dialog that contains a checkbox allowing it to be
+    ignored in the future.
+    :param title: The title for the warning dialog
+    :param message: The main body of the warning dialog
+    :param parent: The parent window of the warning dialog
+    :param settings_key: The key to set if the user chooses to ignore
+                         the dialog
+    """
+
+    dialog = Gtk.MessageDialog(
+        None, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING,
+        Gtk.ButtonsType.OK_CANCEL, title
+    )
+
+    dialog.format_secondary_text(message)
+
+    ignore_checkbox = Gtk.CheckButton("Don't show this warning again")
+
+    # Get the hbox that surrounds the text labels so that the checkbox can
+    # be aligned with the text, rather than far to the left below the warning
+    # icon. This may be somewhat fragile, but the layout of the warning
+    # dialog should remain consistent.
+    # Get the box for the content above the buttons
+    top_content_box = dialog.get_content_area().get_children()[0]
+    # Get the box for the two text fields (primary and secondary text). Index
+    # 0 is the icon.
+    text_box = top_content_box.get_children()[1]
+    # Add the checkbox below the two labels
+    text_box.pack_end(ignore_checkbox, False, False, 0)
+
+    # show_all() must be used or the widget we added will not appear when
+    # run() is called
+    dialog.show_all()
+    response = dialog.run()
+
+    if response == Gtk.ResponseType.OK and ignore_checkbox.get_active():
+        USER_CONFIG[settings_key] = True
+        write_user_config()
+
+    dialog.destroy()
 
 
 def validate_branch():
