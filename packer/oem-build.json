@@ -1,0 +1,102 @@
+{
+  "variables": {
+    "vm_name": "JMU Linux Mint",
+    "semester": "Fa18",
+    "mint_version": "19",
+
+    "git_repo": "https://github.com/jmunixusers/cs-vm-build",
+    "git_branch": "master",
+
+    "headless": "true",
+
+    "output_dir": "{{pwd}}/artifacts",
+    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable",
+    "iso_file": "linuxmint-19-cinnamon-64bit-v2.iso",
+
+    "ssh_user": "oem",
+    "ssh_pass": "oem"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "headless": "{{user `headless`}}",
+
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--audioout", "on" ],
+        ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional" ],
+        ["modifyvm", "{{.Name}}", "--cpus", "2"],
+        ["modifyvm", "{{.Name}}", "--memory", "2048"],
+        ["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
+        ["modifyvm", "{{.Name}}", "--pae", "on"],
+        ["modifyvm", "{{.Name}}", "--rtcuseutc", "on"],
+        ["modifyvm", "{{.Name}}", "--usb", "on", "--usbehci", "off", "--usbxhci", "off" ],
+        ["modifyvm", "{{.Name}}", "--vram", "64" ],
+        ["modifyvm", "{{.Name}}", "--vrde", "off" ],
+        ["storagectl", "{{.Name}}", "--name", "IDE Controller", "--hostiocache", "on" ],
+        ["storagectl", "{{.Name}}", "--name", "SATA Controller", "--hostiocache", "on" ]
+      ],
+
+      "vboxmanage_post": [
+        ["modifyvm", "{{.Name}}", "--accelerate3d", "on" ]
+      ],
+
+      "output_directory": "{{user `output_dir`}}/ova",
+      "vm_name": "{{user `vm_name`}} {{user `semester`}}",
+
+      "iso_urls": [
+        "{{user `mirror_url`}}/{{user `mint_version`}}/{{user `iso_file`}}"
+      ],
+      "iso_checksum_type": "sha256",
+      "iso_checksum_url": "{{user `mirror_url`}}/{{user `mint_version`}}/sha256sum.txt",
+
+      "hard_drive_discard": "true",
+      "hard_drive_interface": "sata",
+      "hard_drive_nonrotational": true,
+      "iso_interface": "ide",
+      "sata_port_count": 2,
+      "disk_size": "20480",
+
+      "guest_os_type": "Ubuntu_64",
+      "boot_wait": "5s",
+      "boot_command": [
+        "<esc><wait><esc><wait>",
+        "/casper/vmlinuz",
+
+        " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
+        " automatic-ubiquity",
+        " debug-ubiquity",
+        " keymap=us",
+        " boot=casper initrd=/casper/initrd.lz quiet noprompt splash --",
+        "<enter>"
+      ],
+
+      "http_directory": "http",
+
+      "format": "ova",
+
+      "ssh_username": "{{user `ssh_user`}}",
+      "ssh_password": "{{user `ssh_pass`}}",
+      "ssh_timeout": "100m",
+      "shutdown_command": "echo -e \"{{user `ssh_pass`}}\\n\" | sudo -S poweroff"
+    }
+  ],
+  "provisioners": [{
+    "type": "shell",
+    "execute_command": "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+    "inline": [
+      "export DEBIAN_FRONTEND=noninteractive",
+      "apt-get update",
+      "apt-get install -y git ansible aptitude",
+      "git clone -b {{user `git_branch`}} {{user `git_repo`}}",
+      "cd /home/oem/cs-vm-build/scripts",
+      "./oem-build",
+      "/usr/sbin/oem-config-prepare"
+    ]
+  }],
+  "post-processors": [
+    {
+      "type": "checksum",
+      "output": "{{user `output_dir`}}/{{.BuildName}}_{{.BuilderType}}.{{.ChecksumType}}sum"
+    }
+  ]
+}

@@ -1,2 +1,5 @@
 *.retry
 *.swp
+
+packer/packer_cache/*
+packer/artifacts/*
