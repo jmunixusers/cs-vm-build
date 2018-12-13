@@ -10,3 +10,5 @@
   become_user: "{{ item.user }}"
   loop: "{{ real_users }}"
   ignore_errors: yes
+- name: Reload udev rules
+  command: /sbin/udevadm control --reload-rules
