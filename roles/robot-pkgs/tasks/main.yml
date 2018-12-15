@@ -17,10 +17,9 @@
     update_cache: yes
 - name: Install robot development packages
   apt: name={{ ros_packages }} state=latest
-# Dest becomes path in Ansible 2.3+
 - name: Create ROS profile entries
   blockinfile:
-    dest: '{{ global_profile_path }}'
+    path: '{{ global_profile_path }}'
     marker: "## {mark} ROS profile entries ##"
     block: |
       source /opt/ros/{{ros_release}}/setup.bash
@@ -59,6 +58,15 @@
       group: "{{ item.gid }}"
       mode: 0644
   loop: "{{ real_users }}"
+- name: Copy Kobuki TurtleBot udev rule
+  copy:
+      src: "57-kobuki.rules"
+      dest: "/etc/udev/rules.d/57-kobuki.rules"
+      owner: "root"
+      group: "root"
+      mode: 0644
+  notify:
+  - Reload udev rules
 - name: Check for missing USB 2/3 controllers
   shell: lspci | grep -i -e EHCI -e xHCI
   register: lspci_output
