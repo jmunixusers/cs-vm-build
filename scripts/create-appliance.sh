@@ -5,8 +5,8 @@ ISO_FOLDER=${ISO_FOLDER:-"${HOME}/Downloads"}
 VBOX_VM_DIR=${VBOX_VM_DIR:-"${HOME}/VirtualBox VMs"}
 
 # Change these every semester as needed
-mint_version="19" # Numeric Mint version (not codename)
-semester="Fa18"   # Two characters for semester, two digits for year
+mint_version="19.1" # Numeric Mint version (not codename)
+semester="Sp19"   # Two characters for semester, two digits for year
 
 vm="JMU Linux Mint ${semester}"
 vm_disk="${VBOX_VM_DIR}/${vm}/${vm}.vdi"
