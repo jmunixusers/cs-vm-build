@@ -4,6 +4,8 @@
     "semester": "Sp19",
     "mint_version": "19.1",
 
+    "build_id": "{{isotime \"2006-01-02\"}}",
+
     "git_repo": "https://github.com/jmunixusers/cs-vm-build",
     "git_branch": "master",
 
@@ -20,6 +22,7 @@
     {
       "type": "virtualbox-iso",
       "headless": "{{user `headless`}}",
+      "http_directory": "http",
 
       "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--audioout", "on" ],
@@ -32,15 +35,15 @@
         ["modifyvm", "{{.Name}}", "--usb", "on", "--usbehci", "off", "--usbxhci", "off" ],
         ["modifyvm", "{{.Name}}", "--vram", "64" ],
         ["modifyvm", "{{.Name}}", "--vrde", "off" ],
-        ["storagectl", "{{.Name}}", "--name", "IDE Controller", "--hostiocache", "on" ],
         ["storagectl", "{{.Name}}", "--name", "SATA Controller", "--hostiocache", "on" ]
       ],
 
       "vboxmanage_post": [
-        ["modifyvm", "{{.Name}}", "--accelerate3d", "on" ]
+        ["modifyvm", "{{.Name}}", "--accelerate3d", "on" ],
+        ["storageattach", "{{.Name}}", "--storagectl", "SATA Controller",
+          "--port", "1", "--type", "dvddrive", "--medium", "emptydrive"]
       ],
 
-      "output_directory": "{{user `output_dir`}}/ova",
       "vm_name": "{{user `vm_name`}} {{user `semester`}}",
 
       "iso_urls": [
@@ -48,11 +51,11 @@
       ],
       "iso_checksum_type": "sha256",
       "iso_checksum_url": "{{user `mirror_url`}}/{{user `mint_version`}}/sha256sum.txt",
+      "iso_interface": "sata",
 
       "hard_drive_discard": "true",
       "hard_drive_interface": "sata",
       "hard_drive_nonrotational": true,
-      "iso_interface": "ide",
       "sata_port_count": 2,
       "disk_size": "20480",
 
@@ -70,14 +73,25 @@
         "<enter>"
       ],
 
-      "http_directory": "http",
-
-      "format": "ova",
-
       "ssh_username": "{{user `ssh_user`}}",
       "ssh_password": "{{user `ssh_pass`}}",
       "ssh_timeout": "100m",
-      "shutdown_command": "echo -e \"{{user `ssh_pass`}}\\n\" | sudo -S poweroff"
+      "shutdown_command": "echo -e \"{{user `ssh_pass`}}\\n\" | sudo -S poweroff",
+
+      "output_directory": "{{user `output_dir`}}",
+      "format": "ova",
+
+      "export_opts":
+      [
+        "--manifest",
+        "--vsys", "0",
+          "--description", "Build ID: {{user `build_id`}}",
+          "--product", "{{user `vm_name`}} {{user `semester`}}",
+          "--producturl", "https://linuxmint.com/",
+          "--vendor", "JMU Unix Users Group",
+          "--vendorurl", "{{user `git_repo`}}",
+          "--version", "{{user `mint_version`}}"
+      ]
     }
   ],
   "provisioners": [{
@@ -96,7 +110,7 @@
   "post-processors": [
     {
       "type": "checksum",
-      "output": "{{user `output_dir`}}/{{.BuildName}}_{{.BuilderType}}.{{.ChecksumType}}sum"
+      "output": "{{user `output_dir`}}/{{user `vm_name`}} {{user `semester`}}.{{.ChecksumType}}sum"
     }
   ]
 }
