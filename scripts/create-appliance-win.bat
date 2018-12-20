@@ -1,11 +1,12 @@
 set PATH="c:\Program Files\Oracle\VirtualBox";%PATH%
 
 REM Change every semester. Fa/Sp for semester, two digits for year.
-set semester="Fa18"
+set semester="Sp19"
+set MINT_VERSION="19.1"
 
 set VM=JMU Linux Mint %semester%
 set VMDISK=%HOMEDRIVE%%HOMEPATH%\VirtualBox VMs\%VM%\%VM%.vdi
-set VMINSTALLDISK=%HOMEDRIVE%%HOMEPATH%\Downloads\linuxmint-19-cinnamon-64bit-v2.iso
+set VMINSTALLDISK=%HOMEDRIVE%%HOMEPATH%\Downloads\linuxmint-%MINT_VERSION%-cinnamon-64bit.iso
 
 VBoxManage createvm --name "%VM%" --ostype Ubuntu_64 --register
 VBoxManage modifyvm "%VM%" --cpus 2 --memory 2048 --vram 64
