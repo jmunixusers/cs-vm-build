@@ -79,8 +79,13 @@ def main():
 
     # The default value for the branch is the current distro release name.
     # Set this before parsing the configuration. If it can't be detected,
-    # it should get set to None
-    USER_CONFIG['git_branch'] = get_distro_release_name()
+    # it should get set to None. If the branch does not currently exist, it
+    # should be set to master.
+    distro_name = get_distro_release_name()
+    if branch_exists(distro_name):
+        USER_CONFIG['git_branch'] = distro_name
+    else:
+        USER_CONFIG['git_branch'] = 'master'
 
     # Parse the user's previous settings
     parse_user_config()
@@ -389,7 +394,7 @@ class AnsibleWrapperWindow(Gtk.Window):
             )
             return
 
-        if not validate_branch():
+        if not branch_exists(USER_CONFIG['git_branch']):
             invalid_branch(self)
             return
         
@@ -588,24 +593,11 @@ def validate_branch_settings(parent):
     branch_mismatch = system_version != chosen_branch
     looks_minty = re.compile(r"[a-z]+a").fullmatch(chosen_branch)
     
-    output = subprocess.run(
-        ["/usr/bin/git", "ls-remote", '--heads', USER_CONFIG['git_url']],
-        stdout=subprocess.PIPE
-    )
-
-    ls_remote = output.stdout.decode("utf-8")
-
-    remote_refs = []
-    for ref in ls_remote.split('\n'):
-        remote_refs.append(ref.split('/')[-1])
-
-    logging.info("Available branches: %s", ", ".join(remote_refs))
-
     header = None
     warning_prompt = None
     
-    system_exists = system_version in remote_refs
-    chosen_exists = chosen_branch in remote_refs
+    system_exists = branch_exists(system_version)
+    chosen_exists = branch_exists(chosen_branch)
 
     # We only validate when the default remote is chosen -- if it's not we
     # cannot make any assumptions about branches
@@ -714,6 +706,32 @@ def validate_branch_settings(parent):
     return warning_prompt is None
 
 
+def branch_exists(branch_name):
+    """
+    Checks whether a particular branch exists at the currently-configured
+    git URL. This uses the output of `git ls-remote --heads` and parses the
+    branch names from that.
+
+    :param branch_name: The branch name to search for on the remote
+    :returns: True if the branch exists and False if it does not
+    """
+
+    output = subprocess.run(
+        ["/usr/bin/git", "ls-remote", '--heads', USER_CONFIG['git_url']],
+        stdout=subprocess.PIPE
+    )
+
+    ls_remote = output.stdout.decode("utf-8")
+
+    remote_refs = []
+    for ref in ls_remote.split('\n'):
+        remote_refs.append(ref.split('/')[-1])
+
+    logging.info("Available branches: %s", ", ".join(remote_refs))
+
+    return branch_name in remote_refs
+
+
 def display_ignorable_warning(title, message, parent, settings_key):
     """
     Displays a warning dialog that contains a checkbox allowing it to be
@@ -756,24 +774,6 @@ def display_ignorable_warning(title, message, parent, settings_key):
         write_user_config()
 
     dialog.destroy()
-
-
-def validate_branch():
-    """
-    Checks the branch passed in against the branches available on remote.
-    Returns true if branch exists on remote. This may be subject to false
-    postivies, but that should not be an issue.
-    :returns: Whether the chosen branch exists on the git remote
-    """
-
-    output = subprocess.run(
-        ["/usr/bin/git", "ls-remote", USER_CONFIG['git_url']],
-        stdout=subprocess.PIPE
-    )
-
-    ls_remote_output = output.stdout.decode("utf-8")
-
-    return USER_CONFIG['git_branch'] in ls_remote_output
 
 
 def invalid_branch(parent):
