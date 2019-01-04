@@ -1,7 +1,7 @@
 ---
 # vars file for Finch
 finch:
-  url: 'https://www.finchrobot.com/sites/default/files/FinchPython120.zip'
+  url: 'https://www.birdbraintechnologies.com/downloads/finch/FinchPython120.zip'
   zip: '{{ global_base_path }}/FinchPython120.zip'
   hash: 'dce5cea6562cb4b2c1f2489131227d211d559198'
   install_path: '{{ global_base_path }}/FinchPython'
