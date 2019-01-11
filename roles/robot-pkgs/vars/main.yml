@@ -19,6 +19,6 @@ usb_warning_msg: |
     "<b>USB Contollers missing</b>
     In order to effectively connect robots to the VM
     ECHI/xHCI controllers need to be installed from
-    VirtualBox. See <a href='https://jmunixusers.github.io/presentations/virtualbox-extension-pack.html'>these instructions</a> for
+    VirtualBox. See <a href='https://jmunixusers.github.io/presentations/vm/virtualbox-extension-pack.html'>these instructions</a> for
     more information on how to install them"
 
