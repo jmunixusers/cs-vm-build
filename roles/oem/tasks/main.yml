@@ -1,20 +1,14 @@
 ---
 # tasks file for oem
+
 - name: Ensure this in Linux Mint
   assert:
       that:
         - "ansible_distribution == 'Linuxmint' or ansible_distribution == 'Linux Mint'"
-- name: Update apt cache
-  apt:
-      update_cache: yes
-- name: Remove unneeded stock packages
-  apt: name={{ packages_to_remove }} state=absent purge=yes
+- include_tasks: vm_only_pre.yml
+  when: "ansible_virtualization_role == 'guest'"
 - name: Remove unused dependencies
   apt:
-      # A name must be specified in Ansible 2.1.1.0 or you get a cryptic error
-      # message when running the playbook. This will not remove the curl package.
-      # It was chosen arbitrarily just to allow this playbook to run
-      name: curl
       autoremove: yes
 - name: Upgrade all installed packages
   apt:
@@ -23,17 +17,6 @@
   apt:
       name: "{{ packages_to_install }}"
       state: latest
-- name: Clean the apt database
-  command: apt-get clean
-  # This will always report as changed otherwise
-  changed_when: False
-  args:
-    warn: no
-- name: Ensure skeleton Desktop directory exists
-  file:
-      path: /etc/skel/Desktop
-      state: directory
-      mode: 0750
 - name: Ensure log directory exists
   file:
       path: /opt/vmtools/logs
@@ -61,8 +44,6 @@
       mode: 0755
       owner: root
       group: staff
-- name: Validate missing USB 2/3 controllers
-  shell: lspci | grep -i -e EHCI -e xHCI
-  register: lspci_output
-  failed_when: lspci_output.rc == 0
-  changed_when: False
+# Some tasks should only be run when running as a guest OS.
+- include_tasks: vm_only_post.yml
+  when: "ansible_virtualization_role == 'guest'"

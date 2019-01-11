@@ -1,0 +1,13 @@
+---
+# vars file for user
+global_base_path: /opt
+global_profile_path: /opt/csvmprofile
+
+user_dependencies:
+  - default-jdk
+  - libnotify-bin
+  - python-psutil
+  - unzip    
+  - vim
+  - vim-gnome    
+  - zenity

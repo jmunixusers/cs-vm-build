@@ -14,7 +14,6 @@ user () {
     echo "==> ${1}"
 }
 
-
 #---
 # Emits an error message and exits the script to stderr.
 #
@@ -39,29 +38,54 @@ assert_mint() {
 }
 
 #---
+# Installs VirtualBox Guest Additions if ISO file is present
+#---
+install_additions() {
+    local isofile=/home/oem/VBoxGuestAdditions.iso
+
+    if [ -f "$isofile" ]; then
+        mkdir /home/oem/additions
+        mount -o loop,ro "$isofile" /home/oem/additions
+
+        # Guest additions installation returns error 2 on success
+        /home/oem/additions/VBoxLinuxAdditions.run || true
+
+        umount /home/oem/additions
+        rm "$isofile"
+    else
+        user "VirtualBox Additions disk missing. Skipping installation."
+    fi
+}
+
+#---
 # Performs the actual preparation of the machine
 #---
 main () {
+    if [ "$(id -u)" -ne "0" ]; then
+        error "Not running as root. Retry with sudo"
+        exit 1
+    fi
+
     assert_mint
 
+    user "Attempting to install VBox Guest Additions"
+    install_additions
+
     user "Updating apt package cache"
-    sudo apt-get update
+    apt-get update
 
     user "Installing ansible and git"
-    sudo apt-get install --assume-yes ansible git aptitude\
+    apt-get install --assume-yes ansible git aptitude\
         || error "Unable to install ansible and git packages"
+
+    mkdir -p /opt/vmtools/logs
 
     user "Running ansible OEM playbook"
     # Ensure this runs from the root directory of the Ansible git directory
     cd "$(dirname "$0")"/.. \
         || error "Unable to cd to $(dirname "$0")/.."
-    ansible-playbook -i hosts -c local -K -t oem oem.yml \
+    ansible-playbook -i hosts -c local -t oem oem.yml \
         || error "Playbook failed to complete successfully"
-
-    user "Preparing to fill disk with zeros to assist with compression"
-    read -n1 -r -p "Press any key to continue or ^C to exit" junk
-    user "Filling disk with zeros to assist with compression"
-    sudo dd if=/dev/zero of=/bigfile bs=1M; sudo sync; sudo rm /bigfile
 }
 
 # Actually run the main function
