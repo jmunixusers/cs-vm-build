@@ -1,0 +1,14 @@
+---
+# vars file for programming-langs
+ruby_packages:
+  - ruby
+  - rvm
+
+ruby_version:
+  - 'ruby-2.6.0'
+
+haskell_packages:
+  - haskell-platform
+
+prolog_packages:
+  - GProlog
