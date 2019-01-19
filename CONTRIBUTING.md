@@ -129,15 +129,15 @@ ansible-galaxy init [your class name/description]
 ```
 This has very little output but once it finishes, go into the newly created
 directory to find a host of new folders and a readme. Every folder (generally)
-contains a `main.yml` file that will be your base for your new role. Generally
-try to keep to the `tasks/main.yml` and `vars/main.yml` if you are unsure about
+contains a `main.yml` file that will be your base for your new role. Try to
+keep to the `tasks/main.yml` and `vars/main.yml` if you are unsure about
 where to put things, though there are good reasons to use other folders/files.
 
 As you will see in many of the other roles, any lists are generally kept to the
 `vars` folder, since it places them in a place that is easy to access and
 decoupled from the actual implementation of what those variables are needed for.
 
-One last note; we have generally avoided using external ansible modules, as
+One last note; we have tried to avoid using external ansible modules, as
 they are usually simply a shell command wrapped in a python script. For any
 install that can be done with a `command` module call instead of a more specific
 module generally should, as using a seperate module would require installing
