@@ -148,3 +148,14 @@ project. It should be fairly obvoius to see, but just in case here is the
 layout:
 ```
 - { role: [role name], tags: ['tags'] )
+```
+
+Now we are ready to edit the python installer. Navagate to
+`cs-vm-build/roles/common/files` and open `uug_ansible_wrapper.py`. You will
+be greeted with a long and hard to read python file, but luckily the only thing
+we need to edit is very early in the file. On line 33 (at the time of writing)
+there is a dictionary of classes and tags, this is where we will be adding our
+class. The first value is what the class will appear as in the install program,
+and the second value will be the role name from the `roles.yml` file we added
+earlier.
+
