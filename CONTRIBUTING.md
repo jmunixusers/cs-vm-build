@@ -143,3 +143,8 @@ install that can be done with a `command` module call instead of a more specific
 module generally should, as using a seperate module would require installing
 that module on every VM, as we are not using ansible as it was designed.
 
+Afterwords, simply add your role to the `roles.yml` file in the root of the
+project. It should be fairly obvoius to see, but just in case here is the
+layout:
+```
+- { role: [role name], tags: ['tags'] )
