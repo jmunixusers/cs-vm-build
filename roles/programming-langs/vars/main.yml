@@ -2,10 +2,9 @@
 # vars file for programming-langs
 ruby_packages:
   - ruby
-  - rvm
 
 haskell_packages:
   - haskell-platform
 
 prolog_packages:
-  - GProlog
+  - swi-prolog

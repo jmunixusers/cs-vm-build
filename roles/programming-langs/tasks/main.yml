@@ -2,14 +2,17 @@
 # tasks file for programming-langs
 
 - name: Install Ruby packages
-  apt: name={{ ruby_packages }} state=latest
-
-  # update ruby to latest stable version, as lam will generally use the same
-- name: Update Ruby with the command module
-  command: rvm get stable
+  apt: 
+    name: {{ ruby_packages }} 
+    state: latest
 
 - name: Install Haskell packages
-  apt: name={{ haskell_packages }} state=latest
+  apt:
+    name: {{ haskell_packages }}
+    state: latest
 
 - name: Install Prolog packages
-  apt: name={{ prolog_packages }} state=latest
+  apt:
+    name: {{ prolog_packages }}
+    state: latest
+
