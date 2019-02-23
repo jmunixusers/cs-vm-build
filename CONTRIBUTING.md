@@ -116,3 +116,46 @@ For example, the first release in the spring of 2018 was `sylvia-sp18a` and
 if subsequent releases had been necessary, they would have been named
 `sylvia-sp18b` and `sylvia-sp18c`, etc. The first release in fall 2018 was
 `tara-fa18a`.
+
+## Adding a new role
+
+Assuming you have your git operations in order, the first thing you will need
+to do to begin working on your ansible role is to create the directory. We will
+start in the base `cs-vm-build` directory that you get when cloning the
+jmunixusers repo. First move into the `roles/` folder, and create a directory
+for your role using the `ansible-galaxy` command:
+```
+ansible-galaxy init [your class name/description]
+```
+This has very little output but once it finishes, go into the newly created
+directory to find a host of new folders and a readme. Every folder (generally)
+contains a `main.yml` file that will be your base for your new role. Try to
+keep to the `tasks/main.yml` and `vars/main.yml` if you are unsure about
+where to put things, though there are good reasons to use other folders/files.
+
+As you will see in many of the other roles, any lists are generally kept to the
+`vars` folder, since it places them in a place that is easy to access and
+decoupled from the actual implementation of what those variables are needed for.
+
+One last note; we have tried to avoid using external ansible modules, as
+they are usually simply a shell command wrapped in a python script. For any
+install that can be done with a `command` module call instead of a more specific
+module generally should, as using a seperate module would require installing
+that module on every VM, as we are not using ansible as it was designed.
+
+Afterwords, simply add your role to the `roles.yml` file in the root of the
+project. It should be fairly obvoius to see, but just in case here is the
+layout:
+```
+- { role: [role name], tags: ['tags'] )
+```
+
+Now we are ready to edit the python installer. Navagate to
+`cs-vm-build/roles/common/files` and open `uug_ansible_wrapper.py`. You will
+be greeted with a long and hard to read python file, but luckily the only thing
+we need to edit is very early in the file. On line 33 (at the time of writing)
+there is a dictionary of classes and tags, this is where we will be adding our
+class. The first value is what the class will appear as in the install program,
+and the second value will be the role name from the `roles.yml` file we added
+earlier.
+
