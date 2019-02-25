@@ -98,6 +98,14 @@ using these tasks and the VM is available
     * mercurial
     * meld
 
+### CS430
+* Ruby
+  * ruby
+* Haskell
+  * haskell-platform
+* Prolog
+  * swi-prolog
+
 ## Manual use of these Ansible roles
 
 ```
