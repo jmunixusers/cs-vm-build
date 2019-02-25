@@ -3,16 +3,16 @@
 
 - name: Install Ruby packages
   apt: 
-    name: {{ ruby_packages }} 
+    name: "{{ ruby_packages }}"
     state: latest
 
 - name: Install Haskell packages
   apt:
-    name: {{ haskell_packages }}
+    name: "{{ haskell_packages }}"
     state: latest
 
 - name: Install Prolog packages
   apt:
-    name: {{ prolog_packages }}
+    name: "{{ prolog_packages }}"
     state: latest
 
