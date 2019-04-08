@@ -21,7 +21,7 @@ using these tasks and the VM is available
 * JMU wireless printing
 
 ### CS101
-* Eclipse
+* Eclipse (with checkstyle plugin)
 * Finch robot
 * Mint packages (basic-prog-pkgs role)
   * artha
@@ -37,11 +37,11 @@ using these tasks and the VM is available
   * wireshark
 
 ### CS149
-* Eclipse
+* Eclipse (with checkstyle plugin)
 * jGRASP
 
 ### CS159
-* Eclipse
+* Eclipse (with checkstyle plugin)
 
 ### CS261
 * Mint packages (adv-prog-pkgs role)
