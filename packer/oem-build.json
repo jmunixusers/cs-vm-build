@@ -10,6 +10,7 @@
     "git_branch": "master",
 
     "headless": "true",
+    "audio": "pulse",
 
     "output_dir": "{{pwd}}/artifacts",
     "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable",
@@ -23,12 +24,14 @@
       "type": "virtualbox-iso",
       "headless": "{{user `headless`}}",
       "http_directory": "http",
+      "vm_name": "{{user `vm_name`}} {{user `semester`}}",
+
+      "cpus": 2,
+      "memory": 4096,
+      "sound": "{{user `audio`}}",
 
       "vboxmanage": [
-        ["modifyvm", "{{.Name}}", "--audioout", "on" ],
         ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional" ],
-        ["modifyvm", "{{.Name}}", "--cpus", "2"],
-        ["modifyvm", "{{.Name}}", "--memory", "2048"],
         ["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
         ["modifyvm", "{{.Name}}", "--pae", "on"],
         ["modifyvm", "{{.Name}}", "--rtcuseutc", "on"],
@@ -43,8 +46,6 @@
         ["storageattach", "{{.Name}}", "--storagectl", "SATA Controller",
           "--port", "1", "--type", "dvddrive", "--medium", "emptydrive"]
       ],
-
-      "vm_name": "{{user `vm_name`}} {{user `semester`}}",
 
       "iso_urls": [
         "{{user `mirror_url`}}/{{user `mint_version`}}/{{user `iso_file`}}"
