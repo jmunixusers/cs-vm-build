@@ -72,3 +72,4 @@
   apt:
     update_cache: yes
   changed_when: False
+  ignore_errors: yes

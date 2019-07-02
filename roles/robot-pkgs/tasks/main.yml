@@ -15,6 +15,7 @@
 - name: Refresh apt cache
   apt:
     update_cache: yes
+  ignore_errors: yes
 - name: Install robot development packages
   apt: name={{ ros_packages }} state=latest
 - name: Create ROS profile entries
