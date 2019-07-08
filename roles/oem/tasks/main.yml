@@ -44,6 +44,25 @@
       mode: 0755
       owner: root
       group: staff
+- name: Create the dconf profile directory
+  file:
+      path: /etc/dconf/profile
+      state: directory
+      mode: 0755
+      owner: root
+- name: Copy dconf profile file
+  copy:
+      src: dbus-profile
+      dest: /etc/dconf/profile/user
+      owner: root
+      group: root
+      mode: 0644
+- name: Create the dconf policy directory
+  file:
+      path: /etc/dconf/db/local.d
+      state: directory
+      mode: 0755
+      owner: root
 # Some tasks should only be run when running as a guest OS.
 - include_tasks: vm_only_post.yml
   when: "ansible_virtualization_role == 'guest'"
