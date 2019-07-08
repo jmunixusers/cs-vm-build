@@ -3,6 +3,16 @@
 # Tasks to only be run on virtualized guest OSes at the end of playbook
 # execution
 
+- name: Copy dconf config file
+  copy:
+      src: csconfig-vmonly
+      dest: /etc/dconf/db/local.d/csconfig-vmonly
+      owner: root
+      group: root
+      mode: 0644
+  notify:
+    - Update dconf database
+
 # The apt database can be fairly large and make the image unnecessarily large
 # so removing it before shipping allows us to ship a smaller image.
 - name: Clean the apt database
