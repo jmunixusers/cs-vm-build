@@ -4,18 +4,22 @@
 # All tasks in this file should be able to be run as part of the OEM or common
 # role without error as common is used in both of those.
 
-- set_fact:
+- name: Set OEM facts
+  set_fact:
     base_path: "{{ oem_base_path }}"
     icon_path: "/etc/skel/Desktop"
     file_mode: 0755
   when: icon_mode == 'oem'
-- set_fact:
+- name: Set user facts
+  set_fact:
     base_path: "{{ global_base_path }}"
     icon_path: "/usr/local/share/applications"
     file_mode: 0644
   when: icon_mode == 'user'
-- set_fact: bin_path="{{ base_path }}/vmtools/bin"
-- set_fact: uug_ansible_wrapper="{{ bin_path }}/uug_ansible_wrapper.py"
+- name: Set bin fact
+  set_fact: bin_path="{{ base_path }}/vmtools/bin"
+- name: Set wrapper fact
+  set_fact: uug_ansible_wrapper="{{ bin_path }}/uug_ansible_wrapper.py"
 - name: Check Ubuntu release
   set_fact:
     ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
