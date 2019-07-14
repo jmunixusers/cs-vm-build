@@ -1,8 +1,8 @@
 {
   "variables": {
     "vm_name": "JMU Linux Mint",
-    "semester": "Sp19",
-    "mint_version": "19.1",
+    "semester": "Fa19",
+    "mint_version": "19.2",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
@@ -13,8 +13,8 @@
     "audio": "pulse",
 
     "output_dir": "{{pwd}}/artifacts",
-    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable",
-    "iso_file": "linuxmint-19.1-cinnamon-64bit.iso",
+    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/testing",
+    "iso_file": "linuxmint-19.2-cinnamon-64bit-beta.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
@@ -48,9 +48,11 @@
       ],
 
       "iso_urls": [
-        "{{user `mirror_url`}}/{{user `mint_version`}}/{{user `iso_file`}}"
+        "{{user `mirror_url`}}/{{user `mint_version`}}/{{user `iso_file`}}",
+        "{{user `mirror_url`}}/{{user `iso_file`}}"
       ],
       "iso_checksum_type": "sha256",
+      "iso_checksum": "05de8ee5e1d5985d4107ed130f3099d3406292bcfe30dbd213a57e10ec07c7a2",
       "iso_checksum_url": "{{user `mirror_url`}}/{{user `mint_version`}}/sha256sum.txt",
       "iso_interface": "sata",
 
