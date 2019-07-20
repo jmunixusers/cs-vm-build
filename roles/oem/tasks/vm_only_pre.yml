@@ -3,3 +3,8 @@
 # Tasks for the oem role to run at the beginning of playbook execution
 - name: Remove unneeded stock packages
   apt: name={{ packages_to_remove }} state=absent purge=yes
+- name: Remove i386 architecture
+  lineinfile:
+    path: /var/lib/dpkg/arch
+    state: absent
+    line: 'i386'
