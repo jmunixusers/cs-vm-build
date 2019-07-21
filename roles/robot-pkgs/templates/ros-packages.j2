@@ -1,6 +1,3 @@
 # Upstream repos for ROS packages
 
-{%for mirror in ros_repos %}
-deb {{ mirror }} {{ ubuntu_release }} main
-
-{% endfor %}
+deb mirror+file:/etc/apt/robot.mirror {{ ubuntu_release }} main

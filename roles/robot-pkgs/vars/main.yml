@@ -2,11 +2,6 @@
 # vars file for robot-pkgs
 ros_release: melodic
 
-# Keep UMD first to prefer downloads from there
-ros_repos:
-  - "http://mirror.umd.edu/packages.ros.org/ros/ubuntu"
-  - "http://packages.ros.org/ros/ubuntu"
-
 ros_packages:
     - ros-{{ros_release}}-desktop-full
     - ros-{{ros_release}}-sound-play

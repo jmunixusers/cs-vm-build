@@ -5,6 +5,13 @@
     keyserver: ha.pool.sks-keyservers.net
     id: 421C365BD9FF1F717815A3895523BAEEB01FA116
     state: present
+- name: Install Robot mirror list
+  copy:
+    src: robot.mirror
+    dest: /etc/apt/robot.mirror
+    owner: root
+    group: root
+    mode: 0644
 - name: Add ROS repository
   template:
     src: ros-packages.j2
@@ -15,7 +22,6 @@
 - name: Refresh apt cache
   apt:
     update_cache: yes
-  ignore_errors: yes
 - name: Install robot development packages
   apt: name={{ ros_packages }} state=latest
 - name: Create ROS profile entries
