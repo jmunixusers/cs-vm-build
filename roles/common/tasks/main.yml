@@ -52,6 +52,20 @@
       dest: "{{ icon_path }}/jmucs_config.desktop"
       mode: "{{ file_mode }}"
 
+- name: Install Mint mirror list
+  copy:
+    src: mint.mirror
+    dest: /etc/apt/mint.mirror
+    owner: root
+    group: root
+    mode: 0664
+- name: Install Ubuntu mirror list
+  copy:
+    src: ubuntu.mirror
+    dest: /etc/apt/ubuntu.mirror
+    owner: root
+    group: root
+    mode: 0664
 - name: Set Ubuntu mirrors
   template:
     src: ubuntu.j2
@@ -72,4 +86,3 @@
   apt:
     update_cache: yes
   changed_when: False
-  ignore_errors: yes

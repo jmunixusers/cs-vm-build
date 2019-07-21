@@ -4,13 +4,10 @@
 # Place modification another file in /etc/apt/sources.list.d/ with a .list
 # file extension.
 
-{% for mirror in ubuntu_mirrors %}
-deb {{ mirror }} {{ ubuntu_release }} main restricted universe multiverse
-deb {{ mirror }} {{ ubuntu_release }}-updates main restricted universe multiverse
-deb {{ mirror }} {{ ubuntu_release }}-backports main restricted universe multiverse
-deb {{ mirror }} {{ ubuntu_release }}-security main restricted universe multiverse
-
-{% endfor %}
+deb mirror+file:/etc/apt/ubuntu.mirror {{ ubuntu_release }} main restricted universe multiverse
+deb mirror+file:/etc/apt/ubuntu.mirror {{ ubuntu_release }}-updates main restricted universe multiverse
+deb mirror+file:/etc/apt/ubuntu.mirror {{ ubuntu_release }}-backports main restricted universe multiverse
+deb mirror+file:/etc/apt/ubuntu.mirror {{ ubuntu_release }}-security main restricted universe multiverse
 
 # Parter repository (necessary for optional media codecs)
 deb http://archive.canonical.com/ubuntu bionic partner

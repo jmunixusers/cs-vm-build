@@ -1,9 +1,2 @@
 ---
 # vars file for common
-ubuntu_mirrors:
-  - "https://mirror.cs.jmu.edu/pub/ubuntu"
-  - "http://us.archive.ubuntu.com/ubuntu"
-
-mint_mirrors:
-  - "https://mirror.cs.jmu.edu/pub/linuxmint/packages"
-  - "http://packages.linuxmint.com"
