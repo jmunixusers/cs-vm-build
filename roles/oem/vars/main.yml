@@ -33,7 +33,7 @@ packages_to_remove:
     - fonts-samyak-*
     - fonts-sarai
     - fonts-sil-*
-    - fonts-smc
+    - fonts-smc-*
     - fonts-takao-pgothic
     - fonts-telu-extra
     - fonts-tibetan-machine
@@ -41,19 +41,22 @@ packages_to_remove:
     - fonts-wqy-microhei
     - gimp*
     - hexchat*
-    - hunspell-de-at
-    - hunspell-de-ch
-    - hunspell-de-de
+    - hunspell-de-*
+    - hunspell-en-au
     - hunspell-en-ca
     - hunspell-en-gb
     - hunspell-en-za
-    - hunspell-fr
-    - hunspell-fr-classical
+    - hunspell-es
+    - hunspell-fr*
     - hunspell-it
+    - hunspell-pt*
     - hunspell-ru
-    - hypgen-fr
     - hyphen-de
+    - hyphen-en-ca
+    - hyphen-en-gb
+    - hyphen-fr
     - hyphen-it
+    - hyphen-pt*
     - hyphen-ru
     - libllvm3.8
     - libreoffice-common
@@ -61,13 +64,10 @@ packages_to_remove:
     - mint-backgrounds-sarah
     - mint-backgrounds-serena
     - mint-backgrounds-sonya
+    - mint-backgrounds-tara
+    - mint-backgrounds-tessa
     - mono-*
-    - myspell-en-au
-    - myspell-en-gb
-    - myspell-en-za
-    - myspell-es
-    - myspell-it
-    - myspell-pt*
+    - myspell-*
     - mythes-de
     - mythes-de-ch
     - mythes-en-au
