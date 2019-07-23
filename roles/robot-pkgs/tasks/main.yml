@@ -3,12 +3,12 @@
 - name: Add ROS key
   apt_key:
     keyserver: ha.pool.sks-keyservers.net
-    id: 421C365BD9FF1F717815A3895523BAEEB01FA116
+    id: C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
     state: present
-- name: Add ROS repository
+- name: Add ROS repositories
   template:
     src: ros-packages.j2
-    dest: /etc/apt/sources.list.d/ros-packages.list
+    dest: /etc/apt/sources.list.d/ros-package-repositories.list
     owner: root
     group: root
     mode: 0644
