@@ -2,8 +2,8 @@
 # tasks file for robot-pkgs
 - name: Add ROS key
   apt_key:
-    keyserver: ha.pool.sks-keyservers.net
-    id: 421C365BD9FF1F717815A3895523BAEEB01FA116
+    id: C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+    url: http://packages.ros.org/ros.asc
     state: present
 - name: Add ROS repository
   template:
