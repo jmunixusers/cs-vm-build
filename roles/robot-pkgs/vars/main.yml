@@ -21,4 +21,3 @@ usb_warning_msg: |
     ECHI/xHCI controllers need to be installed from
     VirtualBox. See <a href='https://jmunixusers.github.io/presentations/vm/virtualbox-extension-pack.html'>these instructions</a> for
     more information on how to install them"
-

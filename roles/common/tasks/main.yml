@@ -26,35 +26,35 @@
 
 - name: Create VMTools bin
   file:
-      path: "{{ bin_path }}"
-      state: directory
+    path: "{{ bin_path }}"
+    state: directory
 - name: Ensure desktop icon directory exists
   file:
-      path: "{{ icon_path }}"
-      state: directory
-      mode: 0755
+    path: "{{ icon_path }}"
+    state: directory
+    mode: 0755
 # The policy file must go in /usr/share/polkit-1. It is the only location that
 # policykit checks
 - name: Install policykit policy for Ansible wrapper
   copy:
-      src: edu.jmu.uug.ansiblewrapper.policy
-      dest: /usr/share/polkit-1/actions/
-      mode: 0644
+    src: edu.jmu.uug.ansiblewrapper.policy
+    dest: /usr/share/polkit-1/actions/
+    mode: 0644
 - name: Install Ansible wrapper GUI script
   copy:
-      src: uug_ansible_wrapper.py
-      dest: '{{ uug_ansible_wrapper }}'
-      mode: 0755
+    src: uug_ansible_wrapper.py
+    dest: '{{ uug_ansible_wrapper }}'
+    mode: 0755
 - name: Install JMU Tux icon
   copy:
-      src: jmu-tux.svg
-      dest: "{{ base_path }}/jmu-tux.svg"
-      mode: 0644
+    src: jmu-tux.svg
+    dest: "{{ base_path }}/jmu-tux.svg"
+    mode: 0644
 - name: Copy shortcut to desktop file directory
   template:
-      src: desktop-template.desktop.j2
-      dest: "{{ icon_path }}/jmucs_config.desktop"
-      mode: "{{ file_mode }}"
+    src: desktop-template.desktop.j2
+    dest: "{{ icon_path }}/jmucs_config.desktop"
+    mode: "{{ file_mode }}"
 
 - name: Set Ubuntu mirrors
   template:

@@ -11,7 +11,7 @@ printers:
     name: JMU-LabPrintColor
     queue: lpd://labprintremote@labprint.jmu.edu/LabPrintColor
     descr: JMU Labs & Libraries
-    driver: drv:///sample.drv/generic.ppd 
+    driver: drv:///sample.drv/generic.ppd
 
 wireless_printing_packages:
   - cups
