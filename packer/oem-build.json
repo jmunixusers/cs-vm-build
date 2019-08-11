@@ -1,8 +1,8 @@
 {
   "variables": {
     "vm_name": "JMU Linux Mint",
-    "semester": "Sp19",
-    "mint_version": "19.1",
+    "semester": "Fa19",
+    "mint_version": "19.2",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
@@ -14,7 +14,7 @@
 
     "output_dir": "{{pwd}}/artifacts",
     "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable",
-    "iso_file": "linuxmint-19.1-cinnamon-64bit.iso",
+    "iso_file": "linuxmint-19.2-cinnamon-64bit.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
