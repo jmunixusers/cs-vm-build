@@ -32,6 +32,7 @@
 
       "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional" ],
+        ["modifyvm", "{{.Name}}", "--graphicscontroller", "vmsvga" ],
         ["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
         ["modifyvm", "{{.Name}}", "--pae", "on"],
         ["modifyvm", "{{.Name}}", "--rtcuseutc", "on"],
