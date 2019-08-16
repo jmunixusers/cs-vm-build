@@ -1,2 +1,4 @@
 ---
 # handlers file for oem
+- name: Update dconf database
+  command: /usr/bin/dconf update
