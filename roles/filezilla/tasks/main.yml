@@ -31,4 +31,3 @@
       # Don't overwrite any filters the user already has
       force: no
   loop: "{{ real_users }}"
-

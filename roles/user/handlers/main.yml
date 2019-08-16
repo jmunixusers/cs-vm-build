@@ -6,15 +6,15 @@
 - name: Suggest restart
   command: >-
     notify-send -u critical "JMU Software Change"
-    "Changes have been made to your machine that 
-    will only take effect when you log out or 
+    "Changes have been made to your machine that
+    will only take effect when you log out or
     when you reboot. Please do this immediately."
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ item.uid }}"
   become: yes
   become_user: "{{ item.user }}"
   loop: "{{ real_users }}"
-- name: Restart update manager
+- name: Restart update manager # noqa 305
   shell:
     nohup mintupdate-launcher
   become: yes

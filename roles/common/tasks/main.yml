@@ -4,53 +4,57 @@
 # All tasks in this file should be able to be run as part of the OEM or common
 # role without error as common is used in both of those.
 
-- set_fact:
+- name: Set OEM facts
+  set_fact:
     base_path: "{{ oem_base_path }}"
     icon_path: "/etc/skel/Desktop"
     file_mode: 0755
   when: icon_mode == 'oem'
-- set_fact:
+- name: Set user facts
+  set_fact:
     base_path: "{{ global_base_path }}"
     icon_path: "/usr/local/share/applications"
     file_mode: 0644
   when: icon_mode == 'user'
-- set_fact: bin_path="{{ base_path }}/vmtools/bin"
-- set_fact: uug_ansible_wrapper="{{ bin_path }}/uug_ansible_wrapper.py"
+- name: Set bin fact
+  set_fact: bin_path="{{ base_path }}/vmtools/bin"
+- name: Set wrapper fact
+  set_fact: uug_ansible_wrapper="{{ bin_path }}/uug_ansible_wrapper.py"
 - name: Check Ubuntu release
   set_fact:
     ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
 
 - name: Create VMTools bin
   file:
-      path: "{{ bin_path }}"
-      state: directory
+    path: "{{ bin_path }}"
+    state: directory
 - name: Ensure desktop icon directory exists
   file:
-      path: "{{ icon_path }}"
-      state: directory
-      mode: 0755
+    path: "{{ icon_path }}"
+    state: directory
+    mode: 0755
 # The policy file must go in /usr/share/polkit-1. It is the only location that
 # policykit checks
 - name: Install policykit policy for Ansible wrapper
   copy:
-      src: edu.jmu.uug.ansiblewrapper.policy
-      dest: /usr/share/polkit-1/actions/
-      mode: 0644
+    src: edu.jmu.uug.ansiblewrapper.policy
+    dest: /usr/share/polkit-1/actions/
+    mode: 0644
 - name: Install Ansible wrapper GUI script
   copy:
-      src: uug_ansible_wrapper.py
-      dest: '{{ uug_ansible_wrapper }}'
-      mode: 0755
+    src: uug_ansible_wrapper.py
+    dest: '{{ uug_ansible_wrapper }}'
+    mode: 0755
 - name: Install JMU Tux icon
   copy:
-      src: jmu-tux.svg
-      dest: "{{ base_path }}/jmu-tux.svg"
-      mode: 0644
+    src: jmu-tux.svg
+    dest: "{{ base_path }}/jmu-tux.svg"
+    mode: 0644
 - name: Copy shortcut to desktop file directory
   template:
-      src: desktop-template.desktop.j2
-      dest: "{{ icon_path }}/jmucs_config.desktop"
-      mode: "{{ file_mode }}"
+    src: desktop-template.desktop.j2
+    dest: "{{ icon_path }}/jmucs_config.desktop"
+    mode: "{{ file_mode }}"
 
 - name: Set Ubuntu mirrors
   template:

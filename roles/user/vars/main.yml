@@ -7,7 +7,7 @@ user_dependencies:
   - default-jdk
   - libnotify-bin
   - python-psutil
-  - unzip    
+  - unzip
   - vim
-  - vim-gnome    
+  - vim-gnome
   - zenity

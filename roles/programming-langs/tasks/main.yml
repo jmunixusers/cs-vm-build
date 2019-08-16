@@ -2,7 +2,7 @@
 # tasks file for programming-langs
 
 - name: Install Ruby packages
-  apt: 
+  apt:
     name: "{{ ruby_packages }}"
     state: latest
 
@@ -15,4 +15,3 @@
   apt:
     name: "{{ prolog_packages }}"
     state: latest
-

@@ -30,7 +30,7 @@
 - name: Updating PATH to include y86 binaries
   lineinfile:
       dest: '{{ global_profile_path }}'
-      line: "export PATH={{ y86_bin_dir}}:$PATH"
+      line: "export PATH={{ y86_bin_dir }}:$PATH"
       state: present
   notify:
       - Suggest restart
