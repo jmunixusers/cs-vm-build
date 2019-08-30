@@ -10,9 +10,8 @@ URL to pull from can be changed in the program's Settings.
 import logging
 import os
 import re
-import socket
 import subprocess
-import sys
+import urllib.request
 
 import json
 
@@ -50,6 +49,7 @@ USER_CONFIG = {
 }
 NAME = "JMU CS VM Configuration"
 VERSION = "Spring 2019"
+
 
 def main():
     """
@@ -387,7 +387,8 @@ class AnsibleWrapperWindow(Gtk.Window):
             no_internet_msg = (
                 "It appears that you are not able to access the Internet. "
                 "This tool requires that you be online. "
-                "Please check your settings and try again."
+                "Please check your settings, ensure you are not behind a "
+                "captive portal, and try again."
             )
             show_dialog(
                 self, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
@@ -398,7 +399,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         if not branch_exists(USER_CONFIG['git_branch']):
             invalid_branch(self)
             return
-        
+
         for checkbox in self.checkboxes:
             checkbox.set_sensitive(False)
 
@@ -495,7 +496,7 @@ def parse_simple_config(path, data):
                 except ValueError:
                     logging.warning("Invalid entry in config file: %s", line)
                     continue
-    except FileNotFoundError as fne:
+    except FileNotFoundError:
         logging.info("Ignoring user configuration. It is not present")
 
 
@@ -583,20 +584,20 @@ def get_distro_release_name():
 
 def validate_branch_settings(parent):
     """
-    Warns the user of an error in the settings of the VM configuration. 
+    Warns the user of an error in the settings of the VM configuration.
     :returns: a boolean indicating if the system should return or continue
     """
-    
+
     system_version = get_distro_release_name()
     chosen_branch = USER_CONFIG['git_branch']
     chosen_remote = USER_CONFIG['git_url']
     master_okay = USER_CONFIG.get('ignore_master', False)
     branch_mismatch = system_version != chosen_branch
     looks_minty = re.compile(r"[a-z]+a").fullmatch(chosen_branch)
-    
+
     header = None
     warning_prompt = None
-    
+
     system_exists = branch_exists(system_version)
     chosen_exists = branch_exists(chosen_branch)
 
@@ -608,7 +609,7 @@ def validate_branch_settings(parent):
             chosen_remote
         )
         return True
-    
+
     # These are branches that should be handled specially
     if chosen_branch == "master" and system_exists and not master_okay:
         # The user wants to run master, but there is a release for their distro
@@ -627,7 +628,7 @@ def validate_branch_settings(parent):
         display_ignorable_warning(
             header, warning_prompt, parent, 'ignore_master'
         )
-        return False;
+        return False
 
     if branch_mismatch and looks_minty and system_exists:
         # The user wants to use a minty-looking branch, but there is a branch
@@ -801,7 +802,7 @@ def invalid_branch(parent):
     return
 
 
-def is_online(hostname="packages.linuxmint.com"):
+def is_online(url="http://detectportal.firefox.com", expected=b"success\n"):
     """
     Checks if the user is able to reach a selected hostname.
     :param hostname: The hostname to test against.
@@ -810,13 +811,23 @@ def is_online(hostname="packages.linuxmint.com"):
     """
 
     try:
-        host = socket.gethostbyname(hostname)
-        test_connection = socket.create_connection((host, 80), 2)
-        test_connection.close()
-        return True
-    except OSError as err:
-        logging.warning("%s is unreachable.", hostname, exc_info=err)
+        with urllib.request.urlopen(url) as response:
+            response_data = response.read()
+            if response_data == expected:
+                return True
+            else:
+                logging.error(
+                    "Response from %s was not %s as expected. Received: %s",
+                    url, expected, response_data
+                )
+            return False
+    except urllib.error.URLError as url_err:
+        logging.error(
+            "Unable to connect to %s", url, exc_info=url_err
+        )
         return False
+
+    return False
 
 
 def write_user_config():
