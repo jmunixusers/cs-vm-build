@@ -1,0 +1,30 @@
+---
+# tasks file for vscode
+- name: Add Microsoft key
+  apt_key:
+    id: BC528686B50D79E339D3721CEB3E94ADBE1229CF
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+- name: Install VSCode Repository file
+  apt_repository:
+    repo: deb https://packages.microsoft.com/repos/vscode stable main
+    state: present
+    filename: vscode
+- name: Install VSCode
+  apt:
+    name: 'code'
+    state: latest
+- name: Install Java pack plugin
+  command: /usr/bin/code --install-extension vscjava.vscode-java-pack
+  args:
+    creates: '{{ item.homedir }}/.vscode/extensions/vscjava.vscode-java-pack*'
+  become: yes
+  become_user: "{{ item.user }}"
+  loop: "{{ real_users }}"
+- name: Install checkstyle plugin
+  command: /usr/bin/code --install-extension shengchen.vscode-checkstyle
+  args:
+    creates: '{{ item.homedir }}/.vscode/extensions/shengchen.vscode-checkstyle*'
+  become: yes
+  become_user: "{{ item.user }}"
+  loop: "{{ real_users }}"
