@@ -28,7 +28,7 @@
     - item.value.5 != "/usr/sbin/nologin"
 - name: Upgrade installed software
   apt:
-      upgrade: safe
+    upgrade: full
 - name: Install required dependencies
   apt: name={{ user_dependencies }} state=latest
 
