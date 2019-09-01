@@ -15,3 +15,4 @@
     - { role: finch, tags: ["cs101"] }
     - { role: y86, tags: ["cs261"] }
     - { role: programming-langs, tags: ["cs430"] }
+    - { role: vscode, tags: ["cs149"] }
