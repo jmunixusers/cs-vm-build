@@ -26,9 +26,9 @@
 # Extensions which are non-free software and available only under the Oracle
 # PUEL. We should ensure we have not accidentally included them.
 - name: Validate missing USB 2/3 controllers # noqa 306
-  shell: lspci | grep -i -e EHCI -e xHCI
+  command: lspci
   register: lspci_output
-  failed_when: lspci_output.rc == 0
+  failed_when: "'ECHI' in lspci_output.stdout or 'xHCI' in lspci_output.stdout"
   changed_when: False
 
 - name: Fill disk with zeros to assist with compression
