@@ -272,8 +272,13 @@ class AnsibleWrapperWindow(Gtk.Window):
         )
         grid.attach_next_to(url_field, url_label, Gtk.PositionType.RIGHT, 1, 1)
         dialog.get_content_area().pack_end(grid, False, False, 0)
-        dialog.add_button(Gtk.STOCK_OK, Gtk.ResponseType.OK)
+        ok_button = dialog.add_button(Gtk.STOCK_OK, Gtk.ResponseType.OK)
         dialog.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+        def click_ok(_):
+            ok_button.clicked()
+
+        branch_field.connect('activate', click_ok)
+        url_field.connect('activate', click_ok)
         dialog.set_default_size(400, 100)
         grid.set_row_spacing(6)
         grid.set_column_spacing(6)
