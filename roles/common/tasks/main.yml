@@ -28,6 +28,8 @@
   command: /usr/bin/dpkg --configure -a
   register: dpkg_command
   changed_when: dpkg_command.stdout
+  environment:
+    DEBIAN_FRONTEND: noninteractive
 - name: Create VMTools bin
   file:
     path: "{{ bin_path }}"
