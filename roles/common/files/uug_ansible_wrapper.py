@@ -426,6 +426,8 @@ class AnsibleWrapperWindow(Gtk.Window):
             USER_CONFIG['git_url'],
             '--checkout',
             USER_CONFIG['git_branch'],
+            '--directory',
+            '/tmp',
             '--purge',
             '--inventory',
             'hosts',
