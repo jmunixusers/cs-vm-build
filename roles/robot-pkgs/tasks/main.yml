@@ -17,7 +17,9 @@
     update_cache: yes
   ignore_errors: yes
 - name: Install robot development packages
-  apt: name={{ ros_packages }} state=latest
+  apt:
+    name: '{{ ros_packages }}'
+    state: latest
 - name: Create ROS profile entries
   blockinfile:
     path: '{{ global_profile_path }}'
@@ -26,7 +28,7 @@
       source /opt/ros/{{ ros_release }}/setup.bash
       export TURTLEBOT_3D_SENSOR={{ ros_release }}
   notify:
-  - Suggest restart
+    - Suggest restart
 - name: Init rosdep if missing
   command: rosdep init
   args:
@@ -54,21 +56,21 @@
   loop: "{{ real_users }}"
 - name: Copy documentation to desktop
   copy:
-      src: usb-controllers.desktop
-      dest: "{{ item.homedir }}/Desktop/usb-controllers.desktop"
-      owner: "{{ item.uid }}"
-      group: "{{ item.gid }}"
-      mode: 0644
+    src: usb-controllers.desktop
+    dest: "{{ item.homedir }}/Desktop/usb-controllers.desktop"
+    owner: "{{ item.uid }}"
+    group: "{{ item.gid }}"
+    mode: 0644
   loop: "{{ real_users }}"
 - name: Copy Kobuki TurtleBot udev rule
   copy:
-      src: "57-kobuki.rules"
-      dest: "/etc/udev/rules.d/57-kobuki.rules"
-      owner: "root"
-      group: "root"
-      mode: 0644
+    src: "57-kobuki.rules"
+    dest: "/etc/udev/rules.d/57-kobuki.rules"
+    owner: "root"
+    group: "root"
+    mode: 0644
   notify:
-  - Reload udev rules
+    - Reload udev rules
 - name: Check for missing USB 2/3 controllers
   shell: lspci | grep -i -e EHCI -e xHCI
   register: lspci_output
@@ -78,5 +80,5 @@
   # Something must be executed or Ansible errors
   command: /bin/true
   notify:
-      - USB controllers warning
+    - USB controllers warning
   when: lspci_output.rc == 1

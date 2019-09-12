@@ -1,7 +1,9 @@
 ---
 # tasks file for eclipse
 - name: Remove Mint Eclipse
-  apt: name={{ eclipse_remove_mint }} state=absent
+  apt:
+    name: '{{ eclipse_remove_mint }}'
+    state: absent
 - name: Check Eclipse
   stat:
     path: '{{ eclipse.zip }}'
@@ -33,12 +35,12 @@
   when: st.stat.checksum|default("") != eclipse.hash
 - name: Install checkstyle plugin
   command: >
-      {{ eclipse.install_path }}/eclipse
-      -nosplash
-      -application org.eclipse.equinox.p2.director
-      -repository http://eclipse-cs.sourceforge.net/update/
-      -installIU net.sf.eclipsecs.feature.group
-      -destination {{ eclipse.install_path }}
+    {{ eclipse.install_path }}/eclipse
+    -nosplash
+    -application org.eclipse.equinox.p2.director
+    -repository http://eclipse-cs.sourceforge.net/update/
+    -installIU net.sf.eclipsecs.feature.group
+    -destination {{ eclipse.install_path }}
   args:
     creates: '{{ eclipse.install_path }}/plugins/net.sf.eclipsecs.checkstyle*'
 - name: Install Eclipse desktop icon

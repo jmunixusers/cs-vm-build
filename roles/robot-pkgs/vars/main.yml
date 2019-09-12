@@ -8,16 +8,16 @@ ros_repos:
   - "http://packages.ros.org/ros/ubuntu"
 
 ros_packages:
-    - ros-{{ros_release}}-desktop-full
-    - ros-{{ros_release}}-sound-play
-    - ros-{{ros_release}}-ar-track-alvar
-    - gazebo9
-    - rviz
-    - g++
+  - ros-{{ros_release}}-desktop-full
+  - ros-{{ros_release}}-sound-play
+  - ros-{{ros_release}}-ar-track-alvar
+  - gazebo9
+  - rviz
+  - g++
 
 usb_warning_msg: |
-    "<b>USB Contollers missing</b>
-    In order to effectively connect robots to the VM
-    ECHI/xHCI controllers need to be installed from
-    VirtualBox. See <a href='https://jmunixusers.github.io/presentations/vm/virtualbox-extension-pack.html'>these instructions</a> for
-    more information on how to install them"
+  "<b>USB Contollers missing</b>
+  In order to effectively connect robots to the VM
+  ECHI/xHCI controllers need to be installed from
+  VirtualBox. See <a href='https://jmunixusers.github.io/presentations/vm/virtualbox-extension-pack.html'>these instructions</a> for
+  more information on how to install them"

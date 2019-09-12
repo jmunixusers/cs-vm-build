@@ -2,42 +2,42 @@
 # tasks file for y86
 - name: Creating y86 directories
   file:
-      path: '{{ item }}'
-      state: directory
-      owner: root
-      group: root
-      mode: 0755
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
   loop:
-      - '{{ y86_bin_dir }}'
-      - '{{ y86_man_dir }}'
-      - '{{ y86_man1_dir }}'
+    - '{{ y86_bin_dir }}'
+    - '{{ y86_man_dir }}'
+    - '{{ y86_man1_dir }}'
 - name: Installing y86 binary tools
   copy:
-      src: '{{ item }}'
-      dest: '{{ y86_bin_dir }}'
-      owner: root
-      group: root
-      mode: 0755
+    src: '{{ item }}'
+    dest: '{{ y86_bin_dir }}'
+    owner: root
+    group: root
+    mode: 0755
   loop: '{{ y86_binaries }}'
 - name: Installing y86ref manpage
   copy:
-      src: '{{ item }}'
-      dest: '{{ y86_man1_dir }}'
-      owner: root
-      group: root
-      mode: 0644
+    src: '{{ item }}'
+    dest: '{{ y86_man1_dir }}'
+    owner: root
+    group: root
+    mode: 0644
   loop: '{{ y86_manpages }}'
 - name: Updating PATH to include y86 binaries
   lineinfile:
-      dest: '{{ global_profile_path }}'
-      line: "export PATH={{ y86_bin_dir }}:$PATH"
-      state: present
+    dest: '{{ global_profile_path }}'
+    line: "export PATH={{ y86_bin_dir }}:$PATH"
+    state: present
   notify:
-      - Suggest restart
+    - Suggest restart
 - name: Updating MANPATH to include y86 man pages
   lineinfile:
-      dest: '{{ global_profile_path }}'
-      line: "export MANPATH={{ y86_man_dir }}:$MANPATH"
-      state: present
+    dest: '{{ global_profile_path }}'
+    line: "export MANPATH={{ y86_man_dir }}:$MANPATH"
+    state: present
   notify:
-      - Suggest restart
+    - Suggest restart

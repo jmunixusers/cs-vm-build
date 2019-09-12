@@ -40,4 +40,4 @@
       export HIDAPI_LIB_PATH={{ finch.install_path }}
       export PYTHONPATH=$PYTHONPATH:{{ finch.install_path }}
   notify:
-  - Suggest restart
+    - Suggest restart

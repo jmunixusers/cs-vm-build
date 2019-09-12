@@ -3,31 +3,31 @@
 
 - name: Install Filezilla package
   apt:
-      name: filezilla
-      state: latest
+    name: filezilla
+    state: latest
 - name: Create Filezilla configuration directory
   file:
-      path: "{{ item.homedir }}/{{ filezilla_config_dir }}"
-      state: directory
-      owner: '{{ item.uid }}'
-      group: '{{ item.gid }}'
-      mode: 0750
+    path: "{{ item.homedir }}/{{ filezilla_config_dir }}"
+    state: directory
+    owner: '{{ item.uid }}'
+    group: '{{ item.gid }}'
+    mode: 0750
   loop: "{{ real_users }}"
 - name: Copy template default Filezilla configuration
   template:
-      src: fzdefaults.xml.j2
-      dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/fzdefaults.xml"
-      owner: '{{ item.uid }}'
-      group: '{{ item.gid }}'
-      mode: 0640
+    src: fzdefaults.xml.j2
+    dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/fzdefaults.xml"
+    owner: '{{ item.uid }}'
+    group: '{{ item.gid }}'
+    mode: 0640
   loop: "{{ real_users }}"
 - name: Attempt to copy Filezilla filters
   copy:
-      src: filters.xml
-      dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/filters.xml"
-      owner: "{{ item.uid }}"
-      group: "{{ item.gid }}"
-      mode: 0640
-      # Don't overwrite any filters the user already has
-      force: no
+    src: filters.xml
+    dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/filters.xml"
+    owner: "{{ item.uid }}"
+    group: "{{ item.gid }}"
+    mode: 0640
+    # Don't overwrite any filters the user already has
+    force: no
   loop: "{{ real_users }}"
