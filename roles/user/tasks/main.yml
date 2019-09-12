@@ -30,8 +30,9 @@
   apt:
     upgrade: full
 - name: Install required dependencies
-  apt: name={{ user_dependencies }} state=latest
-
+  apt:
+    name: '{{ user_dependencies }}'
+    state: latest
 - name: Touch VM profile
   copy:
     src: csvmprofile
@@ -64,9 +65,9 @@
   loop: "{{ real_users }}"
 - name: Remove Timeshift warning
   dconf:
-      key: "/com/linuxmint/updates/warn-about-timeshift"
-      value: "false"
-      state: present
+    key: "/com/linuxmint/updates/warn-about-timeshift"
+    value: "false"
+    state: present
   become: yes
   become_user: "{{ item.user }}"
   loop: "{{ real_users }}"

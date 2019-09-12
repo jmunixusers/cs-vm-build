@@ -1,7 +1,9 @@
 ---
 # tasks file for basic-prog-pkgs
 - name: Install introductory development packages
-  apt: name={{ basic_prog_pkgs_intro_development }} state=latest
+  apt:
+    name: '{{ basic_prog_pkgs_intro_development }}'
+    state: latest
 
 - name: Copy idlerc prefs
   copy:
