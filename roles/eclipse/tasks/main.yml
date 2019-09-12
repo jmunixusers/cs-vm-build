@@ -11,6 +11,7 @@
       get_url:
         url: '{{ eclipse.url }}'
         dest: '{{ eclipse.zip }}'
+        checksum: 'sha1:{{ eclipse.hash }}'
         timeout: 30
         force: yes
       register: url_output
@@ -19,6 +20,7 @@
       get_url:
         url: '{{ eclipse.url_backup }}'
         dest: '{{ eclipse.zip }}'
+        checksum: 'sha1:{{ eclipse.hash }}'
         timeout: 30
         force: yes
       when: url_output.failed

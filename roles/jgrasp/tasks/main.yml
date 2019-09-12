@@ -13,6 +13,7 @@
       get_url:
         url: '{{ jgrasp.url }}'
         dest: '{{ jgrasp.zip }}'
+        checksum: 'sha1:{{ jgrasp.hash }}'
         force: yes
     - name: Remove old jGRASP directory
       file:

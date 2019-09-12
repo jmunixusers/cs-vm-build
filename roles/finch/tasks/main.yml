@@ -13,6 +13,7 @@
       get_url:
         url: '{{ finch.url }}'
         dest: '{{ finch.zip }}'
+        checksum: 'sha1:{{ finch.hash }}'
         force: yes
     - name: Unpack Finch zip
       unarchive:
