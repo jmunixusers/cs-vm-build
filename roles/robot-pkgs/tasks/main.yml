@@ -33,7 +33,7 @@
   command: rosdep init
   args:
     creates: /etc/ros/rosdep/sources.list.d/20-default.list
-- name: Update rosdep for each user # noqa 301
+- name: Update rosdep for each user  # noqa 301
   command: rosdep update
   become: yes
   become_user: "{{ item.user }}"
@@ -75,7 +75,7 @@
   shell: lspci | grep -i -e EHCI -e xHCI
   register: lspci_output
   ignore_errors: yes
-  changed_when: False
+  changed_when: false
 - name: Alert missing USB 2/3 controllers
   # Something must be executed or Ansible errors
   command: /bin/true

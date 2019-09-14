@@ -11,8 +11,8 @@
 - name: Get users
   getent:
     database: passwd
- # fix this after Ansible 2.6, use loop: "{{ getent_passwd|dict2items }}"
 - name: Build real user list
+  # fix this after Ansible 2.6, use loop: "{{ getent_passwd|dict2items }}"
   set_fact:
     real_users: >-
       {{ real_users|default([]) +
