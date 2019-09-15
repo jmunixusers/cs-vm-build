@@ -6,7 +6,7 @@ global_profile_path: /opt/csvmprofile
 user_dependencies:
   - default-jdk
   - libnotify-bin
-  - python-psutil
+  - python3-psutil
   - unzip
   - vim
   - vim-gnome
