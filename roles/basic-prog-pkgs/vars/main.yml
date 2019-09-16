@@ -7,7 +7,7 @@ basic_prog_pkgs_intro_development:
  - fonts-crosextra-caladea
  - fonts-crosextra-carlito
  - geany
- - idle-python3.6
+ - idle
  - libreoffice
  - libreoffice-templates
  - libreoffice-style-tango
