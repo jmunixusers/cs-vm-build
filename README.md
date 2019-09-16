@@ -39,6 +39,7 @@ using these tasks and the VM is available
 ### CS149
 * Eclipse (with checkstyle plugin)
 * jGRASP
+* Visual Studio Code (with Java and checkstyle plugins)
 
 ### CS159
 * Eclipse (with checkstyle plugin)
@@ -120,7 +121,7 @@ or directly from GitHub:
 ansible-pull -U https://github.com/jmunixusers/cs-vm-build --purge -i hosts -K -t TAGS
 ```
 where TAGS is a comma separated list (with no spaces) of
-cs101, cs149, cs159, cs261, cs354, and/or cs361 as appropriate.
+cs101, cs149, cs159, cs261, cs354, cs361 and/or cs430 as appropriate.
 
 This was developed on and for Linux Mint, but can be adapted to any Debian-based
 distribution with minimal changes. Adaptions for distributions that do not use
