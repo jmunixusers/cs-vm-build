@@ -12,6 +12,7 @@ import os
 import re
 import subprocess
 import urllib.request
+from tempfile import TemporaryDirectory
 
 import json
 
@@ -418,22 +419,23 @@ class AnsibleWrapperWindow(Gtk.Window):
             ",".join(USER_CONFIG['roles_this_run'])
         )
 
-        # spawn_sync will not perform a path lookup; however, pkexec will
-        cmd_args = [
-            '/usr/bin/pkexec',
-            'ansible-pull',
-            '--url',
-            USER_CONFIG['git_url'],
-            '--checkout',
-            USER_CONFIG['git_branch'],
-            '--directory',
-            '/tmp',
-            '--purge',
-            '--inventory',
-            'hosts',
-            '--tags',
-            ",".join(USER_CONFIG['roles_this_run']),
-        ]
+        with TemporaryDirectory() as temp_dir:
+            # spawn_sync will not perform a path lookup; however, pkexec will
+            cmd_args = [
+                '/usr/bin/pkexec',
+                'ansible-pull',
+                '--url',
+                USER_CONFIG['git_url'],
+                '--checkout',
+                USER_CONFIG['git_branch'],
+                '--directory',
+                temp_dir,
+                '--purge',
+                '--inventory',
+                'hosts',
+                '--tags',
+                ",".join(USER_CONFIG['roles_this_run']),
+            ]
 
         try:
             self.terminal.spawn_sync(
