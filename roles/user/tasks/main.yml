@@ -71,4 +71,3 @@
   become: yes
   become_user: "{{ item.user }}"
   loop: "{{ real_users }}"
-  notify: Restart update manager
