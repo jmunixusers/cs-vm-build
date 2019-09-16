@@ -21,7 +21,7 @@
     bin_path: '{{ base_path }}/vmtools/bin'
 - name: Set wrapper fact
   set_fact:
-    uug_ansible_wrapper: '{{ bin_path }}/uug_ansible_wrapper'
+    uug_ansible_wrapper: '{{ bin_path }}/uug_ansible_wrapper.py'
 - name: Check Ubuntu release
   set_fact:
     ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
