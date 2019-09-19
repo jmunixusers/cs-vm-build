@@ -430,21 +430,20 @@ class AnsibleWrapperWindow(Gtk.Window):
                 USER_CONFIG['git_branch'],
                 '--directory',
                 temp_dir,
-                '--purge',
                 '--inventory',
                 'hosts',
                 '--tags',
                 ",".join(USER_CONFIG['roles_this_run']),
             ]
 
-        try:
-            self.terminal.spawn_sync(
-                Vte.PtyFlags.DEFAULT, os.environ['HOME'], cmd_args, [],
-                GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None
-            )
-        except GLib.Error as error:
-            logging.error("Unable to run ansible command.", exc_info=error)
-            self.sub_command_exited(None, 1)
+            try:
+                self.terminal.spawn_sync(
+                    Vte.PtyFlags.DEFAULT, os.environ['HOME'], cmd_args, [],
+                    GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None
+                )
+            except GLib.Error as error:
+                logging.error("Unable to run ansible command.", exc_info=error)
+                self.sub_command_exited(None, 1)
 
 
 def on_dialog_close(action, _):
