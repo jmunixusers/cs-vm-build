@@ -12,6 +12,7 @@ import os
 import re
 import subprocess
 import urllib.request
+from tempfile import TemporaryDirectory
 
 import json
 
@@ -418,29 +419,31 @@ class AnsibleWrapperWindow(Gtk.Window):
             ",".join(USER_CONFIG['roles_this_run'])
         )
 
-        # spawn_sync will not perform a path lookup; however, pkexec will
-        cmd_args = [
-            '/usr/bin/pkexec',
-            'ansible-pull',
-            '--url',
-            USER_CONFIG['git_url'],
-            '--checkout',
-            USER_CONFIG['git_branch'],
-            '--purge',
-            '--inventory',
-            'hosts',
-            '--tags',
-            ",".join(USER_CONFIG['roles_this_run']),
-        ]
+        with TemporaryDirectory() as temp_dir:
+            # spawn_sync will not perform a path lookup; however, pkexec will
+            cmd_args = [
+                '/usr/bin/pkexec',
+                'ansible-pull',
+                '--url',
+                USER_CONFIG['git_url'],
+                '--checkout',
+                USER_CONFIG['git_branch'],
+                '--directory',
+                temp_dir,
+                '--inventory',
+                'hosts',
+                '--tags',
+                ",".join(USER_CONFIG['roles_this_run']),
+            ]
 
-        try:
-            self.terminal.spawn_sync(
-                Vte.PtyFlags.DEFAULT, os.environ['HOME'], cmd_args, [],
-                GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None
-            )
-        except GLib.Error as error:
-            logging.error("Unable to run ansible command.", exc_info=error)
-            self.sub_command_exited(None, 1)
+            try:
+                self.terminal.spawn_sync(
+                    Vte.PtyFlags.DEFAULT, os.environ['HOME'], cmd_args, [],
+                    GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None
+                )
+            except GLib.Error as error:
+                logging.error("Unable to run ansible command.", exc_info=error)
+                self.sub_command_exited(None, 1)
 
 
 def on_dialog_close(action, _):
