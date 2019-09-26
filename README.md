@@ -113,7 +113,7 @@ using these tasks and the VM is available
 apt-get install ansible git
 git clone https://github.com/jmunixusers/cs-vm-build
 cd cs-vm-build
-ansible-playbook -i hosts -c local -K -t TAGS local.yml
+ansible-playbook -i hosts -K -t TAGS local.yml
 ```
 or directly from GitHub:
 
