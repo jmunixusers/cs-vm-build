@@ -28,7 +28,7 @@ using these tasks and the VM is available
   * bless
   * chromium-browser
   * geany
-  * idle-python3.6
+  * idle
   * libreoffice
   * logisim
   * meld
