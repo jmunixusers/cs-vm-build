@@ -83,5 +83,5 @@
 - name: Refresh apt cache
   apt:
     update_cache: yes
-  changed_when: False
+  changed_when: false
   ignore_errors: yes
