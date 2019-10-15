@@ -39,6 +39,7 @@
         ["modifyvm", "{{.Name}}", "--usb", "on", "--usbehci", "off", "--usbxhci", "off" ],
         ["modifyvm", "{{.Name}}", "--vram", "64" ],
         ["modifyvm", "{{.Name}}", "--vrde", "off" ],
+        ["storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove" ],
         ["storagectl", "{{.Name}}", "--name", "SATA Controller", "--hostiocache", "on" ]
       ],
 
