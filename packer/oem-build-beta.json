@@ -13,8 +13,8 @@
     "audio": "pulse",
 
     "output_dir": "{{pwd}}/artifacts",
-    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable",
-    "iso_file": "linuxmint-19.3-cinnamon-64bit.iso",
+    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/testing",
+    "iso_file": "linuxmint-19.3-cinnamon-64bit-beta.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
@@ -50,10 +50,10 @@
       ],
 
       "iso_urls": [
-        "{{user `mirror_url`}}/{{user `mint_version`}}/{{user `iso_file`}}"
+        "{{user `mirror_url`}}/{{user `iso_file`}}"
       ],
       "iso_checksum_type": "sha256",
-      "iso_checksum_url": "{{user `mirror_url`}}/{{user `mint_version`}}/sha256sum.txt",
+      "iso_checksum_url": "{{user `mirror_url`}}/sha256sum.txt",
       "iso_interface": "sata",
 
       "hard_drive_discard": "true",
