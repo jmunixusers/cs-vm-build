@@ -10,9 +10,13 @@
 - name: Remove unused dependencies
   apt:
     autoremove: yes
-- name: Upgrade all installed packages
+# Force an update of mintupdate, else it only updates itself on first run
+- name: Update mintupdate package
   apt:
-    upgrade: safe
+    name: mintupdate
+    state: latest
+- name: Upgrade all installed packages  # noqa 301
+  command: /usr/bin/mintupdate-cli -y upgrade
 - name: Install dependencies
   apt:
     name: "{{ packages_to_install }}"
