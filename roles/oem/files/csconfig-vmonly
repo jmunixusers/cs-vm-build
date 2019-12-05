@@ -9,3 +9,6 @@ lock-on-suspend=false
 
 [org/cinnamon/desktop/screensaver]
 lock-enabled=false
+
+[com/linuxmint/report]
+ignored-reports=['root-password-not-set', 'install-media-codecs', 'install-language-packs', 'drivers']
