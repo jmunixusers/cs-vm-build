@@ -63,8 +63,9 @@
     src: jmu-tux.svg
     dest: "/usr/share/icons/hicolor/scalable/apps/edu.jmu.uug.tux.svg"
     mode: 0644
-  # noqa 301
-- name: Update icon cache
+  # Check 301 is disabled since there isn't a good way to verify whether or not the
+  # database changed during the update.
+- name: Update icon cache  # noqa 301
   command: /usr/sbin/update-icon-caches /usr/share/icons/*
 - name: Copy shortcut to desktop file directory
   template:
