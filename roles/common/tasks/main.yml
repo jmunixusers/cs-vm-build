@@ -58,11 +58,36 @@
     src: jmu-tux.svg
     dest: "{{ base_path }}/jmu-tux.svg"
     mode: 0644
+- name: Install JMU Tux globally
+  copy:
+    src: jmu-tux.svg
+    dest: "/usr/share/icons/hicolor/scalable/apps/edu.jmu.uug.tux.svg"
+    mode: 0644
+  # Check 301 is disabled since there isn't a good way to verify whether or not the
+  # database changed during the update.
+- name: Update icon cache  # noqa 301
+  command: /usr/sbin/update-icon-caches /usr/share/icons/*
 - name: Copy shortcut to desktop file directory
   template:
     src: desktop-template.desktop.j2
     dest: "{{ icon_path }}/jmucs_config.desktop"
     mode: "{{ file_mode }}"
+- name: Create directory for custom MintReport script
+  file:
+    path: /usr/share/linuxmint/mintreport/reports/001_Run-JMU-CS-Config-Tool
+    mode: 0755
+    owner: root
+    group: root
+    state: directory
+  when: ansible_distribution == "Linux Mint"
+- name: Install custom MintReport script
+  copy:
+    src: CustomMintReportInfo.py
+    dest: /usr/share/linuxmint/mintreport/reports/001_Run-JMU-CS-Config-Tool/MintReportInfo.py
+    mode: 0644
+    owner: root
+    group: root
+  when: ansible_distribution == "Linux Mint"
 
 - name: Set Ubuntu mirrors
   template:
