@@ -124,7 +124,7 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         # Attempt to use tux as the icon. If it fails, that's okay
         try:
-            self.set_icon_from_file("/opt/jmu-tux.svg")
+            self.set_icon_name("{{ tux_icon_name }}")
         except GLib.GError as err:
             logging.warning("Unable to set Tux icon", exc_info=err)
 
@@ -300,11 +300,7 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         about_dialog = Gtk.AboutDialog()
         try:
-            about_dialog.set_logo(
-                GdkPixbuf.Pixbuf.new_from_file_at_size(
-                    "/opt/jmu-tux.svg", 96, 96
-                )
-            )
+            about_dialog.set_logo_icon_name('{{ tux_icon_name }}')
         except Exception as err:
             logging.error("Error", exc_info=err)
         about_dialog.set_transient_for(self)
@@ -374,7 +370,7 @@ class AnsibleWrapperWindow(Gtk.Window):
                 "There was an error while running the configuration tasks. "
                 "Please try again."
                 "\nIf this issue continues to occur, copy"
-                " /opt/vmtools/logs/last_run.log and"
+                " {{ ansible_log_file }} and"
                 " <a href='%s'>create an issue</a>" % (USER_CONFIG['git_url'])
             )
             show_dialog(

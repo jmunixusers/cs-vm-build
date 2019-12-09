@@ -1,7 +1,5 @@
 ---
 # vars file for oem
-oem_base_path: /opt
-
 packages_to_install:
   - zenity
 

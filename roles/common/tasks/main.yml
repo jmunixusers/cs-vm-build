@@ -6,22 +6,14 @@
 
 - name: Set OEM facts
   set_fact:
-    base_path: "{{ oem_base_path }}"
-    icon_path: "/etc/skel/Desktop"
-    file_mode: 0755
+    wrapper_desktop_file_path: "/etc/skel/Desktop"
+    wrapper_desktop_file_mode: 0755
   when: icon_mode == 'oem'
 - name: Set user facts
   set_fact:
-    base_path: "{{ global_base_path }}"
-    icon_path: "/usr/local/share/applications"
-    file_mode: 0644
+    wrapper_desktop_file_path: "/usr/local/share/applications"
+    wrapper_desktop_file_mode: 0644
   when: icon_mode == 'user'
-- name: Set bin fact
-  set_fact:
-    bin_path: '{{ base_path }}/vmtools/bin'
-- name: Set wrapper fact
-  set_fact:
-    uug_ansible_wrapper: '{{ bin_path }}/uug_ansible_wrapper.py'
 - name: Check Ubuntu release
   set_fact:
     ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
@@ -32,13 +24,14 @@
   changed_when: dpkg_command.stdout
   environment:
     DEBIAN_FRONTEND: noninteractive
-- name: Create VMTools bin
+- name: Ensure log directory exists
   file:
-    path: "{{ bin_path }}"
+    path: "{{ log_directory }}"
     state: directory
+    mode: 0755
 - name: Ensure desktop icon directory exists
   file:
-    path: "{{ icon_path }}"
+    path: "{{ wrapper_desktop_file_path }}"
     state: directory
     mode: 0755
 # The policy file must go in /usr/share/polkit-1. It is the only location that
@@ -48,20 +41,22 @@
     src: edu.jmu.uug.ansiblewrapper.policy
     dest: /usr/share/polkit-1/actions/
     mode: 0644
+- name: Create directory for shared data
+  file:
+    path: "{{ share_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
 - name: Install Ansible wrapper GUI script
-  copy:
+  template:
     src: uug_ansible_wrapper.py
     dest: '{{ uug_ansible_wrapper }}'
     mode: 0755
-- name: Install JMU Tux icon
+- name: Install JMU-colored Tux icon
   copy:
     src: jmu-tux.svg
-    dest: "{{ base_path }}/jmu-tux.svg"
-    mode: 0644
-- name: Install JMU Tux globally
-  copy:
-    src: jmu-tux.svg
-    dest: "/usr/share/icons/hicolor/scalable/apps/edu.jmu.uug.tux.svg"
+    dest: "/usr/share/icons/hicolor/scalable/apps/{{ tux_icon_name }}.svg"
     mode: 0644
   # Check 301 is disabled since there isn't a good way to verify whether or not the
   # database changed during the update.
@@ -70,8 +65,8 @@
 - name: Copy shortcut to desktop file directory
   template:
     src: desktop-template.desktop.j2
-    dest: "{{ icon_path }}/jmucs_config.desktop"
-    mode: "{{ file_mode }}"
+    dest: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
+    mode: "{{ wrapper_desktop_file_mode }}"
 - name: Create directory for custom MintReport script
   file:
     path: /usr/share/linuxmint/mintreport/reports/001_Run-JMU-CS-Config-Tool
@@ -81,7 +76,7 @@
     state: directory
   when: ansible_distribution == "Linux Mint"
 - name: Install custom MintReport script
-  copy:
+  template:
     src: CustomMintReportInfo.py
     dest: /usr/share/linuxmint/mintreport/reports/001_Run-JMU-CS-Config-Tool/MintReportInfo.py
     mode: 0644

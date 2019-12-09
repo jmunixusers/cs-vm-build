@@ -2,7 +2,7 @@
 # tasks file for user
 - name: Create opt directory
   file:
-    path: /opt/
+    path: "{{ global_base_path }}"
     state: directory
 - name: Create local applications directory
   file:

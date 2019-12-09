@@ -17,11 +17,6 @@
   apt:
     name: "{{ packages_to_install }}"
     state: latest
-- name: Ensure log directory exists
-  file:
-    path: /opt/vmtools/logs
-    state: directory
-    mode: 0755
 - name: Copy welcome shortcut to skeleton desktop directory
   copy:
     src: welcome-to-vm.desktop
