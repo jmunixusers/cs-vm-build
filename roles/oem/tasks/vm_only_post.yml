@@ -13,6 +13,20 @@
   notify:
     - Update dconf database
 
+- name: Set debconf grub install_devices
+  debconf:
+    name: grub-pc
+    question: grub-pc/install_devices
+    value: /dev/sda
+    vtype: multiselect
+
+- name: Set debconf grub install_devices_disks_changed
+  debconf:
+    name: grub-pc
+    question: grub-pc/install_devices_disks_changed
+    value: /dev/sda
+    vtype: multiselect
+
 # The apt database can be fairly large and make the image unnecessarily large
 # so removing it before shipping allows us to ship a smaller image.
 - name: Clean the apt database
