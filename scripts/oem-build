@@ -78,8 +78,6 @@ main () {
     apt-get install --assume-yes ansible git aptitude\
         || error "Unable to install ansible and git packages"
 
-    mkdir -p /opt/vmtools/logs
-
     user "Running ansible OEM playbook"
     # Ensure this runs from the root directory of the Ansible git directory
     cd "$(dirname "$0")"/.. \

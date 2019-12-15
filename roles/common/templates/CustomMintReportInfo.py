@@ -1,3 +1,8 @@
+# NOTE: This file is parsed by Jinja2 as part of an Ansible playbook.
+# The following values were interpretted:
+#   tux_icon_name: {{ tux_icon_name }}
+#   global_profile_path: {{ global_profile_path }}
+#   uug_ansible_wrapper: {{ uug_ansible_wrapper }}
 import os
 import gettext
 import gi
@@ -13,11 +18,11 @@ class Report(InfoReport):
     def __init__(self):
 
         self.title = "Run JMU CS Config Tool"
-        self.icon = "edu.jmu.uug.tux"
+        self.icon = "{{ tux_icon_name }}"
         self.has_ignore_button = False
 
     def is_pertinent(self):
-        return not os.path.exists('/opt/csvmprofile')
+        return not os.path.exists('{{ global_profile_path }}')
 
     def get_descriptions(self):
         # Return the descriptions
@@ -35,7 +40,7 @@ class Report(InfoReport):
         return actions
 
     def callback(self, data):
-        subprocess.run(["/opt/vmtools/bin/uug_ansible_wrapper.py"], start_new_session=True)
+        subprocess.run(["{{ uug_ansible_wrapper }}"], start_new_session=True)
         return True
 
 if __name__ == "__main__":

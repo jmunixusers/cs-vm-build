@@ -7,3 +7,14 @@ ubuntu_mirrors:
 mint_mirrors:
   - "https://mirror.cs.jmu.edu/pub/linuxmint/packages"
   - "http://packages.linuxmint.com"
+
+global_base_path: "/opt"
+global_profile_path: "{{ global_base_path }}/csvmprofile"
+
+log_directory: "/var/log/vmtools"
+ansible_log_file: "{{ log_directory }}/ansible_runs.log"
+
+share_directory: "/usr/local/share/jmu-uug"
+uug_ansible_wrapper: "{{ share_directory }}/uug_ansible_wrapper.py"
+
+tux_icon_name: "edu.jmu.uug.tux"

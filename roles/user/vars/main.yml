@@ -1,7 +1,6 @@
 ---
 # vars file for user
-global_base_path: /opt
-global_profile_path: /opt/csvmprofile
+global_profile_path: "{{ global_base_path }}/csvmprofile"
 
 user_dependencies:
   - default-jdk
