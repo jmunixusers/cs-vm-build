@@ -1,0 +1,10 @@
+{
+  "semester": "Sp20",
+  "mint_version": "19.3",
+
+  "git_repo": "https://github.com/jmunixusers/cs-vm-build",
+  "git_branch": "master",
+
+  "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/testing",
+  "iso_file": "linuxmint-19.3-cinnamon-64bit-beta.iso"
+}

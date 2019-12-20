@@ -1,8 +1,8 @@
 {
   "variables": {
     "vm_name": "JMU Linux Mint",
-    "semester": "Fa19",
-    "mint_version": "19.2",
+    "semester": "Sp20",
+    "mint_version": "19.3",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
@@ -13,8 +13,8 @@
     "audio": "pulse",
 
     "output_dir": "{{pwd}}/artifacts",
-    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable",
-    "iso_file": "linuxmint-19.2-cinnamon-64bit.iso",
+    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable/19.3",
+    "iso_file": "linuxmint-19.3-cinnamon-64bit.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
@@ -31,7 +31,7 @@
       "sound": "{{user `audio`}}",
 
       "vboxmanage": [
-        ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional" ],
+        ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional" ],
         ["modifyvm", "{{.Name}}", "--graphicscontroller", "vmsvga" ],
         ["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
         ["modifyvm", "{{.Name}}", "--pae", "on"],
@@ -49,11 +49,9 @@
           "--port", "1", "--type", "dvddrive", "--medium", "emptydrive"]
       ],
 
-      "iso_urls": [
-        "{{user `mirror_url`}}/{{user `mint_version`}}/{{user `iso_file`}}"
-      ],
+      "iso_url": "{{user `mirror_url`}}/{{user `iso_file`}}",
       "iso_checksum_type": "sha256",
-      "iso_checksum_url": "{{user `mirror_url`}}/{{user `mint_version`}}/sha256sum.txt",
+      "iso_checksum_url": "{{user `mirror_url`}}/sha256sum.txt",
       "iso_interface": "sata",
 
       "hard_drive_discard": "true",
