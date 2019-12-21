@@ -19,9 +19,10 @@ import json
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')
-from gi.repository import Gtk, Vte
-from gi.repository import GLib
-from gi.repository import GdkPixbuf
+# pygobject best practice, unfortunately, is to do the import after caling the
+# require_version() function. This triggers a pylint message.
+# pylint: disable=wrong-import-position
+from gi.repository import Gtk, Vte, GLib
 
 DEFAULT_GIT_REMOTE = "https://github.com/jmunixusers/cs-vm-build"
 
@@ -106,7 +107,7 @@ def main():
     win.show_all()
 
     if not validate_branch_settings(win):
-        logging.warn("Non-optimal user branch settings.")
+        logging.warning("Non-optimal user branch settings.")
 
     Gtk.main()
 
@@ -299,10 +300,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         """
 
         about_dialog = Gtk.AboutDialog()
-        try:
-            about_dialog.set_logo_icon_name('{{ tux_icon_name }}')
-        except Exception as err:
-            logging.error("Error", exc_info=err)
+        about_dialog.set_logo_icon_name('{{ tux_icon_name }}')
         about_dialog.set_transient_for(self)
         about_dialog.set_program_name(NAME)
         about_dialog.set_copyright("Copyright \xa9 2018 JMU Unix Users Group")
@@ -348,7 +346,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         # when authentication fails.
         # Because of that, we will accept those values for these scenarios and
         # hopefully can remove the 32xxx values at some point in the future
-        elif exit_status == 126 or exit_status == 32256:
+        elif exit_status in (126, 32256):
             pkexec_err_msg = "Unable to authenticate due to the dialog being"\
                              " closed. Please try again."
             show_dialog(
@@ -356,7 +354,7 @@ class AnsibleWrapperWindow(Gtk.Window):
                 "Unable to authenticate", pkexec_err_msg
             )
             logging.warning("User dismissed authentication dialog")
-        elif exit_status == 127 or exit_status == 32512:
+        elif exit_status in (127, 32512):
             pkexec_err_msg = "Unable to authenticate due to an incorrect" \
                              " password or insufficient permissions." \
                              " Plese try again."
@@ -724,7 +722,7 @@ def branch_exists(branch_name):
 
     output = subprocess.run(
         ["/usr/bin/git", "ls-remote", '--heads', USER_CONFIG['git_url']],
-        stdout=subprocess.PIPE
+        stdout=subprocess.PIPE, check=False
     )
 
     ls_remote = output.stdout.decode("utf-8")
@@ -750,7 +748,7 @@ def display_ignorable_warning(title, message, parent, settings_key):
     """
 
     dialog = Gtk.MessageDialog(
-        None, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING,
+        parent, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING,
         Gtk.ButtonsType.OK_CANCEL, title
     )
 
@@ -803,7 +801,6 @@ def invalid_branch(parent):
         parent, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
         "Invalid Release", bad_branch_msg
     )
-    return
 
 
 def is_online(url="http://detectportal.firefox.com", expected=b"success\n"):
@@ -819,11 +816,10 @@ def is_online(url="http://detectportal.firefox.com", expected=b"success\n"):
             response_data = response.read()
             if response_data == expected:
                 return True
-            else:
-                logging.error(
-                    "Response from %s was not %s as expected. Received: %s",
-                    url, expected, response_data
-                )
+            logging.error(
+                "Response from %s was not %s as expected. Received: %s",
+                url, expected, response_data
+            )
             return False
     except urllib.error.URLError as url_err:
         logging.error(
