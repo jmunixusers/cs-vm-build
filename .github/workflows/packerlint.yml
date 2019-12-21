@@ -28,3 +28,4 @@ jobs:
       - name: Packer validate
         run: |
           $HOME/packer/pkg/packer_linux_amd64 validate packer/oem-build.json
+          $HOME/packer/pkg/packer_linux_amd64 validate -var-file=packer/beta-vars.json packer/oem-build.json

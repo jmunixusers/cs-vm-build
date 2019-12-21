@@ -148,6 +148,21 @@ exporting the VM appliance. Defaults to https://github.com/jmunixusers/cs-vm-bui
 - `git_branch` - the branch of the above repository to choose. Defaults to `master`.
 - `headless` - whether or not to show the desktop session during installation.
 Defaults to `true`.
+- `audio` - choose the host driver to use. Defaults to `pulse` for Linux, or
+specify `dsound` for Windows, `coreaudio` for Mac.
+
+### Building beta images
+
+A large number of variables can be overridden at once by passing a `var-file`
+to Packer. An example of this is provided as `beta-vars.json`, and can be used
+like this:
+
+`packer build -var-file=beta-vars.json oem-build.json`
+
+Packer allows further overrides, with precedence given to the last option in the
+command. For example, to build a beta image on Windows, use this command:
+
+`packer build -var-file=beta-vars.json -var 'audio=dsound' oem-build.json`
 
 ## Contributing
 
