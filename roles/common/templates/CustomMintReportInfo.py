@@ -1,9 +1,9 @@
 # The file name is required to be non-snake-case because of the requirements
-# of mintreport scirpt names
+# of mintreport script names
 # pylint: disable=invalid-name
 
 # NOTE: This file is parsed by Jinja2 as part of an Ansible playbook.
-# The following values were interpretted:
+# The following values were interpreted:
 #   tux_icon_name: {{ tux_icon_name }}
 #   global_profile_path: {{ global_profile_path }}
 #   uug_ansible_wrapper: {{ uug_ansible_wrapper }}
@@ -18,7 +18,7 @@ import subprocess
 
 import gi
 gi.require_version('Gtk', '3.0')
-# pygobject best practice, unfortunately, is to do the import after caling the
+# pygobject best practice, unfortunately, is to do the import after calling the
 # require_version() function. This triggers a pylint message.
 # pylint: disable=wrong-import-position
 from gi.repository import Gtk

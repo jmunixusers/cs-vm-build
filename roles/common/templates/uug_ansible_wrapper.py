@@ -19,7 +19,7 @@ import json
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')
-# pygobject best practice, unfortunately, is to do the import after caling the
+# pygobject best practice, unfortunately, is to do the import after calling the
 # require_version() function. This triggers a pylint message.
 # pylint: disable=wrong-import-position
 from gi.repository import Gtk, Vte, GLib
