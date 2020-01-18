@@ -13,7 +13,7 @@
 # Force an update of mintupdate, else it only updates itself on first run
 - name: Update mintupdate package
   apt:
-    name: mintupdate
+    name: "{{ upgrade_pre_mintupdate }}"
     state: latest
 - name: Upgrade all installed packages  # noqa 301
   command: /usr/bin/mintupdate-cli -y upgrade
