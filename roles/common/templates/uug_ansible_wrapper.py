@@ -713,27 +713,28 @@ def validate_branch_settings(parent):
 def branch_exists(branch_name):
     """
     Checks whether a particular branch exists at the currently-configured
-    git URL. This uses the output of `git ls-remote --heads` and parses the
-    branch names from that.
+    git URL.
 
     :param branch_name: The branch name to search for on the remote
     :returns: True if the branch exists and False if it does not
     """
 
+    remote_url = USER_CONFIG['git_url']
+    cmd = [
+        '/usr/bin/env',  # Use git wherever it is, don't depend on /usr/bin
+        'git',
+        'ls-remote',     # ls-remote allows listing refs on a given remote
+        '--heads',       # only list heads (branches, not tags/PRs)
+        '--exit-code',   # Exit with status 2 if no matching refs are found
+        remote_url,
+        branch_name      # Find refs with the same name as the branch we want
+    ]
     output = subprocess.run(
-        ["/usr/bin/git", "ls-remote", '--heads', USER_CONFIG['git_url']],
-        stdout=subprocess.PIPE, check=False
+        cmd, stdout=subprocess.PIPE, check=False
     )
-
-    ls_remote = output.stdout.decode("utf-8")
-
-    remote_refs = []
-    for ref in ls_remote.split('\n'):
-        remote_refs.append(ref.split('/')[-1])
-
-    logging.info("Available branches: %s", ", ".join(remote_refs))
-
-    return branch_name in remote_refs
+    logging.debug("ls-remote result for %s: %s", branch_name, output.stdout)
+    logging.debug("ls-remote code for %s: %s", branch_name, output.returncode)
+    return output.returncode == 0
 
 
 def display_ignorable_warning(title, message, parent, settings_key):
