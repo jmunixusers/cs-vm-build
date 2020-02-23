@@ -31,6 +31,7 @@
       "sound": "{{user `audio`}}",
 
       "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--audioin", "off" ],
         ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional" ],
         ["modifyvm", "{{.Name}}", "--graphicscontroller", "vmsvga" ],
         ["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
