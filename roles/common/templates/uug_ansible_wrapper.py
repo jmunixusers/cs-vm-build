@@ -139,9 +139,8 @@ class AnsibleWrapperWindow(Gtk.Window):
         contents.set_border_width(10)
 
         label = Gtk.Label(label=
-            "Select the course configurations to add/update"
-            " (at this time courses cannot be removed)."
-        )
+                          "Select the course configurations to add/update"
+                          " (at this time courses cannot be removed).")
         label.set_alignment(0.0, 0.0)
 
         contents.pack_start(label, False, False, 0)
