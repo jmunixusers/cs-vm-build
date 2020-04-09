@@ -138,10 +138,13 @@ class AnsibleWrapperWindow(Gtk.Window):
         contents = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         contents.set_border_width(10)
 
-        label = Gtk.Label(label=
-                          "Select the course configurations to add/update"
-                          " (at this time courses cannot be removed).")
-        label.set_alignment(0.0, 0.0)
+        instruction_text = (
+            "Select the course configurations to add/update"
+            " (at this time courses cannot be removed)."
+        )
+        label = Gtk.Label(label=instruction_text)
+        label.set_xalign(0.0)
+        label.set_yalign(0.0)
 
         contents.pack_start(label, False, False, 0)
 
@@ -246,7 +249,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         """
 
         dialog = Gtk.Dialog(
-            title="Settings", parent=self, flags=Gtk.DialogFlags.MODAL
+            title="Settings", parent=self, modal=True
         )
         grid = Gtk.Grid()
         branch_label = Gtk.Label(label="Branch:")
@@ -460,7 +463,9 @@ def show_dialog(parent, dialog_type, buttons_type, header, message):
     :returns: The user's response to the dialog
     """
 
-    dialog = Gtk.MessageDialog(parent, 0, dialog_type, buttons_type, header)
+    dialog = Gtk.MessageDialog(
+        parent=parent, message_type=dialog_type, buttons=buttons_type, text=header
+    )
     dialog.format_secondary_markup(message)
     response = dialog.run()
     dialog.destroy()
