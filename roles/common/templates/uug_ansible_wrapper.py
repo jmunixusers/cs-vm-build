@@ -138,18 +138,20 @@ class AnsibleWrapperWindow(Gtk.Window):
         contents = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         contents.set_border_width(10)
 
-        label = Gtk.Label(
+        instruction_text = (
             "Select the course configurations to add/update"
             " (at this time courses cannot be removed)."
         )
-        label.set_alignment(0.0, 0.0)
+        label = Gtk.Label(label=instruction_text)
+        label.set_xalign(0.0)
+        label.set_yalign(0.0)
 
         contents.pack_start(label, False, False, 0)
 
         courses_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 
         # This button doesn't do anything. Common is always run
-        refresh = Gtk.CheckButton("Base configuration")
+        refresh = Gtk.CheckButton(label="Base configuration")
         refresh.set_tooltip_text("This option is required")
         refresh.set_active(True)
         refresh.set_sensitive(False)
@@ -158,7 +160,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         # Add a checkbox for every course; sorting is necessary because
         # dictionaries do not guarantee that order is preserved
         for (course, tag) in sorted(COURSES.items()):
-            checkbox = Gtk.CheckButton(course)
+            checkbox = Gtk.CheckButton(label=course)
             checkbox.set_tooltip_text("Configure for %s" % course)
             courses_box.pack_start(checkbox, False, False, 0)
             if tag in USER_CONFIG['roles_this_run']:
@@ -214,14 +216,14 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         # Create the File menu
         file_menu = Gtk.Menu()
-        file_item = Gtk.MenuItem("File")
+        file_item = Gtk.MenuItem(label="File")
         file_item.set_submenu(file_menu)
 
         # Add settings and quit items to the File menu
-        settings = Gtk.MenuItem("Settings\u2026")
+        settings = Gtk.MenuItem(label="Settings\u2026")
         settings.connect("activate", self.show_settings)
         file_menu.append(settings)
-        quit_item = Gtk.MenuItem("Quit")
+        quit_item = Gtk.MenuItem(label="Quit")
         quit_item.connect("activate", Gtk.main_quit)
         file_menu.append(quit_item)
 
@@ -229,11 +231,11 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         # Create the Help menu
         help_menu = Gtk.Menu()
-        help_item = Gtk.MenuItem("Help")
+        help_item = Gtk.MenuItem(label="Help")
         help_item.set_submenu(help_menu)
 
         # Add about item to the Help menu
-        about = Gtk.MenuItem("About")
+        about = Gtk.MenuItem(label="About")
         about.connect("activate", self.show_about_dialog)
         help_menu.append(about)
 
@@ -247,14 +249,14 @@ class AnsibleWrapperWindow(Gtk.Window):
         """
 
         dialog = Gtk.Dialog(
-            title="Settings", parent=self, flags=Gtk.DialogFlags.MODAL
+            title="Settings", parent=self, modal=True
         )
         grid = Gtk.Grid()
-        branch_label = Gtk.Label("Branch:")
+        branch_label = Gtk.Label(label="Branch:")
         branch_label.set_justify(Gtk.Justification.RIGHT)
         branch_label.set_halign(Gtk.Align.END)
 
-        url_label = Gtk.Label("URL:")
+        url_label = Gtk.Label(label="URL:")
         url_label.set_justify(Gtk.Justification.RIGHT)
         url_label.set_halign(Gtk.Align.END)
 
@@ -461,7 +463,9 @@ def show_dialog(parent, dialog_type, buttons_type, header, message):
     :returns: The user's response to the dialog
     """
 
-    dialog = Gtk.MessageDialog(parent, 0, dialog_type, buttons_type, header)
+    dialog = Gtk.MessageDialog(
+        parent=parent, message_type=dialog_type, buttons=buttons_type, text=header
+    )
     dialog.format_secondary_markup(message)
     response = dialog.run()
     dialog.destroy()
