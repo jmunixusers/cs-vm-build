@@ -1,42 +1,12 @@
 ---
 # tasks file for oem
 
-- name: Ensure this in Linux Mint
-  assert:
-    that:
-      - "ansible_distribution == 'Linuxmint' or ansible_distribution == 'Linux Mint'"
 - include_tasks: vm_only_pre.yml
   when: "ansible_virtualization_role == 'guest'"
 - name: Remove unused dependencies
   apt:
     autoremove: yes
-# Force an update of mintupdate, else it only updates itself on first run
-- name: Update mintupdate package
-  apt:
-    name: "{{ upgrade_pre_mintupdate }}"
-    state: latest
-- name: Upgrade all installed packages  # noqa 301
-  command: /usr/bin/mintupdate-cli -y upgrade
-- name: Install dependencies
-  apt:
-    name: "{{ packages_to_install }}"
-    state: latest
-- name: Copy welcome shortcut to skeleton desktop directory
-  copy:
-    src: welcome-to-vm.desktop
-    dest: /etc/skel/Desktop/welcome-to-vm.desktop
-    mode: 0644
-- name: Hide the mintwelcome window
-  file:
-    path: /etc/skel/.linuxmint/mintwelcome
-    mode: 0755
-    state: directory
-- name: Hide the mintwelcome window
-  copy:
-    dest: /etc/skel/.linuxmint/mintwelcome/norun.flag
-    mode: 0664
-    content: ""
-    force: no
+    purge: yes
 - name: Create the /usr/local/share/applications folder
   file:
     path: /usr/local/share/applications
@@ -63,6 +33,12 @@
     state: directory
     mode: 0755
     owner: root
+
+- include_tasks: ubuntu_only.yml
+  when: "ansible_distribution == 'Ubuntu'"
+- include_tasks: mint_only.yml
+  when: "ansible_distribution == 'Linux Mint'"
+
 # Some tasks should only be run when running as a guest OS.
 - include_tasks: vm_only_post.yml
   when: "ansible_virtualization_role == 'guest'"

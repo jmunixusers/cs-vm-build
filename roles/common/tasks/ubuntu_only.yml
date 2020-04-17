@@ -1,0 +1,10 @@
+---
+# tasks file for Ubuntu
+
+- name: Set Ubuntu mirrors
+  template:
+    src: ubuntu.j2
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0664

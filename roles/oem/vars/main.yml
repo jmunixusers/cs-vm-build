@@ -7,6 +7,8 @@ upgrade_pre_mintupdate:
   - mintupdate
   - mint-upgrade-info
 
+skel_desktop_file_path: "/etc/skel/Desktop"
+
 # https://github.com/jmunixusers/cs-vm-build/issues/11#issuecomment-347015788
 packages_to_remove:
   - bluez*
@@ -28,7 +30,7 @@ packages_to_remove:
   - fonts-nakula
   - fonts-nanum
   - fonts-navilu
-  - fonts-noto-cjk
+  - fonts-noto*
   - fonts-orya-extra
   - fonts-pagul
   - fonts-sahadeva
@@ -60,8 +62,8 @@ packages_to_remove:
   - hyphen-it
   - hyphen-pt*
   - hyphen-ru
-  - libllvm3.8
-  - libreoffice-common
+  - libreoffice*
+  - linux*oem
   - mint-artwork-mate
   - mint-backgrounds-sarah
   - mint-backgrounds-serena
@@ -89,5 +91,4 @@ packages_to_remove:
   - transmission*
   - vlc*
   - wbritish
-  - xplayer*
   - xscreensaver-*

@@ -3,7 +3,7 @@
   hosts: all
   become: true
   roles:
-    - { role: common, tags: always, icon_mode: user }
+    - { role: common, tags: always }
     - { role: user, tags: always }
     - { role: wireless-printing, tags: always }
     - { role: filezilla, tags: always }
