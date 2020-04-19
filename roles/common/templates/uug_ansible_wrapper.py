@@ -432,9 +432,32 @@ class AnsibleWrapperWindow(Gtk.Window):
             ]
 
             try:
-                self.terminal.spawn_sync(
+                # Disabling because breaking up the URL in this comment would just make things
+                # less readable.
+                # pylint: disable=line-too-long
+                # These arguments do not match at all with any documentation that I have
+                # seen, nor do they match the output of Vte.Terminal.spawn_async.get_arguments().
+                # The PyGObject docs are just outright wrong for the ordering of the
+                # arguments to this function in every possible way:
+                #   https://lazka.github.io/pgi-docs/#Vte-2.91/classes/Pty.html#Vte.Pty.spawn_async
+                # Other docs seem to not show that there are actually two arguments between
+                # the spawn_flags and the timeout argument:
+                #   https://lazka.github.io/pgi-docs/Vte-2.91/classes/Terminal.html#Vte.Terminal.spawn_async
+                # So it's hard to know what we're actually passing, but I believe
+                # that everything up until spawn flags matches the lazka.github.io link.
+                # Then it's _two_ arguments for child_setup, the timeout, and then the
+                # cancellable and callback arguments. There is also the user_data argument
+                # which is not passed.
+                # For some reason, this function also outright rejects any keyword arguments
+                # and requires that everything be passed as positional parameters, so there
+                # is not a way to make sense of the arguments to this call that I am aware of.
+                # Unfortunately, the more reasonable spawn_sync has been deprecated. The
+                # documentation surrounding this function likely will not improve until and
+                # unless GTK stops treating Python support like an afterthought.
+                self.terminal.spawn_async(
                     Vte.PtyFlags.DEFAULT, os.environ['HOME'], cmd_args, [],
-                    GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None
+                    GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None,
+                    -1, None, None
                 )
             except GLib.Error as error:
                 logging.error("Unable to run ansible command.", exc_info=error)
