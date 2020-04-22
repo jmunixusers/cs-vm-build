@@ -29,12 +29,16 @@
 
 # The apt database can be fairly large and make the image unnecessarily large
 # so removing it before shipping allows us to ship a smaller image.
-- name: Clean the apt database
+- name: Clean the apt package cache
   command: apt-get clean
   # This will always report as changed otherwise
   changed_when: false
   args:
     warn: no
+- name: Delete apt package lists
+  file:
+    path: /var/lib/apt/lists
+    state: absent
 
 # The USB 2/3 controllers are only available with the Virtualbox
 # Extensions which are non-free software and available only under the Oracle
