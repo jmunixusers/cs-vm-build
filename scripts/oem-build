@@ -27,17 +27,6 @@ error () {
 }
 
 #---
-# Exits the script if the current distro is not Linux Mint.
-#---
-assert_mint() {
-    source /etc/os-release
-    local mint_name="Linux Mint"
-    if [ "$NAME" != "$mint_name" ]; then
-        error "The OEM role is only compatible with ${mint_name}. Not $NAME"
-    fi
-}
-
-#---
 # Installs VirtualBox Guest Additions if ISO file is present
 #---
 install_additions() {
@@ -66,17 +55,18 @@ main () {
         exit 1
     fi
 
-    assert_mint
-
-    user "Attempting to install VBox Guest Additions"
-    install_additions
+    user "Shutting down auto upgrades"
+    /usr/bin/systemctl stop unattended-upgrades.service
 
     user "Updating apt package cache"
     apt-get update
 
-    user "Installing ansible and git"
-    apt-get install --assume-yes ansible git aptitude\
-        || error "Unable to install ansible and git packages"
+    user "Installing prerequisite packages"
+    apt-get install -V --assume-yes ansible git aptitude gcc make perl \
+        || error "Unable to install prerequisite packages"
+
+    user "Attempting to install VBox Guest Additions"
+    install_additions
 
     user "Running ansible OEM playbook"
     # Ensure this runs from the root directory of the Ansible git directory

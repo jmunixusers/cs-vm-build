@@ -7,4 +7,5 @@
 
 # Packer-related binaries
 packer/packer_cache/*
-packer/artifacts/*
+packer/artifacts_mint/*
+packer/artifacts_ubuntu/*
