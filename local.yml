@@ -9,7 +9,6 @@
     - { role: filezilla, tags: always }
     - { role: basic-prog-pkgs, tags: ["cs101"] }
     - { role: adv-prog-pkgs, tags: ["cs261", "cs361"] }
-    - { role: robot-pkgs, tags: ["cs354"] }
     - { role: eclipse, tags: ["cs101", "cs149", "cs159"] }
     - { role: jgrasp, tags: ["cs149"] }
     - { role: finch, tags: ["cs101"] }

@@ -1,5 +1,10 @@
+# Temporary files from Ansible and editors
 *.retry
 *.swp
 
+# Python
+*.pyc
+
+# Packer-related binaries
 packer/packer_cache/*
 packer/artifacts/*
