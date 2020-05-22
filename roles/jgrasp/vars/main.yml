@@ -1,7 +1,7 @@
 ---
 # vars file for jgrasp
 jgrasp:
-  url: 'https://www.jgrasp.org/dl4g/jgrasp/jgrasp206_03.zip'
-  hash: '11cc4b8fd9dcc655cc03cb7107508b43cf292bd6'
+  url: 'https://www.jgrasp.org/dl4g/jgrasp/jgrasp206_04.zip'
+  hash: '5fb32382ecf695b2a267c50b415612f18b873b62'
   zip: '{{ global_base_path }}/jgrasp.zip'
   install_path: '{{ global_base_path }}/jgrasp'
