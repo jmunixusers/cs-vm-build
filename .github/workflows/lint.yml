@@ -1,0 +1,91 @@
+---
+name: VM lint workflow
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  Ansible:
+    name: Run Ansible lint tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          pip3 install ansible-lint
+      - name: Run ansible-lint
+        run: |
+          ansible-lint local.yml oem.yml
+  Packer:
+    name: Run Packer lint tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          pip3 install demjson
+      - name: Run jsonlint
+        run: |
+          jsonlint packer/*json
+      - name: Fetch and unzip packer nightly
+        run: |
+          wget -nv -O $HOME/packer.zip https://github.com/hashicorp/packer/releases/download/nightly/packer_linux_amd64.zip
+          unzip -d $HOME/packer $HOME/packer.zip
+      - name: Packer validate
+        run: |
+          $HOME/packer/pkg/packer_linux_amd64 validate packer/ubuntu-build.json
+          $HOME/packer/pkg/packer_linux_amd64 validate packer/mint-build.json
+          $HOME/packer/pkg/packer_linux_amd64 validate -var-file=packer/beta-vars.json packer/mint-build.json
+  Python:
+    name: Run Python lint tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install Ubuntu dependencies
+        run: |
+          sudo apt-get -q install python3-gi-cairo gir1.2-gtk-3.0 libgirepository1.0-dev gir1.2-vte-2.91
+      - name: Install dependencies
+        run: |
+          pip3 install pyyaml pygobject pylint
+      # We cannot just do roles/*/*/*py because we do not want to lint the
+      # finch scripts which we cannot change
+      - name: Run common role pylint
+        run: |
+          pylint roles/common/*/*py
+  YAML:
+    name: Run YAML lint tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          pip3 install yamllint
+      - name: Run actions yamllint
+        run: |
+          yamllint .github/workflows/*yml
+      - name: Run top-level yamllint
+        run: |
+          yamllint *yml
+      - name: Run role-level yamllint
+        run: |
+          yamllint roles/*/*/*yml
