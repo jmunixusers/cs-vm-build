@@ -1,8 +1,8 @@
 {
   "variables": {
-    "vm_name": "JMU Linux Mint",
-    "semester": "Sp20",
-    "mint_version": "19.3",
+    "vm_name": "JMU Ubuntu",
+    "semester": "Fa20",
+    "version": "20.04",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
@@ -12,9 +12,9 @@
     "headless": "true",
     "audio": "pulse",
 
-    "output_dir": "{{pwd}}/artifacts",
-    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable/19.3",
-    "iso_file": "linuxmint-19.3-cinnamon-64bit.iso",
+    "output_dir": "{{pwd}}/artifacts_ubuntu",
+    "mirror_url": "http://mirror.cs.jmu.edu/pub/ubuntu-iso/focal",
+    "iso_file": "ubuntu-20.04-desktop-amd64.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
@@ -52,7 +52,7 @@
 
       "iso_url": "{{user `mirror_url`}}/{{user `iso_file`}}",
       "iso_checksum_type": "sha256",
-      "iso_checksum_url": "{{user `mirror_url`}}/sha256sum.txt",
+      "iso_checksum_url": "{{user `mirror_url`}}/SHA256SUMS",
       "iso_interface": "sata",
 
       "hard_drive_discard": "true",
@@ -64,14 +64,16 @@
       "guest_os_type": "Ubuntu_64",
       "boot_wait": "5s",
       "boot_command": [
-        "<esc><wait><esc><wait>",
+        "<esc><wait>",
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
         "/casper/vmlinuz",
-
         " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
         " automatic-ubiquity",
         " debug-ubiquity",
         " keymap=us",
-        " boot=casper initrd=/casper/initrd.lz quiet noprompt splash --",
+        " boot=casper initrd=/casper/initrd noprompt --",
         "<enter>"
       ],
 
@@ -89,10 +91,10 @@
         "--vsys", "0",
           "--description", "Build ID: {{user `build_id`}}",
           "--product", "{{user `vm_name`}} {{user `semester`}}",
-          "--producturl", "https://linuxmint.com/",
+          "--producturl", "https://ubuntu.com/",
           "--vendor", "JMU Unix Users Group",
           "--vendorurl", "{{user `git_repo`}}",
-          "--version", "{{user `mint_version`}}"
+          "--version", "{{user `version`}}"
       ]
     }
   ],
@@ -101,8 +103,12 @@
     "execute_command": "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
     "inline": [
       "export DEBIAN_FRONTEND=noninteractive",
+      "echo UPDATE",
       "apt-get update",
-      "apt-get install -y git ansible aptitude",
+      "echo KILL",
+      "killall --quiet apt-get || true",
+      "echo INSTALL",
+      "apt-get install -V -y git ansible aptitude",
       "git clone -b {{user `git_branch`}} {{user `git_repo`}}",
       "cd /home/oem/cs-vm-build/scripts",
       "./oem-build",

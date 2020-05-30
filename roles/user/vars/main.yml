@@ -8,5 +8,5 @@ user_dependencies:
   - python3-psutil
   - unzip
   - vim
-  - vim-gnome
+  - vim-gtk3
   - zenity

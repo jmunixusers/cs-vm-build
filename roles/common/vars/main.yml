@@ -18,3 +18,5 @@ share_directory: "/usr/local/share/jmu-uug"
 uug_ansible_wrapper: "{{ share_directory }}/uug_ansible_wrapper.py"
 
 tux_icon_name: "edu.jmu.uug.tux"
+
+wrapper_desktop_file_path: "/usr/local/share/applications"

@@ -4,16 +4,6 @@
 # All tasks in this file should be able to be run as part of the OEM or common
 # role without error as common is used in both of those.
 
-- name: Set OEM facts
-  set_fact:
-    wrapper_desktop_file_path: "/etc/skel/Desktop"
-    wrapper_desktop_file_mode: 0755
-  when: icon_mode == 'oem'
-- name: Set user facts
-  set_fact:
-    wrapper_desktop_file_path: "/usr/local/share/applications"
-    wrapper_desktop_file_mode: 0644
-  when: icon_mode == 'user'
 - name: Check Ubuntu release
   set_fact:
     ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
@@ -29,18 +19,6 @@
     path: "{{ log_directory }}"
     state: directory
     mode: 0755
-- name: Ensure desktop icon directory exists
-  file:
-    path: "{{ wrapper_desktop_file_path }}"
-    state: directory
-    mode: 0755
-# The policy file must go in /usr/share/polkit-1. It is the only location that
-# policykit checks
-- name: Install policykit policy for Ansible wrapper
-  copy:
-    src: edu.jmu.uug.ansiblewrapper.policy
-    dest: /usr/share/polkit-1/actions/
-    mode: 0644
 - name: Create directory for shared data
   file:
     path: "{{ share_directory }}"
@@ -48,6 +26,14 @@
     owner: root
     group: root
     mode: 0755
+
+# The policy file must go in /usr/share/polkit-1. It is the only location that
+# policykit checks
+- name: Install policykit policy for Ansible wrapper
+  copy:
+    src: edu.jmu.uug.ansiblewrapper.policy
+    dest: /usr/share/polkit-1/actions/
+    mode: 0644
 - name: Install Ansible wrapper GUI script
   template:
     src: uug_ansible_wrapper.py
@@ -59,44 +45,22 @@
     dest: "/usr/share/icons/hicolor/scalable/apps/{{ tux_icon_name }}.svg"
     mode: 0644
   notify: Update icon cache
+
+- name: Ensure local applications folder exists
+  file:
+    path: "{{ wrapper_desktop_file_path }}"
+    state: directory
+    mode: 0755
 - name: Copy shortcut to desktop file directory
   template:
     src: desktop-template.desktop.j2
     dest: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
-    mode: "{{ wrapper_desktop_file_mode }}"
-- name: Create directory for custom MintReport script
-  file:
-    path: /usr/share/linuxmint/mintreport/reports/001_Run-JMU-CS-Config-Tool
     mode: 0755
-    owner: root
-    group: root
-    state: directory
-  when: ansible_distribution == "Linux Mint"
-- name: Install custom MintReport script
-  template:
-    src: CustomMintReportInfo.py
-    dest: /usr/share/linuxmint/mintreport/reports/001_Run-JMU-CS-Config-Tool/MintReportInfo.py
-    mode: 0644
-    owner: root
-    group: root
-  when: ansible_distribution == "Linux Mint"
 
-- name: Set Ubuntu mirrors
-  template:
-    src: ubuntu.j2
-    dest: /etc/apt/sources.list
-    owner: root
-    group: root
-    mode: 0664
-  when: ansible_distribution == "Ubuntu"
-- name: Set Linux Mint mirrors
-  template:
-    src: mint.j2
-    dest: /etc/apt/sources.list.d/official-package-repositories.list
-    owner: root
-    group: root
-    mode: 0644
-  when: ansible_distribution == "Linuxmint" or ansible_distribution == "Linux Mint"
+- include_tasks: ubuntu_only.yml
+  when: "ansible_distribution == 'Ubuntu'"
+- include_tasks: mint_only.yml
+  when: "ansible_distribution == 'Linux Mint'"
 - name: Refresh apt cache
   apt:
     update_cache: yes
