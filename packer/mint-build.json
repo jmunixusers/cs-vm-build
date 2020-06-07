@@ -1,4 +1,5 @@
 {
+  "min_packer_version": "1.5.6",
   "variables": {
     "vm_name": "JMU Linux Mint",
     "semester": "Sp20",
@@ -13,7 +14,7 @@
     "audio": "pulse",
 
     "output_dir": "{{pwd}}/artifacts_mint",
-    "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/stable/19.3",
+    "mirror_url": "https://mirror.cs.jmu.edu/pub/linuxmint/images/stable/19.3",
     "iso_file": "linuxmint-19.3-cinnamon-64bit.iso",
 
     "ssh_user": "oem",
@@ -51,8 +52,7 @@
       ],
 
       "iso_url": "{{user `mirror_url`}}/{{user `iso_file`}}",
-      "iso_checksum_type": "sha256",
-      "iso_checksum_url": "{{user `mirror_url`}}/sha256sum.txt",
+      "iso_checksum": "file:{{user `mirror_url`}}/sha256sum.txt",
       "iso_interface": "sata",
 
       "hard_drive_discard": "true",
@@ -87,7 +87,7 @@
       [
         "--manifest",
         "--vsys", "0",
-          "--description", "Build ID: {{user `build_id`}}",
+          "--description", "Build date: {{user `build_id`}}\nPacker version: {{packer_version}}\nVirtualBox version: {{ .Version }}",
           "--product", "{{user `vm_name`}} {{user `semester`}}",
           "--producturl", "https://linuxmint.com/",
           "--vendor", "JMU Unix Users Group",
