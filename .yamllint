@@ -8,3 +8,4 @@ rules:
   line-length: disable
   truthy:                                                                       
     allowed-values: ["yes", "no", "true", "false"]
+    check-keys: false

@@ -1,3 +1,5 @@
+![VM lint workflow](https://github.com/jmunixusers/cs-vm-build/workflows/VM%20lint%20workflow/badge.svg)
+
 # JMU UUG virtual machine build script
 
 This is a set of Ansible roles that can be used to configure a Linux Mint or
