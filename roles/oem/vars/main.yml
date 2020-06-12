@@ -43,7 +43,6 @@ packages_to_remove:
   - fonts-tibetan-machine
   - fonts-tlwg-*
   - fonts-wqy-microhei
-  - gimp*
   - hexchat*
   - hunspell-de-*
   - hunspell-en-au
