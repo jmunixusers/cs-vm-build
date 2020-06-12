@@ -8,7 +8,7 @@
     state: present
 - name: Install VSCode Repository file
   apt_repository:
-    repo: deb https://packages.microsoft.com/repos/vscode stable main
+    repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
     state: present
     filename: vscode
 - name: Install VSCode
