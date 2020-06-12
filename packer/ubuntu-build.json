@@ -89,7 +89,7 @@
       [
         "--manifest",
         "--vsys", "0",
-          "--description", "Build date: {{user `build_id`}}\nPacker version: {{packer_version}}\nVirtualBox version: {{ .Version }}",
+          "--description", "Build date: {{user `build_id`}}\nPacker version: {{packer_version}}",
           "--product", "{{user `vm_name`}} {{user `semester`}}",
           "--producturl", "https://ubuntu.com/",
           "--vendor", "JMU Unix Users Group",
