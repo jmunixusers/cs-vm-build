@@ -1,5 +1,5 @@
 {
-  "min_packer_version": "1.5.6",
+  "min_packer_version": "1.6.0",
   "variables": {
     "vm_name": "JMU Linux Mint",
     "semester": "Sp20",
@@ -81,6 +81,7 @@
       "shutdown_command": "echo -e \"{{user `ssh_pass`}}\\n\" | sudo -S poweroff",
 
       "output_directory": "{{user `output_dir`}}",
+      "output_filename": "image-{{user `semester` | lower }}",
       "format": "ova",
 
       "export_opts":
@@ -112,7 +113,8 @@
   "post-processors": [
     {
       "type": "checksum",
-      "output": "{{user `output_dir`}}/{{user `vm_name`}} {{user `semester`}}.{{.ChecksumType}}sum"
+      "checksum_types": "sha256",
+      "output": "{{user `output_dir`}}/image-{{user `semester` | lower }}.{{.ChecksumType}}sum"
     }
   ]
 }
