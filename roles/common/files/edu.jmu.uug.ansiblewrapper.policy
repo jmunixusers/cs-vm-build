@@ -9,7 +9,7 @@
 
     <action id="edu.jmu.uug.ansiblewrapper">
         <!-- Message at the beginning of the dialog -->
-        <message>Administrator privileges are required to configured the virtual machine.</message>
+        <message>Administrator privileges are required to configure the virtual machine.</message>
         <defaults>
             <!-- Require administrator user to enter their password on an
                  active session (TTY or X11). -->
