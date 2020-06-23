@@ -140,7 +140,7 @@ command using the `-var` flag. The supported parameters are:
 
 - `git_repo` - the repository containing the setup scripts to run before
 exporting the VM appliance. Defaults to https://github.com/jmunixusers/cs-vm-build.
-- `git_branch` - the branch of the above repository to choose. Defaults to `master`.
+- `git_branch` - the branch of the above repository to choose. Defaults to `main`.
 - `headless` - whether or not to show the desktop session during installation.
 Defaults to `true`.
 - `audio` - choose the host driver to use. Defaults to `pulse` for Linux, or

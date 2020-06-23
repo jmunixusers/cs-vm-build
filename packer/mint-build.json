@@ -8,7 +8,7 @@
     "build_id": "{{isotime \"2006-01-02\"}}",
 
     "git_repo": "https://github.com/jmunixusers/cs-vm-build",
-    "git_branch": "master",
+    "git_branch": "main",
 
     "headless": "true",
     "audio": "pulse",

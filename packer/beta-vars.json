@@ -3,7 +3,7 @@
   "mint_version": "20",
 
   "git_repo": "https://github.com/jmunixusers/cs-vm-build",
-  "git_branch": "master",
+  "git_branch": "main",
 
   "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/testing",
   "iso_file": "linuxmint-20-cinnamon-64bit-beta.iso"
