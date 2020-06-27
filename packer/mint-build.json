@@ -2,8 +2,8 @@
   "min_packer_version": "1.6.0",
   "variables": {
     "vm_name": "JMU Linux Mint",
-    "semester": "Sp20",
-    "version": "19.3",
+    "semester": "Fa20",
+    "version": "20",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
@@ -14,8 +14,8 @@
     "audio": "pulse",
 
     "output_dir": "{{pwd}}/artifacts_mint",
-    "mirror_url": "https://mirror.cs.jmu.edu/pub/linuxmint/images/stable/19.3",
-    "iso_file": "linuxmint-19.3-cinnamon-64bit.iso",
+    "mirror_url": "https://mirror.cs.jmu.edu/pub/linuxmint/images/stable/20",
+    "iso_file": "linuxmint-20-cinnamon-64bit.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
@@ -101,6 +101,7 @@
     "type": "shell",
     "execute_command": "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
     "inline": [
+      "while(pgrep -a apt-get); do sleep 1; done",
       "export DEBIAN_FRONTEND=noninteractive",
       "apt-get update",
       "apt-get install -y git ansible aptitude",
