@@ -82,12 +82,12 @@ def main():
     # The default value for the branch is the current distro release name.
     # Set this before parsing the configuration. If it can't be detected,
     # it should get set to None. If the branch does not currently exist, it
-    # should be set to master.
+    # should be set to main.
     distro_name = get_distro_release_name()
     if branch_exists(distro_name):
         USER_CONFIG['git_branch'] = distro_name
     else:
-        USER_CONFIG['git_branch'] = 'master'
+        USER_CONFIG['git_branch'] = 'main'
 
     # Parse the user's previous settings
     parse_user_config()
@@ -98,7 +98,7 @@ def main():
         USER_CONFIG['roles_this_run'].append("common")
 
     if not USER_CONFIG['git_branch']:
-        USER_CONFIG['git_branch'] = "master"
+        USER_CONFIG['git_branch'] = "main"
 
     # Show the window and ensure when it's closed that the script terminates
     win = AnsibleWrapperWindow()
@@ -596,7 +596,7 @@ def validate_branch_settings(parent):
     system_version = get_distro_release_name()
     chosen_branch = USER_CONFIG['git_branch']
     chosen_remote = USER_CONFIG['git_url']
-    master_okay = USER_CONFIG.get('ignore_master', False)
+    main_okay = USER_CONFIG.get('ignore_main', False)
     branch_mismatch = system_version != chosen_branch
     looks_minty = re.compile(r"[a-z]+a").fullmatch(chosen_branch)
 
@@ -616,11 +616,11 @@ def validate_branch_settings(parent):
         return True
 
     # These are branches that should be handled specially
-    if chosen_branch == "master" and system_exists and not master_okay:
-        # The user wants to run master, but there is a release for their distro
+    if chosen_branch == "main" and system_exists and not main_okay:
+        # The user wants to run main, but there is a release for their distro
         header = "Unstable release selected"
         warning_prompt = (
-            "You have selected an unstable development branch (master) of the"
+            "You have selected an unstable development branch (main) of the"
             " configuration tool. It is recommended to use the release branch"
             " of this tool that corresponds to your Linux Mint version."
             " Consider changing your settings to match the following:"
@@ -631,7 +631,7 @@ def validate_branch_settings(parent):
         )
 
         display_ignorable_warning(
-            header, warning_prompt, parent, 'ignore_master'
+            header, warning_prompt, parent, 'ignore_main'
         )
         return False
 
@@ -668,10 +668,10 @@ def validate_branch_settings(parent):
             "You have selected a release of the configuration tool that does"
             " not exist on the git URL you have specified; however, your"
             " current version of Linux Mint is not yet supported. It is"
-            " recommended that you switch to the master (testing) branch."
+            " recommended that you switch to the main (testing) branch."
             " Consider changing your settings to match the following:"
             "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': 'master',
+                'release': 'main',
                 'url': USER_CONFIG['git_url'],
             }
         )
@@ -683,10 +683,10 @@ def validate_branch_settings(parent):
             "You have selected a version of the configuration tool meant for"
             " a different Linux Mint release; however, we are unable to"
             " completely support your Linux Mint release at this time."
-            " It is recommended to switch to the master (testing) branch."
+            " It is recommended to switch to the main (testing) branch."
             " Consider changing your settings to match the following:"
             "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': 'master',
+                'release': 'main',
                 'url': USER_CONFIG['git_url'],
             }
         )
@@ -696,10 +696,10 @@ def validate_branch_settings(parent):
             "You have selected a version of the configuration tool that does"
             " not support your version of Linux Mint; however, there is not"
             " a release that supports your version of Linux Mint available"
-            " yet. It is recommended to switch to the master (testing) branch."
+            " yet. It is recommended to switch to the main (testing) branch."
             " Consider changing your settings to match the following:"
             "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': 'master',
+                'release': 'main',
                 'url': USER_CONFIG['git_url'],
             }
         )
