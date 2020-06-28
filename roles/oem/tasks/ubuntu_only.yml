@@ -4,6 +4,8 @@
 - name: Upgrade all installed packages
   apt:
     upgrade: safe
+- name: Upgrade all installed snaps  # noqa 301
+  command: snap refresh
 - name: Copy dconf config file
   copy:
     src: csconfig-ubuntuonly
