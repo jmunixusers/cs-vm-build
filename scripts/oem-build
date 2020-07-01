@@ -55,9 +55,6 @@ main () {
         exit 1
     fi
 
-    user "Shutting down auto upgrades"
-    /usr/bin/systemctl stop unattended-upgrades.service
-
     user "Updating apt package cache"
     apt-get update
 
