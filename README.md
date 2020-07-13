@@ -7,18 +7,17 @@ Ubuntu system for JMU computer science courses. It is primarily used to deliver
 the Unix Users Group virtual machine, but can be run outside that VM using
 instructions later in this document. Extended end user documentation about
 using these tasks and the VM is available
-[separately](https://jmunixusers.github.io/presentations/vm/).
+[separately](https://www.jmunixusers.org/presentations/vm/).
 
 ## Installed packages and features
 
 ### Common
 * Filezilla
-* JDK/JRE 10-11
+* JDK/JRE 11
 * SFTP connection to stu
 * Shortcuts to re-run tasks
 * Unzip
-* Vim
-* Vim-Gnome
+* Vim with GTK3 extension
 * VM management script
 * JMU wireless printing
 
@@ -104,6 +103,17 @@ using these tasks and the VM is available
 
 ## Manual use of these Ansible roles
 
+This project was developed on and for Linux Mint, and receives occasional
+testing on Ubuntu. It may work on other Debian-based distributions, or may
+require minor modifications. If you find a case like this, feel free to open an
+issue to discuss what changes would be needed, and how they can be incorporated.
+Adaptions for distributions that do not use apt will require more extensive
+modifications, and would likely need signficant justification for inclusion.
+
+If you have a Mint or Ubuntu instance (VM or laptop) that you built yourself,
+and wish to use this project to get started with JMU CS software, follow these
+steps:
+
 ```
 apt-get install ansible git
 git clone https://github.com/jmunixusers/cs-vm-build
@@ -118,10 +128,6 @@ ansible-pull -U https://github.com/jmunixusers/cs-vm-build --directory /tmp/cs-v
 where TAGS is a comma separated list (with no spaces) of
 cs101, cs149, cs159, cs261, cs361 and/or cs430 as appropriate.
 
-This was developed on and for Linux Mint, but can be adapted to any Debian-based
-distribution with minimal changes. Adaptions for distributions that do not use
-apt will require more extensive modifications.
-
 ## Building the UUG VM
 
 To build the UUG VM, configure a system with `git`,
@@ -130,8 +136,12 @@ To build the UUG VM, configure a system with `git`,
 and approximately 20GB of free disk space. VM builds are tested regularly on
 Linux and Windows hosts, but feedback on other platforms is always welcome.
 
+Due to difficulties with Packer packaging, this VM is frequently built with the
+latest version of Packer available directly from Hashicorp. Check the
+`mint-build.json` file for the current minimum version required.
+
 Once the prerequisites are installed, change into the `cs-vm-build/packer`
-directory and execute `packer build oem-build.json`. This will take a
+directory and execute `packer build mint-build.json`. This will take a
 considerable amount of time, depending on host resources available, but should
 output progress indicators along the way.
 
@@ -152,12 +162,12 @@ A large number of variables can be overridden at once by passing a `var-file`
 to Packer. An example of this is provided as `beta-vars.json`, and can be used
 like this:
 
-`packer build -var-file=beta-vars.json oem-build.json`
+`packer build -var-file=beta-vars.json mint-build.json`
 
 Packer allows further overrides, with precedence given to the last option in the
 command. For example, to build a beta image on Windows, use this command:
 
-`packer build -var-file=beta-vars.json -var 'audio=dsound' oem-build.json`
+`packer build -var-file=beta-vars.json -var 'audio=dsound' mint-build.json`
 
 ## Contributing
 

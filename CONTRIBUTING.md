@@ -7,7 +7,7 @@ potential contributors for what to expect.
 
 This document assumes a basic knowledge of `git` and GitHub. For an intro to
 both of these, see our `git`
-[intro guide](https://jmunixusers.github.io/presentations/Git.html).
+[intro guide](https://www.jmunixusers.org/presentations/Git.html).
 
 
 ## Getting started
@@ -42,8 +42,8 @@ information.
 
 ## Submitting pull requests
 
-Pull requests should be targeted to `master` unless they're fixing a particular
-issue in a release. Once issues are in `master`, they may be backported. This
+Pull requests should be targeted to `main` unless they're fixing a particular
+issue in a release. Once issues are in `main`, they may be backported. This
 allows us to ensure that the next release of the VM includes all fixes that
 are in the current release.
 
@@ -55,9 +55,9 @@ request; this will make testing significantly easier for you and for the UUG.
 
 Your pull request will be reviewed by at least one member of the UUG Virtual
 Machine team. We require all pull requests (even ones from UUG Virtual Machine
-team members) to go through a review process before merging. Your reviewers may
-request that some changes be made before merging or may merge your pull
-request as-is.
+team members) to go through automated testing via GitHub Actions, as well as a
+review process before merging. Your reviewers may request that some changes be
+made before merging or may merge your pull request as-is.
 
 Reviewers are encouraged to provide specific feedback and help contributors
 improve their patches.
@@ -72,7 +72,7 @@ easier for your reviewers. We recommend the following for testing:
  - Have a dedicated VM for testing your fixes that you don't use for other work
  - In the JMU CS VM Configuration program:
    - Go to File > Settings...
-   - Change the branch to `master`
+   - Change the branch to `main`
    - Change the URL to `https://github.com/jmunixusers/cs-vm-build`
    - Re-run the base configuration and all roles that your change will affect
    - Change the branch and URL to where you pushed your changes
@@ -80,17 +80,16 @@ easier for your reviewers. We recommend the following for testing:
 
 At this point, you can test and ensure that your change works as expected. If
 your change affects Java, please try to compile a basic Java "Hello world"
-program in each of: DrJava, jGRASP, and Eclipse. If your change affects `gcc`
-or similar utilities, please try to compile a basic C "Hello world" program.
+program in jGRASP and Eclipse. If your change affects `gcc` or similar
+utilities, please try to compile a basic C "Hello world" program.
 
 
 ## Backporting fixes
 
-When a fix needs to be backported from master to a particular release, the
+When a fix needs to be backported from `main` to a particular release, the
 following has worked relatively well.
 
- - Locally checkout a new branch based on `master`
- - Run `git pull https://github.com/jmunixusers/cs-vm-build master`
+ - Locally checkout a new branch based on the intended release
  - Run `git cherry-pick <COMMIT_HASH>` for each commit that needs to be
    backported.
  - Run `git push origin BRANCH`
@@ -98,7 +97,7 @@ following has worked relatively well.
 
 Backports go through the same review process as any other commits. In the pull
 request, please reference the number of the pull request from when the fix was
-merged into `master`.
+merged into `main`.
 
 
 ## Preparing for a release
@@ -158,4 +157,3 @@ there is a dictionary of classes and tags, this is where we will be adding our
 class. The first value is what the class will appear as in the install program,
 and the second value will be the role name from the `roles.yml` file we added
 earlier.
-
