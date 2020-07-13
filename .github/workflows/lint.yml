@@ -8,7 +8,7 @@ on:
 jobs:
   Ansible:
     name: Run Ansible lint tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@master
       - name: Set up Python 3.x
@@ -23,7 +23,7 @@ jobs:
           ansible-lint local.yml oem.yml
   Packer:
     name: Run Packer lint tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -48,7 +48,7 @@ jobs:
           $HOME/packer/packer validate -var-file=packer/beta-vars.json packer/mint-build.json
   Python:
     name: Run Python lint tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -69,7 +69,7 @@ jobs:
           pylint roles/common/*/*.py scripts/*.py
   YAML:
     name: Run YAML lint tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -91,7 +91,7 @@ jobs:
           yamllint roles/*/*/*yml
   Hashes:
     name: Validate file hashes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@master
