@@ -102,6 +102,9 @@ using these tasks and the VM is available
 * Prolog
   * swi-prolog
 
+### CS432
+* (essentially same as CS261)
+
 ## Manual use of these Ansible roles
 
 This project was developed on and for Linux Mint, and receives occasional
