@@ -8,7 +8,7 @@ adv_prog_pkgs_adv_lang:
   - logisim
   - valgrind
 
-adv_prog_pkgs_souce_control:
+adv_prog_pkgs_source_control:
   - git
   - gitg
   - mercurial

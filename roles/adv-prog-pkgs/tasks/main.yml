@@ -7,7 +7,7 @@
 
 - name: Install source control packages
   apt:
-    name: '{{ adv_prog_pkgs_souce_control }}'
+    name: '{{ adv_prog_pkgs_source_control }}'
     state: latest
 
 - name: Install code editor packages
