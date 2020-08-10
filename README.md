@@ -53,6 +53,7 @@ using these tasks and the VM is available
     * gdb
     * logisim
     * valgrind
+    * graphviz
   * Code editors
     * astyle
     * bvi
