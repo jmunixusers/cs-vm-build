@@ -5,9 +5,9 @@ adv_prog_pkgs_adv_lang:
   - g++
   - gcc
   - gdb
+  - graphviz
   - logisim
   - valgrind
-  - graphviz
 
 adv_prog_pkgs_source_control:
   - git

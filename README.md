@@ -51,9 +51,9 @@ using these tasks and the VM is available
     * g++
     * gcc
     * gdb
+    * graphviz
     * logisim
     * valgrind
-    * graphviz
   * Code editors
     * astyle
     * bvi
@@ -79,6 +79,7 @@ using these tasks and the VM is available
     * g++
     * gcc
     * gdb
+    * graphviz
     * logisim
     * valgrind
   * Code editors
