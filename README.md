@@ -51,6 +51,7 @@ using these tasks and the VM is available
     * g++
     * gcc
     * gdb
+    * graphviz
     * logisim
     * valgrind
   * Code editors
@@ -78,6 +79,7 @@ using these tasks and the VM is available
     * g++
     * gcc
     * gdb
+    * graphviz
     * logisim
     * valgrind
   * Code editors
@@ -100,6 +102,9 @@ using these tasks and the VM is available
   * haskell-platform
 * Prolog
   * swi-prolog
+
+### CS432
+* (essentially same as CS261)
 
 ## Manual use of these Ansible roles
 
