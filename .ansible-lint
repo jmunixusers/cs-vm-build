@@ -1,3 +1,10 @@
 skip_list:
 # Package installs should not use latest
   - 403
+
+# Ansible lint added a few new features just before fa20 VM release; we should be aware of them
+# but not fail on them. They can be further reviewed after the release
+warn_list:
+  - '106'  # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern'
+  - '208'  # File permissions not mentioned'
+
