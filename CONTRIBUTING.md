@@ -65,23 +65,56 @@ improve their patches.
 
 ## Testing
 
-Performing a few tests before submitting a pull request can significantly
-decrease the amount of time before your PR is merged and will make life much
-easier for your reviewers. We recommend the following for testing:
+A series of automated tests, through GitHub Actions, are performed on each pull
+request submitted. These automated tests are primarily focused on style and
+best-practices and cannot yet test for the complete correctness of each change.
+Performing a few tests yourself prior to opening a pull request can make the
+process of reviewing your changes easier.
 
- - Have a dedicated VM for testing your fixes that you don't use for other work
- - In the JMU CS VM Configuration program:
-   - Go to File > Settings...
-   - Change the branch to `main`
-   - Change the URL to `https://github.com/jmunixusers/cs-vm-build`
-   - Re-run the base configuration and all roles that your change will affect
-   - Change the branch and URL to where you pushed your changes
-   - Re-run the base configuration and all roles that your change will affect
+If the automated tests fail for your change and you aren't able to determine a
+specific cause or if you believe the failures are unrelated to the changes you
+made, leave a comment on the pull request and a reviewer will assist in
+troubleshooting.
+
+There are two different methods of testing that can be perfomed. For nearly all
+changes, doing a test run of the Ansible playbooks in a test VM is a great way
+to quickly identify issues. For changes to the `common` and `oem` roles or the
+`packer/` directory, a full Packer build can be performed.
+
+### Test Ansible Run
+
+Testing changes to the Ansible playbook should be done in a separate VM from
+the one you use for your usual work, just in case something goes wrong. In
+order to test your changes, push your changes to GitHub, boot your VM, open the
+JMU CS VM Configuration program, and do the following:
+ 1. Go to File > Settings...
+ 1. Change the branch to `main`
+ 1. Set the URL to `https://github.com/jmunixusers/cs-vm-build`
+ 1. Re-run the base configuration and all roles that your change affects
+ 1. Change the branch to the name of the branch you made your change on
+ 1. Change the URL to the URL of your fork (`https://github.com/USERNAME/cs-vm-build`)
+    - Replace `USERNAME` with your username on GitHub
+ 1. Re-run the base configuration and all yours that your change affects
 
 At this point, you can test and ensure that your change works as expected. If
 your change affects Java, please try to compile a basic Java "Hello world"
 program in jGRASP and Eclipse. If your change affects `gcc` or similar
 utilities, please try to compile a basic C "Hello world" program.
+
+### Test Packer Build
+
+If you would like to test a full build of the VM, our Packer configuration
+requires more features than what is available in the repositories of most Linux
+distributions. You can install the latest development version of Packer from
+the [nightly downloads](https://github.com/hashicorp/packer/releases/nightly)
+page. There are downloads available for:
+ - [Windows](https://github.com/hashicorp/packer/releases/download/nightly/packer_windows_amd64.zip)
+ - [Linux](https://github.com/hashicorp/packer/releases/download/nightly/packer_linux_amd64.zip)
+ - [macOS](https://github.com/hashicorp/packer/releases/download/nightly/packer_darwin_amd64.zip)
+
+Once downloaded, unzip the file and execute `packer`. From there, you can
+follow the instructions in the
+[REAMDE](https://github.com/jmunixusers/cs-vm-build#building-the-uug-vm).
 
 
 ## Backporting fixes
@@ -116,6 +149,7 @@ if subsequent releases had been necessary, they would have been named
 `sylvia-sp18b` and `sylvia-sp18c`, etc. The first release in fall 2018 was
 `tara-fa18a`.
 
+
 ## Adding a new role
 
 Assuming you have your git operations in order, the first thing you will need
@@ -123,9 +157,11 @@ to do to begin working on your ansible role is to create the directory. We will
 start in the base `cs-vm-build` directory that you get when cloning the
 jmunixusers repo. First move into the `roles/` folder, and create a directory
 for your role using the `ansible-galaxy` command:
+
 ```
 ansible-galaxy init [your class name/description]
 ```
+
 This has very little output but once it finishes, go into the newly created
 directory to find a host of new folders and a readme. Every folder (generally)
 contains a `main.yml` file that will be your base for your new role. Try to
