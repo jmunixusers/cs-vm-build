@@ -25,6 +25,7 @@ source "virtualbox-iso" "base-build" {
   ssh_password             = "${var.ssh_pass}"
   ssh_timeout              = "100m"
 
+  firmware  = "efi"
   boot_wait = "5s"
   boot_command = [
     "<esc><wait><esc><wait><esc><wait>",
