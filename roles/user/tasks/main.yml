@@ -4,10 +4,16 @@
   file:
     path: "{{ global_base_path }}"
     state: directory
+    owner: root
+    group: root
+    mode: 0755
 - name: Create local applications directory
   file:
     path: /usr/local/share/applications/
     state: directory
+    owner: root
+    group: root
+    mode: 0755
 - name: Get users
   getent:
     database: passwd
