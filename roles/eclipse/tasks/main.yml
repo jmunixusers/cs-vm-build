@@ -34,6 +34,9 @@
       unarchive:
         dest: '{{ global_base_path }}'
         src: '{{ eclipse.zip }}'
+        owner: root
+        group: root
+        mode: 0755
   when: st.stat.checksum|default("") != eclipse.hash
 - name: Install checkstyle plugin
   command: >

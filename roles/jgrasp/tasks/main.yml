@@ -23,6 +23,9 @@
       unarchive:
         dest: '{{ global_base_path }}'
         src: '{{ jgrasp.zip }}'
+        owner: root
+        group: root
+        mode: 0755
   when: st.stat.checksum|default("") != jgrasp.hash
 - name: Install jGRASP desktop icon
   template:
