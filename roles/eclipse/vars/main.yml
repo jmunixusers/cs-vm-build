@@ -3,9 +3,9 @@
 eclipse:
   # Ensure the URL does not specify a mirror and that &r=1 is at the end, which
   # directly links to the file and not the web page with a download button
-  url: 'https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2020-09/R/eclipse-java-2020-09-R-linux-gtk-x86_64.tar.gz&r=1'
-  url_backup: 'http://mirror.cc.columbia.edu/pub/software/eclipse/technology/epp/downloads/release/2020-09/R/eclipse-java-2020-09-R-linux-gtk-x86_64.tar.gz'
-  hash: 'bd7d65adead2c9313a65b0d3bf4e083dcda62ae0'
+  url: 'https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2020-12/R/eclipse-java-2020-12-R-linux-gtk-x86_64.tar.gz&r=1'
+  url_backup: 'http://mirror.cc.columbia.edu/pub/software/eclipse/technology/epp/downloads/release/2020-12/R/eclipse-java-2020-12-R-linux-gtk-x86_64.tar.gz'
+  hash: '3a77893d865e25fb9e28f4b26efd59279ff79457'
   zip: '{{ global_base_path }}/eclipse.tar.gz'
   install_path: '{{ global_base_path }}/eclipse'
 
