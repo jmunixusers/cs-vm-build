@@ -1,10 +1,10 @@
 {
-  "semester": "Fa20",
-  "mint_version": "20",
+  "semester": "Sp21",
+  "mint_version": "20.1",
 
   "git_repo": "https://github.com/jmunixusers/cs-vm-build",
   "git_branch": "main",
 
   "mirror_url": "http://mirror.cs.jmu.edu/pub/linuxmint/images/testing",
-  "iso_file": "linuxmint-20-cinnamon-64bit-beta.iso"
+  "iso_file": "linuxmint-20.1-cinnamon-64bit-beta.iso"
 }
