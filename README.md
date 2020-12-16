@@ -27,6 +27,7 @@ using these tasks and the VM is available
 * Mint packages (basic-prog-pkgs role)
   * artha
   * bless
+  * chromium-browser
   * geany
   * idle
   * libreoffice
