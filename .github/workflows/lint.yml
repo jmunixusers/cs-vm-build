@@ -67,6 +67,21 @@ jobs:
       - name: Run pylint
         run: |
           pylint roles/common/*/*.py scripts/*.py
+  Shell:
+    name: Run Shell linting
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install shellcheck
+        run: |
+          sudo apt-get -q install shellcheck
+      # The profile is currently empty when placed on the machine; however, that
+      # may not always be the case. The file is shell code and should be linted
+      # as such.
+      - name: Run Shellcheck
+        run: |
+          shellcheck --shell=bash scripts/oem-build roles/user/files/csvmprofile
   YAML:
     name: Run YAML lint tests
     runs-on: ubuntu-20.04
