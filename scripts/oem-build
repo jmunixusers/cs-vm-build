@@ -68,8 +68,9 @@ main () {
 
     user "Running ansible OEM playbook"
     # Ensure this runs from the root directory of the Ansible git directory
-    cd "$(dirname "$0")"/.. \
-        || error "Unable to cd to $(dirname "$0")/.."
+    local project_dir
+    project_dir="$(dirname "$(dirname "$0")")"
+    cd "$project_dir" || error "Unable to cd to $project_dir"
     ansible-playbook -i hosts -c local -t oem oem.yml \
         || error "Playbook failed to complete successfully"
 }
