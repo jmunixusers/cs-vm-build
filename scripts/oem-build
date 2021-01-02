@@ -51,8 +51,9 @@ install_additions() {
 #---
 main () {
     if [ "$(id -u)" -ne "0" ]; then
-        error "Not running as root. Retry with sudo"
-        exit 1
+        user "Not running as root. Automatically retrying with sudo."
+        exec sudo "$0"
+        exit $?
     fi
 
     user "Updating apt package cache"
