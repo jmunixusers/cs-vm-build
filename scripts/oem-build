@@ -73,6 +73,15 @@ main () {
         exit $?
     fi
 
+    # Ensure this runs from the root directory of the Ansible git directory
+    local project_dir
+    project_dir="$(dirname "$(dirname "$(realpath "$0")")")"
+    if cd "$project_dir"; then
+        user "Running from $project_dir"
+    else
+        error "Unable to cd to $project_dir"
+    fi
+
     user "Updating apt package cache"
     apt-get update
 
@@ -84,10 +93,6 @@ main () {
     install_additions
 
     user "Running ansible OEM playbook"
-    # Ensure this runs from the root directory of the Ansible git directory
-    local project_dir
-    project_dir="$(dirname "$(dirname "$0")")"
-    cd "$project_dir" || error "Unable to cd to $project_dir"
     ansible-playbook -i hosts -c local -t oem oem.yml \
         || error "Playbook failed to complete successfully"
 }
