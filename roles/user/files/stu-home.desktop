@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Home on Stu
+Exec=sh -c "nemo sftp://\${USER}@stu.cs.jmu.edu/cs/home/stu/\${USER}/"
+Comment=Mount/umount your JMUCS NFS home directory
+Terminal=false
+Type=Application
+Categories=System;
+Icon=usermount
+Name[en_US]=Home on Stu
