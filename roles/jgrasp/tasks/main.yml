@@ -2,12 +2,16 @@
 # tasks file for jgrasp
 - name: Install jGRASP dependencies
   apt:
-    name: lsb-core
+    name: '{{ jgrasp_wedge_dependencies }}'
     state: latest
-- name: Check jGRASP
+- name: Check jGRASP zip
   stat:
     path: '{{ jgrasp.zip }}'
-  register: st
+  register: zip
+- name: Check jGRASP wedge
+  stat:
+    path: '{{ jgrasp.install_path }}/internal_bin/sys_run'
+  register: wedge
 - block:
     - name: Fetch jGRASP zip
       get_url:
@@ -26,7 +30,19 @@
         owner: root
         group: root
         mode: 0755
-  when: st.stat.checksum|default("") != jgrasp.hash
+  when: zip.stat.checksum|default("") != jgrasp.hash
+- block:
+    - name: Configure jGRASP wedge build
+      command:
+        cmd: './configure'
+        creates: '{{ jgrasp.install_path }}/src/Make.sh'
+        chdir: '{{ jgrasp.install_path }}/src/'
+    - name: Make and install jGRASP wedge
+      command:
+        cmd: './Make.sh'
+        creates: '{{ jgrasp.install_path }}/internal_bin/sys_run'
+        chdir: '{{ jgrasp.install_path }}/src'
+  when: not wedge.stat.exists
 - name: Install jGRASP desktop icon
   template:
     src: jgrasp.desktop.j2
