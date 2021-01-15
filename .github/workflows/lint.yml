@@ -21,6 +21,17 @@ jobs:
       - name: Run ansible-lint
         run: |
           ansible-lint local.yml oem.yml
+  AnsibleRun:
+    name: Run all Ansible tags (except OEM)
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@master
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y ansible git ubuntu-desktop
+      - name: Ensure roles run successfully
+        run: |
+          ansible-playbook -i hosts -K local.yml
   Packer:
     name: Run Packer lint tests
     runs-on: ubuntu-20.04
