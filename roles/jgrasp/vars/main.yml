@@ -5,3 +5,8 @@ jgrasp:
   hash: '14dd204212eee3f51be8b48c1784af3647a63c39'
   zip: '{{ global_base_path }}/jgrasp.zip'
   install_path: '{{ global_base_path }}/jgrasp'
+
+jgrasp_wedge_dependencies:
+  - lsb-core
+  - build-essential
+  - gcc
