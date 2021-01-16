@@ -6,5 +6,5 @@ Comment=Mount/umount your JMUCS NFS home directory
 Terminal=false
 Type=Application
 Categories=System;
-Icon=usermount
+Icon=gnome-fs-ssh
 Name[en_US]=Home on Stu
