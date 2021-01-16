@@ -56,6 +56,14 @@
     group: "{{ item.gid }}"
     state: directory
   loop: "{{ real_users }}"
+- name: Trust JMU CS student server SSH
+  known_hosts:
+    # Per ssh_config(5), this is the default value of GlobalKnownHostsFile
+    path: /etc/ssh/ssh_known_hosts
+    name: stu.cs.jmu.edu
+    key: "{{ stu_host_key }}"
+    hash_host: yes
+    state: present
 - name: Copy stu-home desktop
   copy:
     src: stu-home.desktop
