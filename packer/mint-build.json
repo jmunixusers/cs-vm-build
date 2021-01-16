@@ -2,8 +2,8 @@
   "min_packer_version": "1.6.0",
   "variables": {
     "vm_name": "JMU Linux Mint",
-    "semester": "Fa20",
-    "version": "20",
+    "semester": "Sp21",
+    "version": "20.1",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
@@ -14,8 +14,8 @@
     "audio": "pulse",
 
     "output_dir": "{{pwd}}/artifacts_mint",
-    "mirror_url": "https://mirror.cs.jmu.edu/pub/linuxmint/images/stable/20",
-    "iso_file": "linuxmint-20-cinnamon-64bit.iso",
+    "mirror_url": "https://mirror.cs.jmu.edu/pub/linuxmint/images/stable/20.1",
+    "iso_file": "linuxmint-20.1-cinnamon-64bit.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
