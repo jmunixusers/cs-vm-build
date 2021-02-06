@@ -4,19 +4,14 @@
     "vm_name": "JMU Ubuntu",
     "semester": "Fa20",
     "version": "20.04",
-
     "build_id": "{{isotime \"2006-01-02\"}}",
-
     "git_repo": "https://github.com/jmunixusers/cs-vm-build",
     "git_branch": "main",
-
     "headless": "true",
     "audio": "pulse",
-
     "output_dir": "{{pwd}}/artifacts_ubuntu",
     "mirror_url": "https://mirror.cs.jmu.edu/pub/ubuntu-iso/focal",
-    "iso_file": "ubuntu-20.04.1-desktop-amd64.iso",
-
+    "iso_file": "ubuntu-20.04.2-desktop-amd64.iso",
     "ssh_user": "oem",
     "ssh_pass": "oem"
   },
@@ -26,41 +21,112 @@
       "headless": "{{user `headless`}}",
       "http_directory": "http",
       "vm_name": "{{user `vm_name`}} {{user `semester`}}",
-
       "cpus": 2,
       "memory": 4096,
       "sound": "{{user `audio`}}",
-
       "vboxmanage": [
-        ["modifyvm", "{{.Name}}", "--audioin", "off" ],
-        ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional" ],
-        ["modifyvm", "{{.Name}}", "--graphicscontroller", "vmsvga" ],
-        ["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
-        ["modifyvm", "{{.Name}}", "--pae", "on"],
-        ["modifyvm", "{{.Name}}", "--rtcuseutc", "on"],
-        ["modifyvm", "{{.Name}}", "--usb", "on", "--usbehci", "off", "--usbxhci", "off" ],
-        ["modifyvm", "{{.Name}}", "--vram", "64" ],
-        ["modifyvm", "{{.Name}}", "--vrde", "off" ],
-        ["storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove" ],
-        ["storagectl", "{{.Name}}", "--name", "SATA Controller", "--hostiocache", "on" ]
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--audioin",
+          "off"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--clipboard-mode",
+          "bidirectional"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--graphicscontroller",
+          "vmsvga"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--mouse",
+          "usbtablet"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--pae",
+          "on"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--rtcuseutc",
+          "on"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--usb",
+          "on",
+          "--usbehci",
+          "off",
+          "--usbxhci",
+          "off"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--vram",
+          "64"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--vrde",
+          "off"
+        ],
+        [
+          "storagectl",
+          "{{.Name}}",
+          "--name",
+          "IDE Controller",
+          "--remove"
+        ],
+        [
+          "storagectl",
+          "{{.Name}}",
+          "--name",
+          "SATA Controller",
+          "--hostiocache",
+          "on"
+        ]
       ],
-
       "vboxmanage_post": [
-        ["modifyvm", "{{.Name}}", "--accelerate3d", "on" ],
-        ["storageattach", "{{.Name}}", "--storagectl", "SATA Controller",
-          "--port", "1", "--type", "dvddrive", "--medium", "emptydrive"]
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--accelerate3d",
+          "on"
+        ],
+        [
+          "storageattach",
+          "{{.Name}}",
+          "--storagectl",
+          "SATA Controller",
+          "--port",
+          "1",
+          "--type",
+          "dvddrive",
+          "--medium",
+          "emptydrive"
+        ]
       ],
-
       "iso_url": "{{user `mirror_url`}}/{{user `iso_file`}}",
       "iso_checksum": "file:{{user `mirror_url`}}/SHA256SUMS",
       "iso_interface": "sata",
-
       "hard_drive_discard": "true",
       "hard_drive_interface": "sata",
       "hard_drive_nonrotational": true,
       "sata_port_count": 2,
       "disk_size": "20480",
-
       "guest_os_type": "Ubuntu_64",
       "boot_wait": "5s",
       "boot_command": [
@@ -76,47 +142,52 @@
         " boot=casper initrd=/casper/initrd noprompt --",
         "<enter>"
       ],
-
       "ssh_username": "{{user `ssh_user`}}",
       "ssh_password": "{{user `ssh_pass`}}",
       "ssh_timeout": "100m",
       "shutdown_command": "echo -e \"{{user `ssh_pass`}}\\n\" | sudo -S poweroff",
-
       "output_directory": "{{user `output_dir`}}",
       "output_filename": "image-{{user `semester` | lower }}",
       "format": "ova",
-
-      "export_opts":
-      [
+      "export_opts": [
         "--manifest",
-        "--vsys", "0",
-          "--description", "Build date: {{user `build_id`}}\nPacker version: {{packer_version}}",
-          "--product", "{{user `vm_name`}} {{user `semester`}}",
-          "--producturl", "https://ubuntu.com/",
-          "--vendor", "JMU Unix Users Group",
-          "--vendorurl", "{{user `git_repo`}}",
-          "--version", "{{user `version`}}"
+        "--vsys",
+        "0",
+        "--description",
+        "Build date: {{user `build_id`}}\nPacker version: {{packer_version}}",
+        "--product",
+        "{{user `vm_name`}} {{user `semester`}}",
+        "--producturl",
+        "https://ubuntu.com/",
+        "--vendor",
+        "JMU Unix Users Group",
+        "--vendorurl",
+        "{{user `git_repo`}}",
+        "--version",
+        "{{user `version`}}"
       ]
     }
   ],
-  "provisioners": [{
-    "type": "shell",
-    "execute_command": "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
-    "inline": [
-      "echo STOPPING APT",
-      "systemctl stop unattended-upgrades.service",
-      "while(pgrep -a apt-get); do sleep 1; done",
-      "export DEBIAN_FRONTEND=noninteractive",
-      "echo UPDATE",
-      "apt-get update",
-      "echo INSTALL",
-      "apt-get install -V -y git ansible aptitude",
-      "git clone -b {{user `git_branch`}} {{user `git_repo`}}",
-      "cd /home/oem/cs-vm-build/scripts",
-      "./oem-build",
-      "/usr/sbin/oem-config-prepare"
-    ]
-  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+      "inline": [
+        "echo STOPPING APT",
+        "systemctl stop unattended-upgrades.service",
+        "while(pgrep -a apt-get); do sleep 1; done",
+        "export DEBIAN_FRONTEND=noninteractive",
+        "echo UPDATE",
+        "apt-get update",
+        "echo INSTALL",
+        "apt-get install -V -y git ansible aptitude",
+        "git clone -b {{user `git_branch`}} {{user `git_repo`}}",
+        "cd /home/oem/cs-vm-build/scripts",
+        "./oem-build",
+        "/usr/sbin/oem-config-prepare"
+      ]
+    }
+  ],
   "post-processors": [
     {
       "type": "checksum",
