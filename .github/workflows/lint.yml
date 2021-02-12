@@ -17,7 +17,7 @@ jobs:
           python-version: 3.x
       - name: Install dependencies
         run: |
-          pip3 install ansible-lint
+          pip3 install ansible ansible-lint
       - name: Run ansible-lint
         run: |
           ansible-lint local.yml oem.yml
