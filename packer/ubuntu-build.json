@@ -11,7 +11,7 @@
     "audio": "pulse",
     "output_dir": "{{pwd}}/artifacts_ubuntu",
     "mirror_url": "https://mirror.cs.jmu.edu/pub/ubuntu-iso/focal",
-    "iso_file": "ubuntu-20.04.2-desktop-amd64.iso",
+    "iso_file": "ubuntu-20.04.2.0-desktop-amd64.iso",
     "ssh_user": "oem",
     "ssh_pass": "oem"
   },
