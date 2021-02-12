@@ -5,7 +5,7 @@
   apt:
     name: "{{ upgrade_pre_mintupdate }}"
     state: latest
-- name: Upgrade all installed packages  # noqa 301
+- name: Upgrade all installed packages  # noqa no-changed-when
   command: /usr/bin/mintupdate-cli -y upgrade
 
 - name: Ensure skeleton desktop directory exists
