@@ -43,7 +43,7 @@
 # The USB 2/3 controllers are only available with the Virtualbox
 # Extensions which are non-free software and available only under the Oracle
 # PUEL. We should ensure we have not accidentally included them.
-- name: Validate missing USB 2/3 controllers  # noqa 306
+- name: Validate missing USB 2/3 controllers  # noqa risky-shell-pipe
   command: lspci
   register: lspci_output
   failed_when: "'ECHI' in lspci_output.stdout or 'xHCI' in lspci_output.stdout"
