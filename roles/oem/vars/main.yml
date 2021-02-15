@@ -1,8 +1,5 @@
 ---
 # vars file for oem
-packages_to_install:
-  - zenity
-
 upgrade_pre_mintupdate:
   - mintupdate
   - mint-upgrade-info
