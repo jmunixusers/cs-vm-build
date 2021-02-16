@@ -72,10 +72,9 @@
     group: '{{ item.gid }}'
     mode: 0750
   with_items: "{{ real_users }}"
-# dest becomes path in Ansible 2.3+
 - name: Add profile to user bashrc
   lineinfile:
-    dest: '{{ item.homedir }}/.bashrc'
+    path: '{{ item.homedir }}/.bashrc'
     line: "source {{ global_profile_path }}"
     state: present
     insertafter: EOF

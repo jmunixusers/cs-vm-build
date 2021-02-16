@@ -47,10 +47,9 @@
     owner: root
     group: root
     mode: 0644
-# Dest becomes path in Ansible 2.3+
 - name: Create Finch profile entries
   blockinfile:
-    dest: '{{ global_profile_path }}'
+    path: '{{ global_profile_path }}'
     marker: "## {mark} Finch profile entries ##"
     block: |
       export HIDAPI_LIB_PATH={{ finch.install_path }}
