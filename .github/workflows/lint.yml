@@ -20,7 +20,7 @@ jobs:
           pip3 install ansible ansible-lint
       - name: Run ansible-lint
         run: |
-          ansible-lint local.yml oem.yml
+          ansible-lint -R -r lintrules/ansible local.yml oem.yml
   Packer:
     name: Run Packer lint tests
     runs-on: ubuntu-20.04
