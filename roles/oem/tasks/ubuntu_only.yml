@@ -12,6 +12,6 @@
     dest: /etc/dconf/db/local.d/csconfig-ubuntuonly
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   notify:
     - Update dconf database

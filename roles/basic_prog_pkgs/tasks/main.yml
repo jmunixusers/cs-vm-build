@@ -12,7 +12,7 @@
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
     directory_mode: "0750"
-    mode: 0640
+    mode: "0640"
   loop: "{{ real_users }}"
 - name: Copy mimeapps Idle pref
   copy:
@@ -20,7 +20,7 @@
     dest: '{{ item.homedir }}/.config/'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-    mode: 0640
+    mode: "0640"
     force: no
   loop: "{{ real_users }}"
 - name: Set Idle pref in existing mimeapps
