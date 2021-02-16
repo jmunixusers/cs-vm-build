@@ -14,8 +14,8 @@
     "audio": "pulse",
 
     "output_dir": "{{pwd}}/artifacts_mint",
-    "mirror_url": "https://mirror.cs.jmu.edu/pub/linuxmint/images/stable/20.1",
-    "iso_file": "linuxmint-20.1-cinnamon-64bit.iso",
+    "mirror_url": "https://mirror.cs.jmu.edu/pub/linuxmint/images/stable/{{user `version`}}",
+    "iso_file": "linuxmint-{{user `version`}}-cinnamon-64bit.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
