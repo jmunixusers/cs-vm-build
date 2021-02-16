@@ -18,13 +18,20 @@
   getent:
     database: passwd
 - name: Build real user list
-  # fix this after Ansible 2.6, use loop: "{{ getent_passwd|dict2items }}"
   set_fact:
     real_users: >-
-      {{ real_users|default([]) +
-      [ {'user': item.key, 'homedir': item.value.4,
-      'uid': item.value.1 | int, 'gid': item.value.2 } ] }}
-  with_dict: "{{ getent_passwd }}"
+      {{
+        (real_users|default([])) +
+          [
+            {
+              'user': item.key,
+              'homedir': item.value.4,
+              'uid': item.value.1 | int,
+              'gid': item.value.2
+            }
+          ]
+      }}
+  loop: "{{ getent_passwd|dict2items }}"
   when:
     # Ideally, this would pull from useradd.conf to get the lower bound for
     # regular user UIDs; however, 1000 is relatively universal
