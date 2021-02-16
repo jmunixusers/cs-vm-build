@@ -7,7 +7,8 @@ upgrade_pre_mintupdate:
   - mintupdate
   - mint-upgrade-info
 
-skel_desktop_file_path: "/etc/skel/Desktop"
+skel_path: "/etc/skel"
+skel_desktop_file_path: "{{ skel_path }}/Desktop"
 
 # https://github.com/jmunixusers/cs-vm-build/issues/11#issuecomment-347015788
 packages_to_remove:
