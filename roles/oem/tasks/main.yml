@@ -11,14 +11,14 @@
   file:
     path: /usr/local/share/applications
     state: directory
-    mode: 0755
+    mode: "0755"
     owner: root
     group: staff
 - name: Create the dconf profile directory
   file:
     path: /etc/dconf/profile
     state: directory
-    mode: 0755
+    mode: "0755"
     owner: root
 - name: Copy dconf profile file
   copy:
@@ -26,12 +26,12 @@
     dest: /etc/dconf/profile/user
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
 - name: Create the dconf policy directory
   file:
     path: /etc/dconf/db/local.d
     state: directory
-    mode: 0755
+    mode: "0755"
     owner: root
 
 - include_tasks: ubuntu_only.yml

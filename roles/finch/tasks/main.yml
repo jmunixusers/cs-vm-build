@@ -11,7 +11,7 @@
         state: directory
         owner: root
         group: root
-        mode: 0755
+        mode: "0755"
     - name: Fetch Finch zip
       get_url:
         url: '{{ finch.url }}'
@@ -24,7 +24,7 @@
         src: '{{ finch.zip }}'
         owner: root
         group: root
-        mode: 0755
+        mode: "0755"
   when: st.stat.checksum|default("") != finch.hash
 - name: Install Finch udev rule
   copy:
@@ -32,25 +32,24 @@
     dest: '/etc/udev/rules.d/'
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
 - name: Install Finch extra - dance2.py
   copy:
     src: dance2.py
     dest: '{{ finch.install_path }}'
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
 - name: Install Finch extra - maze.py
   copy:
     src: maze.py
     dest: '{{ finch.install_path }}'
     owner: root
     group: root
-    mode: 0644
-# Dest becomes path in Ansible 2.3+
+    mode: "0644"
 - name: Create Finch profile entries
   blockinfile:
-    dest: '{{ global_profile_path }}'
+    path: '{{ global_profile_path }}'
     marker: "## {mark} Finch profile entries ##"
     block: |
       export HIDAPI_LIB_PATH={{ finch.install_path }}

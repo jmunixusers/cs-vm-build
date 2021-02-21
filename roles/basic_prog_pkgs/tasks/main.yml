@@ -11,9 +11,8 @@
     dest: '{{ item.homedir }}'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-    # Quotes are requred due to a bug in Ansible 2.1
     directory_mode: "0750"
-    mode: 0640
+    mode: "0640"
   loop: "{{ real_users }}"
 - name: Copy mimeapps Idle pref
   copy:
@@ -21,13 +20,12 @@
     dest: '{{ item.homedir }}/.config/'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-    mode: 0640
+    mode: "0640"
     force: no
   loop: "{{ real_users }}"
-# Dest becomes path in Ansible 2.3+
 - name: Set Idle pref in existing mimeapps
   lineinfile:
-    dest: '{{ item.homedir }}/.config/mimeapps.list'
+    path: '{{ item.homedir }}/.config/mimeapps.list'
     regexp: '^text/x-python='
     line: 'text/x-python=idle-python3.6.desktop;gedit.desktop;pluma.desktop'
   loop: "{{ real_users }}"

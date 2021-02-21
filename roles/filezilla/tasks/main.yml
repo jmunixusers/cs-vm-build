@@ -11,7 +11,7 @@
     state: directory
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-    mode: 0750
+    mode: "0750"
   loop: "{{ real_users }}"
 - name: Copy template default Filezilla configuration
   template:
@@ -19,7 +19,7 @@
     dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/fzdefaults.xml"
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-    mode: 0640
+    mode: "0640"
   loop: "{{ real_users }}"
 - name: Attempt to copy Filezilla filters
   copy:
@@ -27,7 +27,7 @@
     dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/filters.xml"
     owner: "{{ item.uid }}"
     group: "{{ item.gid }}"
-    mode: 0640
+    mode: "0640"
     # Don't overwrite any filters the user already has
     force: no
   loop: "{{ real_users }}"

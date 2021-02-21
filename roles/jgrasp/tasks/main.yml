@@ -29,7 +29,7 @@
         src: '{{ jgrasp.zip }}'
         owner: root
         group: root
-        mode: 0755
+        mode: "0755"
   when: zip.stat.checksum|default("") != jgrasp.hash
 - block:
     - name: Configure jGRASP wedge build
@@ -47,6 +47,6 @@
   template:
     src: jgrasp.desktop.j2
     dest: /usr/local/share/applications/jgrasp.desktop
-    mode: 0644
+    mode: "0644"
   notify:
     - Update desktop menu

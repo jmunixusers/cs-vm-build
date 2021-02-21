@@ -18,14 +18,14 @@
   file:
     path: "{{ log_directory }}"
     state: directory
-    mode: 0755
+    mode: "0755"
 - name: Create directory for shared data
   file:
     path: "{{ share_directory }}"
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 
 # The policy file must go in /usr/share/polkit-1. It is the only location that
 # policykit checks
@@ -33,29 +33,29 @@
   copy:
     src: edu.jmu.uug.ansiblewrapper.policy
     dest: /usr/share/polkit-1/actions/
-    mode: 0644
+    mode: "0644"
 - name: Install Ansible wrapper GUI script
   template:
     src: uug_ansible_wrapper.py
     dest: '{{ uug_ansible_wrapper }}'
-    mode: 0755
+    mode: "0755"
 - name: Install JMU-colored Tux icon
   copy:
     src: jmu-tux.svg
     dest: "/usr/share/icons/hicolor/scalable/apps/{{ tux_icon_name }}.svg"
-    mode: 0644
+    mode: "0644"
   notify: Update icon cache
 
 - name: Ensure local applications folder exists
   file:
     path: "{{ wrapper_desktop_file_path }}"
     state: directory
-    mode: 0755
+    mode: "0755"
 - name: Copy shortcut to desktop file directory
   template:
     src: desktop-template.desktop.j2
     dest: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
-    mode: 0755
+    mode: "0755"
 
 - include_tasks: ubuntu_only.yml
   when: "ansible_distribution == 'Ubuntu'"

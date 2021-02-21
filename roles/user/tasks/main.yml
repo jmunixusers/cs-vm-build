@@ -6,25 +6,32 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 - name: Create local applications directory
   file:
     path: /usr/local/share/applications/
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 - name: Get users
   getent:
     database: passwd
 - name: Build real user list
-  # fix this after Ansible 2.6, use loop: "{{ getent_passwd|dict2items }}"
   set_fact:
     real_users: >-
-      {{ real_users|default([]) +
-      [ {'user': item.key, 'homedir': item.value.4,
-      'uid': item.value.1 | int, 'gid': item.value.2 } ] }}
-  with_dict: "{{ getent_passwd }}"
+      {{
+        (real_users|default([])) +
+          [
+            {
+              'user': item.key,
+              'homedir': item.value.4,
+              'uid': item.value.1 | int,
+              'gid': item.value.2
+            }
+          ]
+      }}
+  loop: "{{ getent_passwd|dict2items }}"
   when:
     # Ideally, this would pull from useradd.conf to get the lower bound for
     # regular user UIDs; however, 1000 is relatively universal
@@ -43,7 +50,7 @@
   copy:
     src: csvmprofile
     dest: '{{ global_profile_path }}'
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
     # prevent overwriting
@@ -51,7 +58,7 @@
 - name: Ensure user home directory exists
   file:
     path: "{{ item.homedir }}"
-    mode: 0755
+    mode: "0755"
     owner: "{{ item.uid }}"
     group: "{{ item.gid }}"
     state: directory
@@ -70,12 +77,11 @@
     dest: '{{ item.homedir }}/Desktop'
     owner: '{{ item.uid }}'
     group: '{{ item.gid }}'
-    mode: 0750
+    mode: "0750"
   with_items: "{{ real_users }}"
-# dest becomes path in Ansible 2.3+
 - name: Add profile to user bashrc
   lineinfile:
-    dest: '{{ item.homedir }}/.bashrc'
+    path: '{{ item.homedir }}/.bashrc'
     line: "source {{ global_profile_path }}"
     state: present
     insertafter: EOF
