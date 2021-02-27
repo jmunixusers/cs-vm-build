@@ -1,5 +1,6 @@
 [com/linuxmint/updates]
 warn-about-timeshift=false
+show-welcome-page=false
 
 [org/cinnamon/desktop/session]
 idle-delay=uint32 0

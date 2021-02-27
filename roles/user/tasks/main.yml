@@ -100,3 +100,12 @@
   become_user: "{{ item.user }}"
   loop: "{{ real_users }}"
   when: "ansible_distribution == 'Linux Mint'"
+- name: Remove mintupdate welcome page
+  dconf:
+    key: "/com/linuxmint/updates/show-welcome-page"
+    value: "false"
+    state: present
+  become: yes
+  become_user: "{{ item.user }}"
+  loop: "{{ real_users }}"
+  when: "ansible_distribution == 'Linux Mint'"
