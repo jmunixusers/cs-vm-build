@@ -3,5 +3,5 @@
 finch:
   url: 'https://www.birdbraintechnologies.com/downloads/finch/FinchPython120.zip'
   zip: '{{ global_base_path }}/FinchPython120.zip'
-  hash: '177345bd2029f8055c53f3f078e90c72ca80c260'
+  hash: '841a7f7ca3a11678ecb6319e9983f87c57eb80da'
   install_path: '{{ global_base_path }}/FinchPython'
