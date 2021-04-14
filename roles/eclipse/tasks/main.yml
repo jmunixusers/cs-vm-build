@@ -13,7 +13,7 @@
       get_url:
         url: '{{ eclipse.url }}'
         dest: '{{ eclipse.zip }}'
-        checksum: 'sha1:{{ eclipse.hash }}'
+        checksum: 'sha1:{{ eclipse.hash[ansible_architecture] }}'
         timeout: 30
         force: yes
       register: url_output
@@ -22,7 +22,7 @@
       get_url:
         url: '{{ eclipse.url_backup }}'
         dest: '{{ eclipse.zip }}'
-        checksum: 'sha1:{{ eclipse.hash }}'
+        checksum: 'sha1:{{ eclipse.hash[ansible_architecture] }}'
         timeout: 30
         force: yes
       when: url_output.failed
@@ -37,7 +37,7 @@
         owner: root
         group: root
         mode: "0755"
-  when: st.stat.checksum|default("") != eclipse.hash
+  when: st.stat.checksum|default("") != eclipse.hash[ansible_architecture]
 - name: Install checkstyle plugin
   command: >
     {{ eclipse.install_path }}/eclipse
