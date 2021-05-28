@@ -86,7 +86,7 @@ main () {
     apt-get update
 
     user "Installing prerequisite packages"
-    apt-get install -V ansible git aptitude gcc make perl \
+    apt-get install -V -y ansible git aptitude gcc make perl \
         || error "Unable to install prerequisite packages"
 
     user "Attempting to install VBox Guest Additions"
