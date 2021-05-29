@@ -79,6 +79,7 @@
     group: '{{ item.gid }}'
     mode: "0750"
   with_items: "{{ real_users }}"
+  when: "ansible_distribution == 'Linux Mint'"
 - name: Add profile to user bashrc
   lineinfile:
     path: '{{ item.homedir }}/.bashrc'
