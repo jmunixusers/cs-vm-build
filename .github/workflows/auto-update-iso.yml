@@ -8,6 +8,7 @@ env:
   UBUNTU_RELEASE: focal
 jobs:
   update-ubuntu:
+    if: github.repository == 'jmunixusers/cs-vm-build'
     name: Update Ubuntu ISO file name
     runs-on: ubuntu-latest
     steps:

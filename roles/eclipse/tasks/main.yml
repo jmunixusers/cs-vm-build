@@ -43,7 +43,7 @@
     {{ eclipse.install_path }}/eclipse
     -nosplash
     -application org.eclipse.equinox.p2.director
-    -repository http://eclipse-cs.sourceforge.net/update/
+    -repository https://checkstyle.org/eclipse-cs-update-site/
     -installIU net.sf.eclipsecs.feature.group
     -destination {{ eclipse.install_path }}
   args:
