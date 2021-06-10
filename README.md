@@ -71,7 +71,6 @@ using these tasks and the VM is available
     * Assembler (`yas`)
     * Reference solution (`y86ref`)
     * Reference solution manual page (`y86ref(1)`)
-    * Simulator (`ysim`)
 
 ### CS361
 * Mint packages (adv-prog-pkgs role)

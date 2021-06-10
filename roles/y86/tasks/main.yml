@@ -13,8 +13,8 @@
     - '{{ y86_man1_dir }}'
 - name: Installing y86 binary tools
   copy:
-    src: '{{ item }}'
-    dest: '{{ y86_bin_dir }}'
+    src: '{{ item }}-{{ ansible_architecture }}'
+    dest: '{{ y86_bin_dir }}/{{ item }}'
     owner: root
     group: root
     mode: "0755"
