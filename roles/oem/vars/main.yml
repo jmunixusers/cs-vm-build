@@ -41,6 +41,7 @@ packages_to_remove:
   - fonts-tibetan-machine
   - fonts-tlwg-*
   - fonts-wqy-microhei
+  - fonts-yrsa-rasa
   - hexchat*
   - hunspell-de-*
   - hunspell-en-au
@@ -60,7 +61,6 @@ packages_to_remove:
   - hyphen-pt*
   - hyphen-ru
   - libreoffice*
-  - linux*oem
   - mint-artwork-mate
   - mint-backgrounds-sarah
   - mint-backgrounds-serena
@@ -79,6 +79,7 @@ packages_to_remove:
   - mythes-it
   - mythes-pt-pt
   - mythes-ru
+  - openjdk*
   - openvpn
   - pidgin*
   - pix*
@@ -89,5 +90,7 @@ packages_to_remove:
   - tomboy
   - transmission*
   - vlc*
+  - wbrazilian
   - wbritish
+  - wfrench
   - xscreensaver-*
