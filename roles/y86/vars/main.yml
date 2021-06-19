@@ -6,7 +6,6 @@ y86_man1_dir: '{{ y86_dir }}/man/man1'
 
 y86_binaries:
   - y86ref
-  - ysim
   - yas
 
 y86_manpages:
