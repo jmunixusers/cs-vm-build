@@ -13,6 +13,12 @@
   notify:
     - Update dconf database
 
+- name: Install spice agent
+  apt:
+    name: spice-vdagent
+    state: latest
+  when: "ansible_virtualization_type == 'kvm' or ansible_virtualization_type == 'qemu'"
+
 - name: Set debconf grub install_devices
   ansible.builtin.debconf:
     name: grub-pc
