@@ -35,10 +35,19 @@
   changed_when: false
   args:
     warn: no
+
+- name: Find package lists to delete
+  find:
+    paths: /var/lib/apt/lists/
+    file_type: file
+    excludes:
+      - "lock"
+  register: found_package_lists
 - name: Delete apt package lists
   file:
-    path: /var/lib/apt/lists
+    path: "{{ item.path }}"
     state: absent
+  with_items: "{{ found_package_lists['files'] }}"
 
 # The USB 2/3 controllers are only available with the Virtualbox
 # Extensions which are non-free software and available only under the Oracle
