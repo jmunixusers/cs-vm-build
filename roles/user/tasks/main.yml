@@ -71,15 +71,17 @@
     key: "{{ stu_host_key }}"
     hash_host: yes
     state: present
-- name: Copy stu-home desktop
-  copy:
-    src: stu-home.desktop
-    dest: '{{ item.homedir }}/Desktop'
-    owner: '{{ item.uid }}'
-    group: '{{ item.gid }}'
-    mode: "0750"
-  with_items: "{{ real_users }}"
-  when: "ansible_distribution == 'Linux Mint'"
+- name: Create stu-home bookmark
+  lineinfile:
+    path: '{{ item.homedir }}/.config/gtk-3.0/bookmarks'
+    line: "sftp://{{ item.user }}@stu.cs.jmu.edu/cs/home/stu/{{ item.user }} Home on stu"
+    state: present
+    insertafter: EOF
+    create: yes
+    owner: '{{ item.user }}'
+    group: '{{ item.user }}'
+    mode: "0644"
+  loop: "{{ real_users }}"
 - name: Add profile to user bashrc
   lineinfile:
     path: '{{ item.homedir }}/.bashrc'
