@@ -68,6 +68,8 @@ packages_to_remove:
   - mint-backgrounds-tara
   - mint-backgrounds-tessa
   - mint-backgrounds-tina
+  - mint-backgrounds-ulyana
+  - mint-backgrounds-ulyssa
   - mono-*
   - myspell-*
   - mythes-de
