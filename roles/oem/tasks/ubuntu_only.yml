@@ -6,6 +6,22 @@
     upgrade: safe
 - name: Upgrade all installed snaps  # noqa no-changed-when
   command: snap refresh
+- name: Purge old snaps
+  shell: |
+    set -o pipefail
+    errors=0
+    changed=""
+    while read snapname revision; do
+      snap remove "$snapname" --revision="$revision"
+      errors=$((errors + $?))
+      changed="Snap removed"
+    done <<< "$(snap list --all | awk '/disabled/{print $1, $3}')"
+    echo $changed
+    exit $errors
+  args:
+    executable: /bin/bash
+  register: snapout
+  changed_when: '"Snap removed" in snapout.stdout'
 - name: Copy dconf config file
   copy:
     src: csconfig-ubuntuonly
