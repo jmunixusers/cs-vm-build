@@ -117,6 +117,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install aiohttp jinja2 pyyaml
+      - name: Configure download cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/hashlint
+          key: hashlint-cache-${{ github.sha }}
+          restore-keys:
+            hashlint-cache-
       - name: Run hash validation
         run: |
           python3 scripts/hashlint.py
