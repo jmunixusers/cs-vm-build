@@ -1,13 +1,13 @@
-.TH Y86REF 1 "AUGUST 2018" Linux "User Manuals"
+.TH Y86REF 1 "2021-08-15" Linux "User Manuals"
 .SH NAME
 y86ref \- y86 mini-elf file interactions reference solution
 .SH SYNOPSIS
 .B y86ref
-[\fIOPTION\/\fR]... 
+[\fIOPTION\/\fR]...
 .IR file
 .SH DESCRIPTION
 .B y86ref
-reads .o files made for the imaginary y86 processor architecture, and prints 
+reads .o files made for the imaginary y86 processor architecture, and prints
 information based on flags given. This is a reference solution to the PAs
 assigned over the course of the semester.
 .SH OPTIONS
@@ -24,15 +24,15 @@ show all information about the program with brief virtual memory output
 .BR \-f \fR
 show all information about the program with full virtual memory output
 .TP
+.BR \-s \fR
+show the program headers in the file
+.TP
 .BR \-m \fR
 briefly display virtual memory
 .TP
 .BR \-M \fR
 display all contents of the virtual memory
 .TP
-.BR \-s \fR
-show the program headers in the file
-.TP 
 .BR \-d \fR
 display the assembly operations contained in all code segments of the file
 .TP
