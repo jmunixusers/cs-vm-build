@@ -8,6 +8,7 @@ URL to pull from can be changed in the program's Settings.
 """
 
 import ast
+import functools
 import logging
 import os
 import re
@@ -541,6 +542,7 @@ def parse_user_config():
     logging.info("Read config: %s from %s", USER_CONFIG, USER_CONFIG_PATH)
 
 
+@functools.lru_cache
 def parse_os_release():
     """
     Loads the data in /etc/os-release.
@@ -568,6 +570,7 @@ def parse_os_release():
                 if value and value[0] in ["'", '"']:
                     value = ast.literal_eval(value)
                 os_release_contents[key] = value
+
     return os_release_contents
 
 
