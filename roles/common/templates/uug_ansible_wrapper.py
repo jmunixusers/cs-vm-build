@@ -505,7 +505,7 @@ def parse_json_config(path, config):
     """
 
     try:
-        with open(path, "r") as config_file:
+        with open(path, "r", encoding="utf-8") as config_file:
             config.update(json.load(config_file))
     except FileNotFoundError as fne:
         logging.info(
@@ -522,7 +522,7 @@ def write_json_config(path, config):
     :param config: The dictionary to write. Must be serializable as JSON
     """
 
-    with open(path, "w") as config_file:
+    with open(path, "w", encoding="utf-8") as config_file:
         # Make the written file relatively readable & writable by users
         json.dump(config, config_file, indent=4, sort_keys=True)
 
