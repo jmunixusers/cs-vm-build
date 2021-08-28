@@ -7,6 +7,8 @@ in a configuration file (~/.config/vm_config). The branch to pull and the
 URL to pull from can be changed in the program's Settings.
 """
 
+import ast
+import functools
 import logging
 import os
 import re
@@ -495,40 +497,6 @@ def show_dialog(parent, dialog_type, buttons_type, header, message):
     return response
 
 
-def parse_simple_config(path, data):
-    """
-    Parses a simple INI-like config. Only lines with assignments are permitted
-    and it can't handle sections like INI has. Lines with # as the first
-    non-space character are comments.
-    :param path: The path to the configuration file
-    :param data: The dictionary to store the data in
-    """
-
-    try:
-        with open(path, "r") as config:
-            for line in config:
-                # Allow comments at beginning of lines
-                if line.lstrip().startswith("#"):
-                    continue
-                # Ignore any line without an assignment
-                if "=" not in line:
-                    logging.warning("Config entry has no assignment: %s", line)
-                    continue
-                # Store the key and value. The string before the first = is
-                # the key, and everything else ends up in the value (even if
-                # there are multiple = on the line).
-                try:
-                    split = line.split("=")
-                    key = split[0]
-                    val = "".join(split[1:])
-                    data[key.strip()] = val.strip()
-                except ValueError:
-                    logging.warning("Invalid entry in config file: %s", line)
-                    continue
-    except FileNotFoundError:
-        logging.info("Ignoring user configuration. It is not present")
-
-
 def parse_json_config(path, config):
     """
     Loads the data in the file at the provided path into a dictionary.
@@ -537,7 +505,7 @@ def parse_json_config(path, config):
     """
 
     try:
-        with open(path, "r") as config_file:
+        with open(path, "r", encoding="utf-8") as config_file:
             config.update(json.load(config_file))
     except FileNotFoundError as fne:
         logging.info(
@@ -554,7 +522,7 @@ def write_json_config(path, config):
     :param config: The dictionary to write. Must be serializable as JSON
     """
 
-    with open(path, "w") as config_file:
+    with open(path, "w", encoding="utf-8") as config_file:
         # Make the written file relatively readable & writable by users
         json.dump(config, config_file, indent=4, sort_keys=True)
 
@@ -574,15 +542,36 @@ def parse_user_config():
     logging.info("Read config: %s from %s", USER_CONFIG, USER_CONFIG_PATH)
 
 
+@functools.lru_cache
 def parse_os_release():
     """
     Loads the data in /etc/os-release.
     :returns: A dictionary with the data parsed from /etc/os-release
     """
 
-    config = {}
-    parse_simple_config("/etc/os-release", config)
-    return config
+    # Set os_release_file to the first item in the list that exists
+    for os_release_file in ['/etc/os-release', '/usr/lib/os-release']:
+        if os.path.exists(os_release_file):
+            break
+
+    os_release_contents = {}
+    # os-release(5) specifies that it is expected that the strings in
+    # this file are UTF-8 encoding
+    with open(os_release_file, encoding="utf-8") as os_release:
+        # This method of parsing is based on the example at
+        # https://www.freedesktop.org/software/systemd/man/os-release.html
+        for line in os_release:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if match := re.match(r"([A-Z][A-Z_0-9]+)=(.*)", line):
+                key, value = match.groups()
+                # Parse string values correctly
+                if value and value[0] in ["'", '"']:
+                    value = ast.literal_eval(value)
+                os_release_contents[key] = value
+
+    return os_release_contents
 
 
 def get_distro_release_name():

@@ -265,7 +265,7 @@ def get_urls() -> Tuple[Set[str], int]:
     errors = 0
     to_check = set()
     for file, hash_data in URLS.items():
-        with open(file) as software_data_file:
+        with open(file, encoding="utf-8") as software_data_file:
             software_data = yaml.safe_load(software_data_file)
         try:
             to_check |= urls_for_file(file, software_data, hash_data)
