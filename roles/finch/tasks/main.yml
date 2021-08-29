@@ -33,14 +33,14 @@
 - name: Install Finch extra - dance2.py
   copy:
     src: dance2.py
-    dest: '{{ finch.install_path }}'
+    dest: '{{ finch.extract_base }}'
     owner: root
     group: root
     mode: "0644"
 - name: Install Finch extra - maze.py
   copy:
     src: maze.py
-    dest: '{{ finch.install_path }}'
+    dest: '{{ finch.extract_base }}'
     owner: root
     group: root
     mode: "0644"
@@ -49,7 +49,7 @@
     path: '{{ global_profile_path }}'
     marker: "## {mark} Finch profile entries ##"
     block: |
-      export HIDAPI_LIB_PATH={{ finch.install_path }}
-      export PYTHONPATH=$PYTHONPATH:{{ finch.install_path }}
+      export HIDAPI_LIB_PATH={{ finch.extract_base }}
+      export PYTHONPATH=$PYTHONPATH:{{ finch.extract_base }}
   notify:
     - Suggest restart
