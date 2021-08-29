@@ -72,6 +72,12 @@ using these tasks and the VM is available
     * Reference solution (`y86ref`)
     * Reference solution manual page (`y86ref(1)`)
 
+### CS354
+* Gazebo9
+* ROS Melodic
+* Rosdep/catkin initialization
+* Rviz
+
 ### CS361
 * Mint packages (adv-prog-pkgs role)
   * Compilers and interpreters
@@ -131,7 +137,7 @@ or directly from GitHub:
 ansible-pull -U https://github.com/jmunixusers/cs-vm-build --directory /tmp/cs-vm-build --purge -i hosts -K -t TAGS
 ```
 where TAGS is a comma separated list (with no spaces) of
-cs101, cs149, cs159, cs261, cs361 and/or cs430 as appropriate.
+cs101, cs149, cs159, cs261, cs354, cs361 and/or cs430 as appropriate.
 
 ## Building the UUG VM
 
