@@ -23,6 +23,12 @@
     mode: "0755"
   # noqa no-handler
   when: download_finch.changed
+# Recent versions of the Finch zip file have mistakenly included the
+# __pycache__ directory
+- name: Delete Finch pycache
+  file:
+    path: '{{ finch.extract_base }}/__pycache__'
+    state: absent
 - name: Install Finch udev rule
   copy:
     src: 55-finch.rules
