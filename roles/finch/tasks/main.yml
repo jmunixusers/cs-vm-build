@@ -1,31 +1,28 @@
 ---
 # tasks file for Finch
-- name: Check Finch
-  stat:
-    path: '{{ finch.zip }}'
-  register: st
-- block:
-    - name: Create Finch directory
-      file:
-        path: '{{ finch.install_path }}'
-        state: directory
-        owner: root
-        group: root
-        mode: "0755"
-    - name: Fetch Finch zip
-      get_url:
-        url: '{{ finch.url }}'
-        dest: '{{ finch.zip }}'
-        checksum: 'sha1:{{ finch.hash }}'
-        force: yes
-    - name: Unpack Finch zip
-      unarchive:
-        dest: '{{ finch.install_path }}'
-        src: '{{ finch.zip }}'
-        owner: root
-        group: root
-        mode: "0755"
-  when: st.stat.checksum|default("") != finch.hash
+- name: Create Finch directory
+  file:
+    path: '{{ finch.install_path }}'
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+- name: Fetch Finch zip
+  get_url:
+    url: '{{ finch.url }}'
+    dest: '{{ finch.zip }}'
+    checksum: 'sha1:{{ finch.hash }}'
+    force: yes
+  register: download_finch
+- name: Unpack Finch zip
+  unarchive:
+    dest: '{{ finch.install_path }}'
+    src: '{{ finch.zip }}'
+    owner: root
+    group: root
+    mode: "0755"
+  # noqa no-handler
+  when: download_finch.changed
 - name: Install Finch udev rule
   copy:
     src: 55-finch.rules
