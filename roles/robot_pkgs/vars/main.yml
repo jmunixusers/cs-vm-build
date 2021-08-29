@@ -1,16 +1,13 @@
 ---
 # vars file for robot-pkgs
-ros_release: melodic
+ros2_release: galactic
 
 # Keep UMD first to prefer downloads from there
 ros_repos:
-  - "http://mirror.umd.edu/packages.ros.org/ros/ubuntu"
-  - "http://packages.ros.org/ros/ubuntu"
+  - "http://packages.ros.org/ros2/ubuntu"
 
 ros_packages:
-  - ros-{{ros_release}}-desktop-full
-  - ros-{{ros_release}}-sound-play
-  - ros-{{ros_release}}-ar-track-alvar
+  - ros-{{ ros2_release }}-desktop
   - gazebo9
   - rviz
   - g++

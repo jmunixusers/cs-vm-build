@@ -38,10 +38,10 @@ COURSES = {
     'CS 149': 'cs149',
     'CS 159': 'cs159',
     'CS 261': 'cs261',
-    'CS 354': 'cs354',
     'CS 361': 'cs361',
     'CS 430': 'cs430',
-    'CS 432': 'cs432'
+    'CS 432': 'cs432',
+    'CS 354 ⚠️Experimental⚠️': 'cs354',
 }
 USER_CONFIG_PATH = os.path.join(os.environ['HOME'], ".config", "vm_config")
 USER_CONFIG = {

@@ -1,10 +1,13 @@
 ---
 # tasks file for robot-pkgs
+# Instructions are based on the ones provided for ROS 2 at
+# https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html#setup-sources
 - name: Add ROS key
   apt_key:
     id: C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-    url: http://packages.ros.org/ros.asc
+    url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
     state: present
+
 - name: Add ROS repository
   template:
     src: ros-packages.j2
@@ -25,35 +28,10 @@
     path: '{{ global_profile_path }}'
     marker: "## {mark} ROS profile entries ##"
     block: |
-      source /opt/ros/{{ ros_release }}/setup.bash
-      export TURTLEBOT_3D_SENSOR={{ ros_release }}
+      source /opt/ros/{{ ros2_release }}/setup.bash
+      export TURTLEBOT_3D_SENSOR={{ ros2_release }}
   notify:
     - Suggest restart
-- name: Init rosdep if missing
-  command: rosdep init
-  args:
-    creates: /etc/ros/rosdep/sources.list.d/20-default.list
-- name: Update rosdep for each user  # noqa 301
-  command: rosdep update
-  become: yes
-  become_user: "{{ item.user }}"
-  loop: "{{ real_users }}"
-- name: Create Catkin workspace directory
-  file:
-    path: '{{ item.homedir }}/catkin_ws/src/'
-    state: directory
-    owner: '{{ item.uid }}'
-    group: '{{ item.gid }}'
-  loop: "{{ real_users }}"
-- name: Init Catkin workspace
-  shell: source /opt/ros/{{ ros_release }}/setup.bash && catkin_make
-  args:
-    executable: /bin/bash
-    chdir: '{{ item.homedir }}/catkin_ws/'
-    creates: '{{ item.homedir }}/catkin_ws/.catkin_workspace'
-  become: yes
-  become_user: "{{ item.user }}"
-  loop: "{{ real_users }}"
 - name: Copy documentation to desktop
   copy:
     src: usb-controllers.desktop
