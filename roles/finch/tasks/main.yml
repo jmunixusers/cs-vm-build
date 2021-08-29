@@ -1,31 +1,34 @@
 ---
 # tasks file for Finch
-- name: Check Finch
-  stat:
-    path: '{{ finch.zip }}'
-  register: st
-- block:
-    - name: Create Finch directory
-      file:
-        path: '{{ finch.install_path }}'
-        state: directory
-        owner: root
-        group: root
-        mode: "0755"
-    - name: Fetch Finch zip
-      get_url:
-        url: '{{ finch.url }}'
-        dest: '{{ finch.zip }}'
-        checksum: 'sha1:{{ finch.hash }}'
-        force: yes
-    - name: Unpack Finch zip
-      unarchive:
-        dest: '{{ finch.install_path }}'
-        src: '{{ finch.zip }}'
-        owner: root
-        group: root
-        mode: "0755"
-  when: st.stat.checksum|default("") != finch.hash
+- name: Create Finch directory
+  file:
+    path: '{{ finch.install_path }}'
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+- name: Fetch Finch zip
+  get_url:
+    url: '{{ finch.url }}'
+    dest: '{{ finch.zip }}'
+    checksum: 'sha1:{{ finch.hash }}'
+    force: yes
+  register: download_finch
+- name: Unpack Finch zip
+  unarchive:
+    dest: '{{ finch.install_path }}'
+    src: '{{ finch.zip }}'
+    owner: root
+    group: root
+    mode: "0755"
+  # noqa no-handler
+  when: download_finch.changed
+# Recent versions of the Finch zip file have mistakenly included the
+# __pycache__ directory
+- name: Delete Finch pycache
+  file:
+    path: '{{ finch.extract_base }}/__pycache__'
+    state: absent
 - name: Install Finch udev rule
   copy:
     src: 55-finch.rules
@@ -36,14 +39,14 @@
 - name: Install Finch extra - dance2.py
   copy:
     src: dance2.py
-    dest: '{{ finch.install_path }}'
+    dest: '{{ finch.extract_base }}'
     owner: root
     group: root
     mode: "0644"
 - name: Install Finch extra - maze.py
   copy:
     src: maze.py
-    dest: '{{ finch.install_path }}'
+    dest: '{{ finch.extract_base }}'
     owner: root
     group: root
     mode: "0644"
@@ -52,7 +55,7 @@
     path: '{{ global_profile_path }}'
     marker: "## {mark} Finch profile entries ##"
     block: |
-      export HIDAPI_LIB_PATH={{ finch.install_path }}
-      export PYTHONPATH=$PYTHONPATH:{{ finch.install_path }}
+      export HIDAPI_LIB_PATH={{ finch.extract_base }}
+      export PYTHONPATH=$PYTHONPATH:{{ finch.extract_base }}
   notify:
     - Suggest restart

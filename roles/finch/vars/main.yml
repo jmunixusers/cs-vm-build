@@ -5,3 +5,6 @@ finch:
   zip: '{{ global_base_path }}/FinchPython120.zip'
   hash: '841a7f7ca3a11678ecb6319e9983f87c57eb80da'
   install_path: '{{ global_base_path }}/FinchPython'
+  # The "root" of the zip file is a "FinchPython120" directory. This variable will
+  # need to be updated if the structure of the zip changes.
+  extract_base: '{{ global_base_path }}/FinchPython/FinchPython120'
