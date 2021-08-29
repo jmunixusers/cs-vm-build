@@ -418,9 +418,11 @@ class AnsibleWrapperWindow(Gtk.Window):
         )
 
         with TemporaryDirectory() as temp_dir:
-            # spawn_sync will not perform a path lookup; however, pkexec will
+            # spawn_sync will not perform a path lookup; however, pkexec and env will
             cmd_args = [
                 '/usr/bin/pkexec',
+                "env",
+                "PYTHONUNBUFFERED=1",
                 'ansible-pull',
                 '--url',
                 USER_CONFIG['git_url'],
