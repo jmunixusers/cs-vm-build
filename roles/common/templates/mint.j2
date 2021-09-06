@@ -4,20 +4,14 @@
 # Place modifications in another file in /etc/apt/sources.list.d/ with a .list
 # file extension.
 
-{% for mirror in ubuntu_mirrors %}
-# Upstream Ubuntu sources for {{ mirror }}
-deb {{ mirror }} {{ ubuntu_release }} main restricted universe multiverse
-deb {{ mirror }} {{ ubuntu_release }}-updates main restricted universe multiverse
-deb {{ mirror }} {{ ubuntu_release }}-backports main restricted universe multiverse
-deb {{ mirror }} {{ ubuntu_release }}-security main restricted universe multiverse
+# Ubuntu sources
+deb mirror+file://{{ mirror_file_path.ubuntu }} {{ ubuntu_release }} main restricted universe multiverse
+deb mirror+file://{{ mirror_file_path.ubuntu }} {{ ubuntu_release }}-updates main restricted universe multiverse
+deb mirror+file://{{ mirror_file_path.ubuntu }} {{ ubuntu_release }}-backports main restricted universe multiverse
+deb mirror+file://{{ mirror_file_path.ubuntu }} {{ ubuntu_release }}-security main restricted universe multiverse
 
-{% endfor %}
-
-{% for mirror in mint_mirrors %}
-# Mint sources for {{ mirror }}
-deb {{ mirror }} {{ ansible_distribution_release }} main upstream import backport
-
-{% endfor %}
+# Mint sources
+deb mirror+file://{{ mirror_file_path.mint }} {{ ansible_distribution_release }} main upstream import backport
 
 # Parter repository (necessary for optional media codecs) -- not mirrored
 deb http://archive.canonical.com/ubuntu {{ ubuntu_release }} partner
