@@ -1,0 +1,23 @@
+name: Label pull request
+on:
+  - pull_request_target
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      # This must not check out the code from the PR
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          pip3 install pyyaml
+      - name: Generate labeler config from playbook
+        run: |
+          python3 scripts/generate_labeler_config.py
+      - uses: actions/labeler@v3
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
