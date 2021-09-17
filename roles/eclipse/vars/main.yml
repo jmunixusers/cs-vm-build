@@ -3,11 +3,11 @@
 eclipse:
   # Ensure the URL does not specify a mirror and that &r=1 is at the end, which
   # directly links to the file and not the web page with a download button
-  url: 'https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2021-06/R/eclipse-java-2021-06-R-linux-gtk-{{ ansible_architecture }}.tar.gz&r=1'
-  url_backup: 'https://download.eclipse.org/technology/epp/downloads/release/2021-06/R/eclipse-java-2021-06-R-linux-gtk-{{ ansible_architecture }}.tar.gz'
+  url: 'https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2021-09/R/eclipse-java-2021-09-R-linux-gtk-{{ ansible_architecture }}.tar.gz&r=1'
+  url_backup: 'https://download.eclipse.org/technology/epp/downloads/release/2021-09/R/eclipse-java-2021-09-R-linux-gtk-{{ ansible_architecture }}.tar.gz'
   hash:
-    x86_64: '615f495abcb3ace8d9c8008d75f74b9bcd5a30cc'
-    aarch64: 'd45a1b72be74a34491883a34ea27bd71b14c22cb'
+    x86_64: '8466edcb2b8161138097f7ec67a591413424e181'
+    aarch64: '4b60e3c4e84e81797962cce998e5f98d8a744b60'
   zip: '{{ global_base_path }}/eclipse.tar.gz'
   install_path: '{{ global_base_path }}/eclipse'
 
