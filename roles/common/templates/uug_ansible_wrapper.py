@@ -19,8 +19,9 @@ from tempfile import TemporaryDirectory
 import json
 
 import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Vte', '2.91')
+
+gi.require_version("Gtk", "3.0")
+gi.require_version("Vte", "2.91")
 # pygobject best practice, unfortunately, is to do the import after calling the
 # require_version() function. This triggers a pylint message.
 # pylint: disable=wrong-import-position
@@ -34,22 +35,22 @@ DEFAULT_GIT_REMOTE = "https://github.com/jmunixusers/cs-vm-build"
 # checkbox
 # Map of course names to the Ansible tags
 COURSES = {
-    'CS 101': 'cs101',
-    'CS 149': 'cs149',
-    'CS 159': 'cs159',
-    'CS 261': 'cs261',
-    'CS 361': 'cs361',
-    'CS 430': 'cs430',
-    'CS 432': 'cs432'
+    "CS 101": "cs101",
+    "CS 149": "cs149",
+    "CS 159": "cs159",
+    "CS 261": "cs261",
+    "CS 361": "cs361",
+    "CS 430": "cs430",
+    "CS 432": "cs432",
 }
-USER_CONFIG_PATH = os.path.join(os.environ['HOME'], ".config", "vm_config")
+USER_CONFIG_PATH = os.path.join(os.environ["HOME"], ".config", "vm_config")
 USER_CONFIG = {
-    'git_branch': None,
-    'git_url': DEFAULT_GIT_REMOTE,
+    "git_branch": None,
+    "git_url": DEFAULT_GIT_REMOTE,
     # All roles the user has ever chosen
-    'roles_all_time': ["common"],
+    "roles_all_time": ["common"],
     # Roles to be used for this particular run
-    'roles_this_run': ["common"],
+    "roles_this_run": ["common"],
 }
 NAME = "JMU CS VM Configuration"
 VERSION = "Spring 2019"
@@ -62,24 +63,20 @@ def main():
 
     # Configure logging. Log to a file and create it if it doesn't exist. If
     # it cannot be opened, then fall back to logging on the console
-    user_log_file = os.path.join(
-        os.environ['HOME'], ".cache", "uug_ansible_wrapper.log"
-    )
+    user_log_file = os.path.join(os.environ["HOME"], ".cache", "uug_ansible_wrapper.log")
     try:
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s: %(message)s",
             datefmt="%Y-%m-%d-%H-%M",
             filename=user_log_file,
             filemode="w+",
-            level=logging.INFO
+            level=logging.INFO,
         )
     except OSError:
-        logging.basicConfig(
-            format="%(levelname)s: %(message)s", level=logging.INFO
-        )
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
         logging.error(
-            "Unable to open log file at %s. Logging on console"
-            " instead", user_log_file
+            "Unable to open log file at %s. Logging on console instead",
+            user_log_file,
         )
 
     # The default value for the branch is the current distro release name.
@@ -88,20 +85,20 @@ def main():
     # should be set to main.
     distro_name = get_distro_release_name()
     if branch_exists(distro_name):
-        USER_CONFIG['git_branch'] = distro_name
+        USER_CONFIG["git_branch"] = distro_name
     else:
-        USER_CONFIG['git_branch'] = 'main'
+        USER_CONFIG["git_branch"] = "main"
 
     # Parse the user's previous settings
     parse_user_config()
 
     # If common got removed from the configuration, add it back to prevent
     # potentially bad things from happening
-    if "common" not in USER_CONFIG['roles_this_run']:
-        USER_CONFIG['roles_this_run'].append("common")
+    if "common" not in USER_CONFIG["roles_this_run"]:
+        USER_CONFIG["roles_this_run"].append("common")
 
-    if not USER_CONFIG['git_branch']:
-        USER_CONFIG['git_branch'] = "main"
+    if not USER_CONFIG["git_branch"]:
+        USER_CONFIG["git_branch"] = "main"
 
     # Show the window and ensure when it's closed that the script terminates
     win = AnsibleWrapperWindow()
@@ -163,9 +160,9 @@ class AnsibleWrapperWindow(Gtk.Window):
         # dictionaries do not guarantee that order is preserved
         for (course, tag) in sorted(COURSES.items()):
             checkbox = Gtk.CheckButton(label=course)
-            checkbox.set_tooltip_text("Configure for %s" % course)
+            checkbox.set_tooltip_text(f"Configure for {course}")
             courses_box.pack_start(checkbox, False, False, 0)
-            if tag in USER_CONFIG['roles_this_run']:
+            if tag in USER_CONFIG["roles_this_run"]:
                 checkbox.set_active(True)
             checkbox.connect("toggled", self.on_course_toggled, tag)
             self.checkboxes.append(checkbox)
@@ -205,9 +202,9 @@ class AnsibleWrapperWindow(Gtk.Window):
         """
 
         if button.get_active():
-            USER_CONFIG['roles_this_run'].append(name)
+            USER_CONFIG["roles_this_run"].append(name)
         else:
-            USER_CONFIG['roles_this_run'].remove(name)
+            USER_CONFIG["roles_this_run"].remove(name)
 
     def create_toolbar(self):
         """
@@ -250,9 +247,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         Displays a dialog for changing the program's settings.
         """
 
-        dialog = Gtk.Dialog(
-            title="Settings", parent=self, modal=True
-        )
+        dialog = Gtk.Dialog(title="Settings", parent=self, modal=True)
         grid = Gtk.Grid()
         branch_label = Gtk.Label(label="Branch:")
         branch_label.set_justify(Gtk.Justification.RIGHT)
@@ -264,27 +259,24 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         branch_field = Gtk.Entry()
         url_field = Gtk.Entry()
-        branch_field.set_text(USER_CONFIG['git_branch'])
-        url_field.set_text(USER_CONFIG['git_url'])
+        branch_field.set_text(USER_CONFIG["git_branch"])
+        url_field.set_text(USER_CONFIG["git_url"])
         branch_field.set_width_chars(40)
         url_field.set_width_chars(40)
 
         grid.add(branch_label)
-        grid.attach_next_to(
-            branch_field, branch_label, Gtk.PositionType.RIGHT, 1, 1
-        )
-        grid.attach_next_to(
-            url_label, branch_label, Gtk.PositionType.BOTTOM, 1, 1
-        )
+        grid.attach_next_to(branch_field, branch_label, Gtk.PositionType.RIGHT, 1, 1)
+        grid.attach_next_to(url_label, branch_label, Gtk.PositionType.BOTTOM, 1, 1)
         grid.attach_next_to(url_field, url_label, Gtk.PositionType.RIGHT, 1, 1)
         dialog.get_content_area().pack_end(grid, False, False, 0)
         ok_button = dialog.add_button(Gtk.STOCK_OK, Gtk.ResponseType.OK)
         dialog.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+
         def click_ok(_):
             ok_button.clicked()
 
-        branch_field.connect('activate', click_ok)
-        url_field.connect('activate', click_ok)
+        branch_field.connect("activate", click_ok)
+        url_field.connect("activate", click_ok)
         dialog.set_default_size(400, 100)
         grid.set_row_spacing(6)
         grid.set_column_spacing(6)
@@ -293,8 +285,8 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            USER_CONFIG['git_branch'] = branch_field.get_text()
-            USER_CONFIG['git_url'] = url_field.get_text()
+            USER_CONFIG["git_branch"] = branch_field.get_text()
+            USER_CONFIG["git_url"] = url_field.get_text()
             write_user_config()
         dialog.destroy()
 
@@ -304,7 +296,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         """
 
         about_dialog = Gtk.AboutDialog()
-        about_dialog.set_logo_icon_name('{{ tux_icon_name }}')
+        about_dialog.set_logo_icon_name("{{ tux_icon_name }}")
         about_dialog.set_transient_for(self)
         about_dialog.set_program_name(NAME)
         about_dialog.set_copyright("Copyright \xa9 2018 JMU Unix Users Group")
@@ -333,12 +325,14 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.run_button.set_sensitive(True)
         if exit_status == 0:
             success_msg = (
-                "Your machine has been configured for: %s" %
-                (",".join(USER_CONFIG['roles_this_run']))
+                f"Your machine has been configured for {', '.join(USER_CONFIG['roles_this_run'])}"
             )
             show_dialog(
-                self, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Complete",
-                success_msg
+                self,
+                Gtk.MessageType.INFO,
+                Gtk.ButtonsType.OK,
+                "Complete",
+                success_msg,
             )
             logging.info("ansible-pull succeeded")
         # 126 should be the exit code if the pkexec dialog is dismissed and
@@ -351,20 +345,29 @@ class AnsibleWrapperWindow(Gtk.Window):
         # Because of that, we will accept those values for these scenarios and
         # hopefully can remove the 32xxx values at some point in the future
         elif exit_status in (126, 32256):
-            pkexec_err_msg = "Unable to authenticate due to the dialog being"\
-                             " closed. Please try again."
+            pkexec_err_msg = (
+                "Unable to authenticate due to the dialog being closed. Please try again."
+            )
             show_dialog(
-                self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
-                "Unable to authenticate", pkexec_err_msg
+                self,
+                Gtk.MessageType.ERROR,
+                Gtk.ButtonsType.OK,
+                "Unable to authenticate",
+                pkexec_err_msg,
             )
             logging.warning("User dismissed authentication dialog")
         elif exit_status in (127, 32512):
-            pkexec_err_msg = "Unable to authenticate due to an incorrect" \
-                             " password or insufficient permissions." \
-                             " Plese try again."
+            pkexec_err_msg = (
+                "Unable to authenticate due to an incorrect"
+                " password or insufficient permissions."
+                " Plese try again."
+            )
             show_dialog(
-                self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK,
-                "Unable to authenticate", pkexec_err_msg
+                self,
+                Gtk.MessageType.ERROR,
+                Gtk.ButtonsType.OK,
+                "Unable to authenticate",
+                pkexec_err_msg,
             )
             logging.error("Unable to authenticate user")
         else:
@@ -373,11 +376,14 @@ class AnsibleWrapperWindow(Gtk.Window):
                 "Please try again."
                 "\nIf this issue continues to occur, copy"
                 " {{ ansible_log_file }} and"
-                " <a href='%s'>create an issue</a>" % (USER_CONFIG['git_url'])
+                f" <a href='{USER_CONFIG['git_url']}'>create an issue</a>"
             )
             show_dialog(
-                self, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, "Error",
-                ansible_err_msg
+                self,
+                Gtk.MessageType.ERROR,
+                Gtk.ButtonsType.OK,
+                "Error",
+                ansible_err_msg,
             )
             logging.error("ansible-pull failed")
 
@@ -395,12 +401,15 @@ class AnsibleWrapperWindow(Gtk.Window):
                 "captive portal, and try again."
             )
             show_dialog(
-                self, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
-                "No Internet connection", no_internet_msg
+                self,
+                Gtk.MessageType.ERROR,
+                Gtk.ButtonsType.CANCEL,
+                "No Internet connection",
+                no_internet_msg,
             )
             return
 
-        if not branch_exists(USER_CONFIG['git_branch']):
+        if not branch_exists(USER_CONFIG["git_branch"]):
             invalid_branch(self)
             return
 
@@ -414,26 +423,26 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         logging.info(
             "Running ansible-pull with flags: %s",
-            ",".join(USER_CONFIG['roles_this_run'])
+            ",".join(USER_CONFIG["roles_this_run"]),
         )
 
         with TemporaryDirectory() as temp_dir:
             # spawn_sync will not perform a path lookup; however, pkexec and env will
             cmd_args = [
-                '/usr/bin/pkexec',
+                "/usr/bin/pkexec",
                 "env",
                 "PYTHONUNBUFFERED=1",
-                'ansible-pull',
-                '--url',
-                USER_CONFIG['git_url'],
-                '--checkout',
-                USER_CONFIG['git_branch'],
-                '--directory',
+                "ansible-pull",
+                "--url",
+                USER_CONFIG["git_url"],
+                "--checkout",
+                USER_CONFIG["git_branch"],
+                "--directory",
                 temp_dir,
-                '--inventory',
-                'hosts',
-                '--tags',
-                ",".join(USER_CONFIG['roles_this_run']),
+                "--inventory",
+                "hosts",
+                "--tags",
+                ",".join(USER_CONFIG["roles_this_run"]),
             ]
 
             try:
@@ -460,9 +469,16 @@ class AnsibleWrapperWindow(Gtk.Window):
                 # documentation surrounding this function likely will not improve until and
                 # unless GTK stops treating Python support like an afterthought.
                 self.terminal.spawn_async(
-                    Vte.PtyFlags.DEFAULT, os.environ['HOME'], cmd_args, [],
-                    GLib.SpawnFlags.DO_NOT_REAP_CHILD, None, None,
-                    -1, None, None
+                    Vte.PtyFlags.DEFAULT,
+                    os.environ["HOME"],
+                    cmd_args,
+                    [],
+                    GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                    None,
+                    None,
+                    -1,
+                    None,
+                    None,
                 )
             except GLib.Error as error:
                 logging.error("Unable to run ansible command.", exc_info=error)
@@ -491,7 +507,10 @@ def show_dialog(parent, dialog_type, buttons_type, header, message):
     """
 
     dialog = Gtk.MessageDialog(
-        parent=parent, message_type=dialog_type, buttons=buttons_type, text=header
+        parent=parent,
+        message_type=dialog_type,
+        buttons=buttons_type,
+        text=header,
     )
     dialog.format_secondary_markup(message)
     response = dialog.run()
@@ -510,9 +529,7 @@ def parse_json_config(path, config):
         with open(path, "r", encoding="utf-8") as config_file:
             config.update(json.load(config_file))
     except FileNotFoundError as fne:
-        logging.info(
-            "User configuration file not present. Ignoring.", exc_info=fne
-        )
+        logging.info("User configuration file not present. Ignoring.", exc_info=fne)
     except json.decoder.JSONDecodeError as jde:
         logging.info("User configuration is invalid. Ignoring.", exc_info=jde)
 
@@ -536,10 +553,10 @@ def parse_user_config():
 
     parse_json_config(USER_CONFIG_PATH, USER_CONFIG)
 
-    USER_CONFIG['roles_all_time'] = list(set(USER_CONFIG['roles_all_time']))
-    USER_CONFIG['roles_this_run'] += USER_CONFIG['roles_all_time']
+    USER_CONFIG["roles_all_time"] = list(set(USER_CONFIG["roles_all_time"]))
+    USER_CONFIG["roles_this_run"] += USER_CONFIG["roles_all_time"]
     # Remove duplicates from roles for this run
-    USER_CONFIG['roles_this_run'] = list(set(USER_CONFIG['roles_this_run']))
+    USER_CONFIG["roles_this_run"] = list(set(USER_CONFIG["roles_this_run"]))
 
     logging.info("Read config: %s from %s", USER_CONFIG, USER_CONFIG_PATH)
 
@@ -552,7 +569,7 @@ def parse_os_release():
     """
 
     # Set os_release_file to the first item in the list that exists
-    for os_release_file in ['/etc/os-release', '/usr/lib/os-release']:
+    for os_release_file in ["/etc/os-release", "/usr/lib/os-release"]:
         if os.path.exists(os_release_file):
             break
 
@@ -588,12 +605,12 @@ def get_distro_release_name():
     release = ""
 
     os_release_config = parse_os_release()
-    if 'VERSION_CODENAME' in os_release_config:
-        release = os_release_config['VERSION_CODENAME']
+    if "VERSION_CODENAME" in os_release_config:
+        release = os_release_config["VERSION_CODENAME"]
     else:
         logging.debug(
-            "VERSION_CODENAME is not in /etc/os_release. "
-            "Full file contents: %s", os_release_config
+            "VERSION_CODENAME is not in /etc/os_release. Full file contents: %s",
+            os_release_config,
         )
 
     if release.lstrip() == "" or release is None:
@@ -609,9 +626,9 @@ def validate_branch_settings(parent):
     """
 
     system_version = get_distro_release_name()
-    chosen_branch = USER_CONFIG['git_branch']
-    chosen_remote = USER_CONFIG['git_url']
-    main_okay = USER_CONFIG.get('ignore_main', False)
+    chosen_branch = USER_CONFIG["git_branch"]
+    chosen_remote = USER_CONFIG["git_url"]
+    main_okay = USER_CONFIG.get("ignore_main", False)
     branch_mismatch = system_version != chosen_branch
     looks_minty = re.compile(r"[a-z]+a").fullmatch(chosen_branch)
 
@@ -626,7 +643,7 @@ def validate_branch_settings(parent):
     if chosen_remote != DEFAULT_GIT_REMOTE:
         logging.debug(
             "Not checking branches -- unsupported remote (%s) set",
-            chosen_remote
+            chosen_remote,
         )
         return True
 
@@ -639,15 +656,10 @@ def validate_branch_settings(parent):
             " configuration tool. It is recommended to use the release branch"
             " of this tool that corresponds to your Linux Mint version."
             " Consider changing your settings to match the following:"
-            "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': system_version,
-                'url': USER_CONFIG['git_url'],
-            }
+            f"\nRelease: {system_version}\nURL: {USER_CONFIG['git_url']}"
         )
 
-        display_ignorable_warning(
-            header, warning_prompt, parent, 'ignore_main'
-        )
+        display_ignorable_warning(header, warning_prompt, parent, "ignore_main")
         return False
 
     if branch_mismatch and looks_minty and system_exists:
@@ -659,10 +671,7 @@ def validate_branch_settings(parent):
             " a different Linux Mint release. It is recommended to switch to"
             " the release branch that corresponds to your Linux Mint version."
             " Consider changing your settings to match the following:"
-            "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': system_version,
-                'url': USER_CONFIG['git_url'],
-            }
+            f"\nRelease: {system_version}\nURL: {USER_CONFIG['git_url']}"
         )
     elif system_exists and not chosen_exists:
         header = "Chosen release unavailable"
@@ -672,10 +681,7 @@ def validate_branch_settings(parent):
             " that you switch to the release branch that corresponds to your"
             " Linux Mint release on the UUG git repository."
             " Consider changing your settings to match the following:"
-            "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': system_version,
-                'url': DEFAULT_GIT_REMOTE,
-            }
+            f"\nRelease: {system_version}\nURL: {DEFAULT_GIT_REMOTE}"
         )
     elif looks_minty and not (branch_mismatch or chosen_exists):
         header = "Chosen release not available"
@@ -685,10 +691,7 @@ def validate_branch_settings(parent):
             " current version of Linux Mint is not yet supported. It is"
             " recommended that you switch to the main (testing) branch."
             " Consider changing your settings to match the following:"
-            "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': 'main',
-                'url': USER_CONFIG['git_url'],
-            }
+            f"\nRelease: main\nURL: {USER_CONFIG['git_url']}"
         )
     elif branch_mismatch and looks_minty and not system_exists:
         # The user wants to use a minty-looking branch, but it doesn't match
@@ -700,10 +703,7 @@ def validate_branch_settings(parent):
             " completely support your Linux Mint release at this time."
             " It is recommended to switch to the main (testing) branch."
             " Consider changing your settings to match the following:"
-            "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': 'main',
-                'url': USER_CONFIG['git_url'],
-            }
+            f"\nRelease: main\nURL: {USER_CONFIG['git_url']}"
         )
     elif branch_mismatch and not (system_exists or chosen_exists):
         header = "Chosen release unavailable"
@@ -713,16 +713,16 @@ def validate_branch_settings(parent):
             " a release that supports your version of Linux Mint available"
             " yet. It is recommended to switch to the main (testing) branch."
             " Consider changing your settings to match the following:"
-            "\nRelease: %(release)s\nURL: %(url)s" % {
-                'release': 'main',
-                'url': USER_CONFIG['git_url'],
-            }
+            f"\nRelease: main\nURL: {USER_CONFIG['git_url']}"
         )
 
     if header and warning_prompt:
         show_dialog(
-            parent, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, header,
-            warning_prompt
+            parent,
+            Gtk.MessageType.WARNING,
+            Gtk.ButtonsType.OK,
+            header,
+            warning_prompt,
         )
 
     return warning_prompt is None
@@ -737,19 +737,17 @@ def branch_exists(branch_name):
     :returns: True if the branch exists and False if it does not
     """
 
-    remote_url = USER_CONFIG['git_url']
+    remote_url = USER_CONFIG["git_url"]
     cmd = [
-        '/usr/bin/env',  # Use git wherever it is, don't depend on /usr/bin
-        'git',
-        'ls-remote',     # ls-remote allows listing refs on a given remote
-        '--heads',       # only list heads (branches, not tags/PRs)
-        '--exit-code',   # Exit with status 2 if no matching refs are found
+        "/usr/bin/env",  # Use git wherever it is, don't depend on /usr/bin
+        "git",
+        "ls-remote",  # ls-remote allows listing refs on a given remote
+        "--heads",  # only list heads (branches, not tags/PRs)
+        "--exit-code",  # Exit with status 2 if no matching refs are found
         remote_url,
-        branch_name      # Find refs with the same name as the branch we want
+        branch_name,  # Find refs with the same name as the branch we want
     ]
-    output = subprocess.run(
-        cmd, stdout=subprocess.PIPE, check=False
-    )
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, check=False)
     logging.debug("ls-remote result for %s: %s", branch_name, output.stdout)
     logging.debug("ls-remote code for %s: %s", branch_name, output.returncode)
     return output.returncode == 0
@@ -767,8 +765,11 @@ def display_ignorable_warning(title, message, parent, settings_key):
     """
 
     dialog = Gtk.MessageDialog(
-        parent, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING,
-        Gtk.ButtonsType.OK_CANCEL, title
+        parent,
+        Gtk.DialogFlags.MODAL,
+        Gtk.MessageType.WARNING,
+        Gtk.ButtonsType.OK_CANCEL,
+        title,
     )
 
     dialog.format_secondary_text(message)
@@ -808,17 +809,18 @@ def invalid_branch(parent):
     bad_branch_msg = (
         "The release chosen does not exist at the project URL."
         " Please check the settings listed below and try again."
-        "\nRelease: %(0)s\nURL: %(1)s\nIf you're using a current"
+        f"\nRelease: %{USER_CONFIG['git_branch']}"
+        f"\nURL: {USER_CONFIG['git_url']}\nIf you're using a current"
         " release of Linux Mint, you may submit"
-        " <a href='%(1)s'>an issue</a> requesting support for"
-        " the release listed above" % {
-            '0': USER_CONFIG['git_branch'],
-            '1': USER_CONFIG['git_url']
-        }
+        f" <a href='{USER_CONFIG['git_url']}>an issue</a> requesting support for"
+        " the release listed above"
     )
     show_dialog(
-        parent, Gtk.MessageType.ERROR, Gtk.ButtonsType.CANCEL,
-        "Invalid Release", bad_branch_msg
+        parent,
+        Gtk.MessageType.ERROR,
+        Gtk.ButtonsType.CANCEL,
+        "Invalid Release",
+        bad_branch_msg,
     )
 
 
@@ -837,13 +839,13 @@ def is_online(url="http://detectportal.firefox.com", expected=b"success\n"):
                 return True
             logging.error(
                 "Response from %s was not %s as expected. Received: %s",
-                url, expected, response_data
+                url,
+                expected,
+                response_data,
             )
             return False
     except urllib.error.URLError as url_err:
-        logging.error(
-            "Unable to connect to %s", url, exc_info=url_err
-        )
+        logging.error("Unable to connect to %s", url, exc_info=url_err)
         return False
 
     return False
@@ -857,14 +859,12 @@ def write_user_config():
 
     # Add all new roles to cummulative roles and also remove duplicates before
     # writing -- must be a list since sets cannot be serialized with JSON
-    USER_CONFIG['roles_this_run'] = list(set(USER_CONFIG['roles_this_run']))
-    USER_CONFIG['roles_all_time'] += USER_CONFIG['roles_this_run']
+    USER_CONFIG["roles_this_run"] = list(set(USER_CONFIG["roles_this_run"]))
+    USER_CONFIG["roles_all_time"] += USER_CONFIG["roles_this_run"]
     # Since there could now be duplicates in roles_all_time, remove them
-    USER_CONFIG['roles_all_time'] = list(set(USER_CONFIG['roles_all_time']))
+    USER_CONFIG["roles_all_time"] = list(set(USER_CONFIG["roles_all_time"]))
 
-    logging.info(
-        "Writing user configuration %s to %s", USER_CONFIG, USER_CONFIG_PATH
-    )
+    logging.info("Writing user configuration %s to %s", USER_CONFIG, USER_CONFIG_PATH)
 
     write_json_config(USER_CONFIG_PATH, USER_CONFIG)
 
