@@ -497,6 +497,7 @@ class SettingsDialog(Gtk.Dialog):
 
         branch_label = self._create_label("Release track:")
         url_label = self._create_label("Source URL:")
+        ignore_main_label = self._create_label("Development:")
         experimental_label = self._create_label("Experimental:")
 
         branch_entry = self._create_entry(USER_CONFIG["git_branch"])
@@ -505,17 +506,20 @@ class SettingsDialog(Gtk.Dialog):
             "Allow running unsupported/experimental courses",
             USER_CONFIG["allow_experimental"],
         )
+        ignore_main_check = self._create_checkbox(
+            "Allow running from development branch",
+            USER_CONFIG.get("ignore_main", False)
+        )
 
         self._register_setting("git_branch", branch_entry)
         self._register_setting("git_url", url_entry)
         self._register_setting("allow_experimental", experimental_check)
+        self._register_setting("ignore_main", ignore_main_check)
 
-        grid.attach(branch_label, 0, 0, 1, 1)
-        grid.attach(branch_entry, 1, 0, 1, 1)
-        grid.attach(url_label, 0, 1, 1, 1)
-        grid.attach(url_entry, 1, 1, 1, 1)
-        grid.attach(experimental_label, 0, 2, 1, 1)
-        grid.attach(experimental_check, 1, 2, 1, 1)
+        self.add_row(grid, 0, branch_label, branch_entry)
+        self.add_row(grid, 1, url_label, url_entry)
+        self.add_row(grid, 2, ignore_main_label, ignore_main_check)
+        self.add_row(grid, 3, experimental_label, experimental_check)
 
         self.get_content_area().pack_end(grid, False, False, 0)
 
@@ -530,6 +534,10 @@ class SettingsDialog(Gtk.Dialog):
             write_user_config()
 
         self.connect("response", handle_response)
+
+    def add_row(self, grid, row, label, widget):
+        grid.attach(label, 0, row, 1, 1)
+        grid.attach(widget, 1, row, 1, 1)
 
     def _register_setting(self, key, widget):
         """
@@ -561,7 +569,7 @@ class SettingsDialog(Gtk.Dialog):
         # Add more widget types here as appropriate
         return None
 
-    def get_settings(self):
+    def get_all_settings(self):
         """
         Retrieves a mapping of all settings.
         """
