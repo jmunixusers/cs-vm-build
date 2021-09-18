@@ -7,16 +7,20 @@ in a configuration file (~/.config/vm_config). The branch to pull and the
 URL to pull from can be changed in the program's Settings.
 """
 
+# pylint: disable=too-many-lines
+
 import ast
 import functools
 import logging
 import os
+import pathlib
 import re
 import subprocess
 import urllib.request
 from tempfile import TemporaryDirectory
 
-import json
+import yaml
+from xdg import BaseDirectory
 
 import gi
 
@@ -43,10 +47,7 @@ COURSES = {
     "CS 430": "cs430",
     "CS 432": "cs432",
 }
-EXPERIMENTAL_COURSES = {
-    "CS 354": "cs354",
-}
-USER_CONFIG_PATH = os.path.join(os.environ["HOME"], ".config", "vm_config")
+EXPERIMENTAL_COURSES = {}
 USER_CONFIG = {
     "git_branch": None,
     "git_url": DEFAULT_GIT_REMOTE,
@@ -57,8 +58,9 @@ USER_CONFIG = {
     # Allow experimental courses to be shown
     "allow_experimental": False,
 }
+APP_NAME = "cs-vm-build"
 NAME = "JMU CS VM Configuration"
-VERSION = "Fall 2021"
+VERSION = "2022.01"
 
 
 def main():
@@ -68,7 +70,7 @@ def main():
 
     # Configure logging. Log to a file and create it if it doesn't exist. If
     # it cannot be opened, then fall back to logging on the console
-    user_log_file = os.path.join(os.environ["HOME"], ".cache", "uug_ansible_wrapper.log")
+    user_log_file = pathlib.Path(BaseDirectory.save_cache_path(APP_NAME)) / "ansible-wrapper.log"
     try:
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s: %(message)s",
@@ -507,8 +509,7 @@ class SettingsDialog(Gtk.Dialog):
             USER_CONFIG["allow_experimental"],
         )
         ignore_main_check = self._create_checkbox(
-            "Allow running from development branch",
-            USER_CONFIG.get("ignore_main", False)
+            "Allow running from development branch", USER_CONFIG.get("ignore_main", False)
         )
 
         self._register_setting("git_branch", branch_entry)
@@ -516,10 +517,10 @@ class SettingsDialog(Gtk.Dialog):
         self._register_setting("allow_experimental", experimental_check)
         self._register_setting("ignore_main", ignore_main_check)
 
-        self.add_row(grid, 0, branch_label, branch_entry)
-        self.add_row(grid, 1, url_label, url_entry)
-        self.add_row(grid, 2, ignore_main_label, ignore_main_check)
-        self.add_row(grid, 3, experimental_label, experimental_check)
+        self._add_row(grid, 0, branch_label, branch_entry)
+        self._add_row(grid, 1, url_label, url_entry)
+        self._add_row(grid, 2, ignore_main_label, ignore_main_check)
+        self._add_row(grid, 3, experimental_label, experimental_check)
 
         self.get_content_area().pack_end(grid, False, False, 0)
 
@@ -535,7 +536,11 @@ class SettingsDialog(Gtk.Dialog):
 
         self.connect("response", handle_response)
 
-    def add_row(self, grid, row, label, widget):
+    @staticmethod
+    def _add_row(grid, row, label, widget):
+        """
+        Add a row to the list of settings widgets in the Dialog.
+        """
         grid.attach(label, 0, row, 1, 1)
         grid.attach(widget, 1, row, 1, 1)
 
@@ -642,7 +647,7 @@ def show_dialog(parent, dialog_type, buttons_type, header, message):
     return response
 
 
-def parse_json_config(path, config):
+def parse_json_config(path: pathlib.Path, config):
     """
     Loads the data in the file at the provided path into a dictionary.
     :param path: The path to the JSON file
@@ -651,23 +656,41 @@ def parse_json_config(path, config):
 
     try:
         with open(path, "r", encoding="utf-8") as config_file:
-            config.update(json.load(config_file))
+            config.update(yaml.safe_load(config_file))
     except FileNotFoundError as fne:
         logging.info("User configuration file not present. Ignoring.", exc_info=fne)
-    except json.decoder.JSONDecodeError as jde:
+    except yaml.YAMLError as jde:
         logging.info("User configuration is invalid. Ignoring.", exc_info=jde)
 
 
-def write_json_config(path, config):
+def write_json_config(path: pathlib.Path, config):
     """
     Writes a dictionary to a file at the provided at path in JSON format.
     :param path: The path of the file to write the dictionary to
     :param config: The dictionary to write. Must be serializable as JSON
     """
 
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    class IndentingSafeDumper(yaml.SafeDumper):
+        """
+        PyYAML Dumper that increments indentation for lists and objects
+        correctly.
+        """
+
+        def increase_indent(self, flow=False, indentless=False):
+            return super().increase_indent(flow=flow, indentless=False)
+
     with open(path, "w", encoding="utf-8") as config_file:
         # Make the written file relatively readable & writable by users
-        json.dump(config, config_file, indent=4, sort_keys=True)
+        yaml.dump(
+            config,
+            config_file,
+            Dumper=IndentingSafeDumper,
+            default_flow_style=False,
+            encoding="utf-8",
+            explicit_start=True,
+        )
 
 
 def parse_user_config():
@@ -675,14 +698,19 @@ def parse_user_config():
     Loads a user's configuration.
     """
 
-    parse_json_config(USER_CONFIG_PATH, USER_CONFIG)
+    config_dir = BaseDirectory.load_first_config(APP_NAME)
+    if config_dir:
+        config_path = pathlib.Path(config_dir) / "settings.yml"
+        parse_json_config(config_path, USER_CONFIG)
+    else:
+        logging.info("User configuration has not been created yet")
 
     USER_CONFIG["roles_all_time"] = list(set(USER_CONFIG["roles_all_time"]))
     USER_CONFIG["roles_this_run"] += USER_CONFIG["roles_all_time"]
     # Remove duplicates from roles for this run
     USER_CONFIG["roles_this_run"] = list(set(USER_CONFIG["roles_this_run"]))
 
-    logging.info("Read config: %s from %s", USER_CONFIG, USER_CONFIG_PATH)
+    logging.info("Read config: %s from %s", USER_CONFIG, config_dir)
 
 
 @functools.lru_cache
@@ -972,8 +1000,6 @@ def is_online(url="http://detectportal.firefox.com", expected=b"success\n"):
         logging.error("Unable to connect to %s", url, exc_info=url_err)
         return False
 
-    return False
-
 
 def write_user_config():
     """
@@ -988,9 +1014,10 @@ def write_user_config():
     # Since there could now be duplicates in roles_all_time, remove them
     USER_CONFIG["roles_all_time"] = list(set(USER_CONFIG["roles_all_time"]))
 
-    logging.info("Writing user configuration %s to %s", USER_CONFIG, USER_CONFIG_PATH)
+    config_path = pathlib.Path(BaseDirectory.save_config_path("cs-vm-build")) / "settings.yml"
+    logging.info("Writing user configuration %s to %s", USER_CONFIG, config_path)
 
-    write_json_config(USER_CONFIG_PATH, USER_CONFIG)
+    write_json_config(config_path, USER_CONFIG)
 
 
 if __name__ == "__main__":
