@@ -3,7 +3,7 @@
 finch:
   url: 'https://www.birdbraintechnologies.com/downloads/finch/FinchPython120.zip'
   zip: '{{ global_base_path }}/FinchPython120.zip'
-  hash: '841a7f7ca3a11678ecb6319e9983f87c57eb80da'
+  hash: '14a23baf34b1232bc75665d23293b52c18471e8a'
   install_path: '{{ global_base_path }}/FinchPython'
   # The "root" of the zip file is a "FinchPython120" directory. This variable will
   # need to be updated if the structure of the zip changes.
