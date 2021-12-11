@@ -11,8 +11,3 @@
     path: /var/lib/dpkg/arch
     state: absent
     line: 'i386'
-- name: Hold Mesa packages
-  dpkg_selections:
-    name: '{{ item }}'
-    selection: hold
-  loop: "{{ mesa_hold_packages }}"
