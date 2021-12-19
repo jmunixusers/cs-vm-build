@@ -33,7 +33,7 @@ jobs:
           python-version: 3.x
       - name: Install dependencies
         run: |
-          pip3 install demjson
+          pip3 install demjson3
       - name: Run jsonlint
         run: |
           jsonlint packer/*json
