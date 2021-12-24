@@ -7,18 +7,6 @@ upgrade_pre_mintupdate:
 skel_path: "/etc/skel"
 skel_desktop_file_path: "{{ skel_path }}/Desktop"
 
-mesa_hold_packages:
-  - libegl-mesa0
-  - libgbm1
-  - libgl1-mesa-dri
-  - libgl1-mesa-glx
-  - libglapi-mesa
-  - libglx-mesa0
-  - libxatracker2
-  - mesa-va-drivers
-  - mesa-vdpau-drivers
-  - mesa-vulkan-drivers
-
 # https://github.com/jmunixusers/cs-vm-build/issues/11#issuecomment-347015788
 packages_to_remove:
   - bluez*
