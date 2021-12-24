@@ -16,6 +16,7 @@ import os
 import pathlib
 import re
 import subprocess
+import urllib.error
 import urllib.request
 import webbrowser
 from tempfile import TemporaryDirectory
@@ -61,7 +62,7 @@ USER_CONFIG = {
 }
 APP_NAME = "cs-vm-build"
 NAME = "JMU CS VM Configuration"
-VERSION = "2022.01"
+VERSION = "2022.08"
 
 
 def main():
@@ -71,7 +72,9 @@ def main():
 
     # Configure logging. Log to a file and create it if it doesn't exist. If
     # it cannot be opened, then fall back to logging on the console
-    user_log_file = pathlib.Path(BaseDirectory.save_cache_path(APP_NAME)) / "ansible-wrapper.log"
+    user_log_file = (
+        pathlib.Path(BaseDirectory.save_cache_path(APP_NAME)) / "ansible-wrapper.log"
+    )
     try:
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s: %(message)s",
@@ -267,15 +270,15 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         # Add a documentation link to the help menu
         docs = Gtk.MenuItem(label="Documentation")
-        docs.connect("activate", self.open_docs)
+        docs.connect(
+            "activate",
+            lambda _: webbrowser.open("http://www.jmunixusers.org/presentations/vm/"),
+        )
         help_menu.append(docs)
 
         menu_bar.append(help_item)
 
         self.vbox.pack_start(menu_bar, False, False, 0)
-
-    def open_docs(self, _):
-        webbrowser.open("http://www.jmunixusers.org/presentations/vm/")
 
     def show_settings(self, _):
         """
@@ -297,7 +300,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         about_dialog.set_logo_icon_name("{{ tux_icon_name }}")
         about_dialog.set_transient_for(self)
         about_dialog.set_program_name(NAME)
-        about_dialog.set_copyright("Copyright \xa9 2018-2021 JMU Unix Users Group")
+        about_dialog.set_copyright("Copyright \xa9 2018-2022 JMU Unix Users Group")
         about_dialog.set_comments(
             "A tool for configuring virtual machines for use in the "
             "JMU Department of Computer Science, "
@@ -322,8 +325,8 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.cancel_button.set_sensitive(True)
         self.run_button.set_sensitive(True)
         if exit_status == 0:
-            success_msg = (
-                f"Your machine has been configured for {', '.join(USER_CONFIG['roles_this_run'])}"
+            success_msg = "Your machine has been configured for " + ", ".join(
+                sorted(USER_CONFIG["roles_this_run"])
             )
             show_dialog(
                 self,
@@ -344,7 +347,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         # hopefully can remove the 32xxx values at some point in the future
         elif exit_status in (126, 32256):
             pkexec_err_msg = (
-                "Unable to authenticate due to the dialog being closed. Please try again."
+                "Authentication failed because the dialog was closed. Please try again."
             )
             show_dialog(
                 self,
@@ -518,7 +521,8 @@ class SettingsDialog(Gtk.Dialog):
             USER_CONFIG["allow_experimental"],
         )
         ignore_main_check = self._create_checkbox(
-            "Allow running from development branch", USER_CONFIG.get("ignore_main", False)
+            "Allow running from development branch",
+            USER_CONFIG.get("ignore_main", False),
         )
 
         self._register_setting("git_branch", branch_entry)
@@ -730,10 +734,10 @@ def parse_os_release():
     """
 
     # Set os_release_file to the first item in the list that exists
-    for os_release_file in ["/etc/os-release", "/usr/lib/os-release"]:
-        if os.path.exists(os_release_file):
-            break
-
+    os_release_file = [
+        file for file in ["/etc/os-release", "/usr/lib/os-release"]
+        if os.path.exists(file)
+    ][0]
     os_release_contents = {}
     # os-release(5) specifies that it is expected that the strings in
     # this file are UTF-8 encoding
@@ -1023,7 +1027,9 @@ def write_user_config():
     # Since there could now be duplicates in roles_all_time, remove them
     USER_CONFIG["roles_all_time"] = list(set(USER_CONFIG["roles_all_time"]))
 
-    config_path = pathlib.Path(BaseDirectory.save_config_path("cs-vm-build")) / "settings.yml"
+    config_path = (
+        pathlib.Path(BaseDirectory.save_config_path("cs-vm-build")) / "settings.yml"
+    )
     logging.info("Writing user configuration %s to %s", USER_CONFIG, config_path)
 
     write_json_config(config_path, USER_CONFIG)
