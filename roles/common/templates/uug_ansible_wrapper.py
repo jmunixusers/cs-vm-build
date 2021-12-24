@@ -17,6 +17,7 @@ import pathlib
 import re
 import subprocess
 import urllib.request
+import webbrowser
 from tempfile import TemporaryDirectory
 
 import yaml
@@ -264,9 +265,17 @@ class AnsibleWrapperWindow(Gtk.Window):
         about.connect("activate", self.show_about_dialog)
         help_menu.append(about)
 
+        # Add a documentation link to the help menu
+        docs = Gtk.MenuItem(label="Documentation")
+        docs.connect("activate", self.open_docs)
+        help_menu.append(docs)
+
         menu_bar.append(help_item)
 
         self.vbox.pack_start(menu_bar, False, False, 0)
+
+    def open_docs(self, _):
+        webbrowser.open("http://www.jmunixusers.org/presentations/vm/")
 
     def show_settings(self, _):
         """
@@ -295,7 +304,7 @@ class AnsibleWrapperWindow(Gtk.Window):
             "maintained by the Unix Users Group"
         )
         about_dialog.set_authors(["JMU Unix Users Group"])
-        about_dialog.set_website("https://github.com/jmunixusers/cs-vm-build")
+        about_dialog.set_website("http://github.com/jmunixusers/cs-vm-build")
         about_dialog.set_website_label("Project GitHub page")
         about_dialog.set_version(VERSION)
         about_dialog.set_license_type(Gtk.License.MIT_X11)
