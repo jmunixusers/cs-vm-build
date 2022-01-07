@@ -2,8 +2,8 @@
   "min_packer_version": "1.6.0",
   "variables": {
     "vm_name": "JMU Linux Mint",
-    "semester": "Fa21",
-    "version": "20.2",
+    "semester": "Sp22",
+    "version": "20.3",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
