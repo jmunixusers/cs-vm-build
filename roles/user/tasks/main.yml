@@ -1,24 +1,24 @@
 ---
 # tasks file for user
 - name: Create opt directory
-  file:
+  ansible.builtin.file:
     path: "{{ global_base_path }}"
     state: directory
     owner: root
     group: root
     mode: "0755"
 - name: Create local applications directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/share/applications/
     state: directory
     owner: root
     group: root
     mode: "0755"
 - name: Get users
-  getent:
+  ansible.builtin.getent:
     database: passwd
 - name: Build real user list
-  set_fact:
+  ansible.builtin.set_fact:
     real_users: >-
       {{
         (real_users|default([])) +
@@ -40,14 +40,14 @@
     - item.value.5 != "/bin/false"
     - item.value.5 != "/usr/sbin/nologin"
 - name: Upgrade installed software
-  apt:
+  ansible.builtin.apt:
     upgrade: full
 - name: Install required dependencies
-  apt:
+  ansible.builtin.apt:
     name: '{{ user_dependencies }}'
     state: latest
 - name: Touch VM profile
-  copy:
+  ansible.builtin.copy:
     src: csvmprofile
     dest: '{{ global_profile_path }}'
     mode: "0644"
@@ -56,7 +56,7 @@
     # prevent overwriting
     force: no
 - name: Ensure user home directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ item.homedir }}"
     mode: "0755"
     owner: "{{ item.uid }}"
@@ -64,7 +64,7 @@
     state: directory
   loop: "{{ real_users }}"
 - name: Trust JMU CS student server SSH
-  known_hosts:
+  ansible.builtin.known_hosts:
     # Per ssh_config(5), this is the default value of GlobalKnownHostsFile
     path: /etc/ssh/ssh_known_hosts
     name: stu.cs.jmu.edu
@@ -72,7 +72,7 @@
     hash_host: yes
     state: present
 - name: Create stu-home bookmark
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: '{{ item.homedir }}/.config/gtk-3.0/bookmarks'
     line: "sftp://{{ item.user }}@stu.cs.jmu.edu/cs/home/stu/{{ item.user }} Home on stu"
     state: present
@@ -83,7 +83,7 @@
     mode: "0644"
   loop: "{{ real_users }}"
 - name: Add profile to user bashrc
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: '{{ item.homedir }}/.bashrc'
     line: "source {{ global_profile_path }}"
     state: present
@@ -95,7 +95,7 @@
   ignore_errors: yes
   loop: "{{ real_users }}"
 - name: Remove Timeshift warning
-  dconf:
+  community.general.dconf:
     key: "/com/linuxmint/updates/warn-about-timeshift"
     value: "false"
     state: present
@@ -104,7 +104,7 @@
   loop: "{{ real_users }}"
   when: "ansible_distribution == 'Linux Mint'"
 - name: Remove mintupdate welcome page
-  dconf:
+  community.general.dconf:
     key: "/com/linuxmint/updates/show-welcome-page"
     value: "false"
     state: present

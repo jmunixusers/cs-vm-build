@@ -4,31 +4,31 @@
 - include_tasks: vm_only_pre.yml
   when: "ansible_virtualization_role == 'guest'"
 - name: Remove unused dependencies
-  apt:
+  ansible.builtin.apt:
     autoremove: yes
     purge: yes
 - name: Create the /usr/local/share/applications folder
-  file:
+  ansible.builtin.file:
     path: /usr/local/share/applications
     state: directory
     mode: "0755"
     owner: root
     group: staff
 - name: Create the dconf profile directory
-  file:
+  ansible.builtin.file:
     path: /etc/dconf/profile
     state: directory
     mode: "0755"
     owner: root
 - name: Copy dconf profile file
-  copy:
+  ansible.builtin.copy:
     src: dbus-profile
     dest: /etc/dconf/profile/user
     owner: root
     group: root
     mode: "0644"
 - name: Create the dconf policy directory
-  file:
+  ansible.builtin.file:
     path: /etc/dconf/db/local.d
     state: directory
     mode: "0755"

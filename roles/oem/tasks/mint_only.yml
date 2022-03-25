@@ -2,35 +2,36 @@
 # tasks file for Linux Mint
 
 - name: Update mintupdate package
-  apt:
+  ansible.builtin.apt:
     name: "{{ upgrade_pre_mintupdate }}"
     state: latest
 - name: Upgrade all installed packages  # noqa no-changed-when
-  command: /usr/bin/mintupdate-cli -y upgrade
+  ansible.builtin.command:
+    cmd: /usr/bin/mintupdate-cli -y upgrade
 
 - name: Ensure skeleton desktop directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ skel_desktop_file_path }}"
     state: directory
     mode: "0755"
 - name: Copy welcome shortcut to skeleton desktop directory
-  copy:
+  ansible.builtin.copy:
     src: welcome-to-vm.desktop
     dest: "{{ skel_desktop_file_path }}/welcome-to-vm.desktop"
     mode: "0644"
 - name: Hide the mintwelcome window
-  file:
+  ansible.builtin.file:
     path: "{{ skel_path }}/.linuxmint/mintwelcome"
     mode: "0755"
     state: directory
 - name: Hide the mintwelcome window
-  copy:
+  ansible.builtin.copy:
     dest: "{{ skel_path }}/.linuxmint/mintwelcome/norun.flag"
     mode: "0664"
     content: ""
     force: no
 - name: Copy setup script shortcut to desktop
-  copy:
+  ansible.builtin.copy:
     src: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
     dest: "{{ skel_desktop_file_path }}/jmucs_config.desktop"
     mode: "0755"

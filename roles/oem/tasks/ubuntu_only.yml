@@ -2,12 +2,13 @@
 # tasks file for Ubuntu
 
 - name: Upgrade all installed packages
-  apt:
+  ansible.builtin.apt:
     upgrade: safe
 - name: Upgrade all installed snaps  # noqa no-changed-when
-  command: snap refresh
+  ansible.builtin.command:
+    cmd: snap refresh
 - name: Purge old snaps
-  shell: |
+  ansible.builtin.shell: |
     set -o pipefail
     errors=0
     changed=""
@@ -23,7 +24,7 @@
   register: snapout
   changed_when: '"Snap removed" in snapout.stdout'
 - name: Copy dconf config file
-  copy:
+  ansible.builtin.copy:
     src: csconfig-ubuntuonly
     dest: /etc/dconf/db/local.d/csconfig-ubuntuonly
     owner: root

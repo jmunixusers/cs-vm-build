@@ -2,7 +2,7 @@
 # tasks file for Ubuntu
 
 - name: Set Ubuntu mirrors
-  template:
+  ansible.builtin.template:
     src: ubuntu.j2
     dest: /etc/apt/sources.list
     owner: root

@@ -5,22 +5,22 @@
 # role without error as common is used in both of those.
 
 - name: Check Ubuntu release
-  set_fact:
+  ansible.builtin.set_fact:
     ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
 
 - name: Process all pending installs
-  command: /usr/bin/dpkg --configure -a
+  ansible.builtin.command: /usr/bin/dpkg --configure -a
   register: dpkg_command
   changed_when: dpkg_command.stdout
   environment:
     DEBIAN_FRONTEND: noninteractive
 - name: Ensure log directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ log_directory }}"
     state: directory
     mode: "0755"
 - name: Create directory for shared data
-  file:
+  ansible.builtin.file:
     path: "{{ share_directory }}"
     state: directory
     owner: root
@@ -30,29 +30,29 @@
 # The policy file must go in /usr/share/polkit-1. It is the only location that
 # policykit checks
 - name: Install policykit policy for Ansible wrapper
-  copy:
+  ansible.builtin.copy:
     src: edu.jmu.uug.ansiblewrapper.policy
     dest: /usr/share/polkit-1/actions/
     mode: "0644"
 - name: Install Ansible wrapper GUI script
-  template:
+  ansible.builtin.template:
     src: uug_ansible_wrapper.py
     dest: '{{ uug_ansible_wrapper }}'
     mode: "0755"
 - name: Install JMU-colored Tux icon
-  copy:
+  ansible.builtin.copy:
     src: jmu-tux.svg
     dest: "/usr/share/icons/hicolor/scalable/apps/{{ tux_icon_name }}.svg"
     mode: "0644"
   notify: Update icon cache
 
 - name: Ensure local applications folder exists
-  file:
+  ansible.builtin.file:
     path: "{{ wrapper_desktop_file_path }}"
     state: directory
     mode: "0755"
 - name: Copy shortcut to desktop file directory
-  template:
+  ansible.builtin.template:
     src: desktop-template.desktop.j2
     dest: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
     mode: "0755"
@@ -62,7 +62,7 @@
 - include_tasks: mint_only.yml
   when: "ansible_distribution == 'Linux Mint'"
 - name: Refresh apt cache
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
   changed_when: false
   ignore_errors: yes

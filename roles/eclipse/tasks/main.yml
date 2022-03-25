@@ -1,37 +1,39 @@
 ---
 # tasks file for eclipse
 - name: Remove Mint Eclipse
-  apt:
+  ansible.builtin.apt:
     name: '{{ eclipse_remove_mint }}'
     state: absent
 - name: Check Eclipse
-  stat:
+  ansible.builtin.stat:
     path: '{{ eclipse.zip }}'
   register: st
 - block:
     - name: Fetch Eclipse bundle
-      get_url:
+      ansible.builtin.get_url:
         url: '{{ eclipse.url }}'
         dest: '{{ eclipse.zip }}'
         checksum: 'sha1:{{ eclipse.hash[ansible_architecture] }}'
         timeout: 30
         force: yes
+        mode: "0644"
       register: url_output
       ignore_errors: true
     - name: Fetch Eclipse bundle from backup server
-      get_url:
+      ansible.builtin.get_url:
         url: '{{ eclipse.url_backup }}'
         dest: '{{ eclipse.zip }}'
         checksum: 'sha1:{{ eclipse.hash[ansible_architecture] }}'
         timeout: 30
         force: yes
+        mode: "0644"
       when: url_output.failed
     - name: Remove old Eclipse directory
-      file:
+      ansible.builtin.file:
         path: '{{ eclipse.install_path }}'
         state: absent
     - name: Unpack Eclipse bundle
-      unarchive:
+      ansible.builtin.unarchive:
         dest: '{{ global_base_path }}'
         src: '{{ eclipse.zip }}'
         owner: root
@@ -39,7 +41,7 @@
         mode: "0755"
   when: st.stat.checksum|default("") != eclipse.hash[ansible_architecture]
 - name: Install checkstyle plugin
-  command: >
+  ansible.builtin.command: >
     {{ eclipse.install_path }}/eclipse
     -nosplash
     -application org.eclipse.equinox.p2.director
@@ -49,7 +51,7 @@
   args:
     creates: '{{ eclipse.install_path }}/plugins/net.sf.eclipsecs.checkstyle*'
 - name: Install Eclipse desktop icon
-  template:
+  ansible.builtin.template:
     src: eclipse.desktop.j2
     dest: /usr/local/share/applications/eclipse.desktop
     mode: "0644"

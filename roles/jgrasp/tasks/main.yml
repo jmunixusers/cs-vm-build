@@ -1,30 +1,31 @@
 ---
 # tasks file for jgrasp
 - name: Install jGRASP dependencies
-  apt:
+  ansible.builtin.apt:
     name: '{{ jgrasp_wedge_dependencies }}'
     state: latest
 - name: Check jGRASP zip
-  stat:
+  ansible.builtin.stat:
     path: '{{ jgrasp.zip }}'
   register: zip
 - name: Check jGRASP wedge
-  stat:
+  ansible.builtin.stat:
     path: '{{ jgrasp.install_path }}/internal_bin/sys_run'
   register: wedge
 - block:
     - name: Fetch jGRASP zip
-      get_url:
+      ansible.builtin.get_url:
         url: '{{ jgrasp.url }}'
         dest: '{{ jgrasp.zip }}'
         checksum: 'sha1:{{ jgrasp.hash }}'
         force: yes
+        mode: "0644"
     - name: Remove old jGRASP directory
-      file:
+      ansible.builtin.file:
         path: '{{ jgrasp.install_path }}'
         state: absent
     - name: Unpack jGRASP zip
-      unarchive:
+      ansible.builtin.unarchive:
         dest: '{{ global_base_path }}'
         src: '{{ jgrasp.zip }}'
         owner: root
@@ -33,18 +34,18 @@
   when: zip.stat.checksum|default("") != jgrasp.hash
 - block:
     - name: Configure jGRASP wedge build
-      command:
+      ansible.builtin.command:
         cmd: './configure'
         creates: '{{ jgrasp.install_path }}/src/Make.sh'
         chdir: '{{ jgrasp.install_path }}/src/'
     - name: Make and install jGRASP wedge
-      command:
+      ansible.builtin.command:
         cmd: './Make.sh'
         creates: '{{ jgrasp.install_path }}/internal_bin/sys_run'
         chdir: '{{ jgrasp.install_path }}/src'
   when: not wedge.stat.exists
 - name: Install jGRASP desktop icon
-  template:
+  ansible.builtin.template:
     src: jgrasp.desktop.j2
     dest: /usr/local/share/applications/jgrasp.desktop
     mode: "0644"

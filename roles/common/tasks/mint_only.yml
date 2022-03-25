@@ -2,14 +2,14 @@
 # tasks file for Linux Mint
 
 - name: Create directory for custom MintReport script
-  file:
+  ansible.builtin.file:
     path: /usr/share/linuxmint/mintreport/reports/001_Run-JMU-CS-Config-Tool
     mode: "0755"
     owner: root
     group: root
     state: directory
 - name: Install custom MintReport script
-  template:
+  ansible.builtin.template:
     src: CustomMintReportInfo.py
     dest: /usr/share/linuxmint/mintreport/reports/001_Run-JMU-CS-Config-Tool/MintReportInfo.py
     mode: "0644"
@@ -17,7 +17,7 @@
     group: root
 
 - name: Set Linux Mint mirrors
-  template:
+  ansible.builtin.template:
     src: mint.j2
     dest: /etc/apt/sources.list.d/official-package-repositories.list
     owner: root

@@ -1,14 +1,15 @@
 ---
 # handlers file for user
 - name: Update desktop menu
-  command:
-    /usr/bin/update-desktop-database
+  ansible.builtin.command:
+    cmd: /usr/bin/update-desktop-database
 - name: Suggest restart
-  command: >-
-    notify-send -u critical "JMU Software Change"
-    "Changes have been made to your machine that
-    will only take effect when you log out or
-    when you reboot. Please do this immediately."
+  ansible.builtin.command:
+    cmd: >-
+      notify-send -u critical "JMU Software Change"
+      "Changes have been made to your machine that
+      will only take effect when you log out or
+      when you reboot. Please do this immediately."
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ item.uid }}"
   become: yes
