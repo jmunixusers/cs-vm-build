@@ -10,7 +10,7 @@ jobs:
     name: Run Ansible lint tests
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
@@ -109,7 +109,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
@@ -118,7 +118,7 @@ jobs:
         run: |
           pip3 install aiohttp jinja2 pyyaml
       - name: Configure download cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/hashlint
           key: hashlint-cache-${{ github.sha }}
