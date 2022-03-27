@@ -3,3 +3,5 @@ skip_list:
   - package-latest
 warn_list:
   - fqcn-builtins
+  - ignore-errors
+  - experimental
