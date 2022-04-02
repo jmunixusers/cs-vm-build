@@ -1,5 +1,5 @@
 ---
 # handlers file for oem
 - name: Update dconf database
-  ansible.builtin.command:
+  command:
     cmd: /usr/bin/dconf update

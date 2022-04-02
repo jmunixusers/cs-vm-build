@@ -6,9 +6,8 @@
     name: "{{ upgrade_pre_mintupdate }}"
     state: latest
 - name: Upgrade all installed packages  # noqa no-changed-when
-  ansible.builtin.command:
+  command:
     cmd: /usr/bin/mintupdate-cli -y upgrade
-
 - name: Ensure skeleton desktop directory exists
   ansible.builtin.file:
     path: "{{ skel_desktop_file_path }}"

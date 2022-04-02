@@ -14,7 +14,7 @@
 # Do not indent continuation lines of a multi-line block,
 # they become newlines when parsed
 - name: Add printers
-  ansible.builtin.shell: >
+  shell: >
     lpstat -p "{{ item.name }}" ||
     lpadmin -p "{{ item.name }}" -E
     -v "{{ item.queue }}"

@@ -5,10 +5,10 @@
   ansible.builtin.apt:
     upgrade: safe
 - name: Upgrade all installed snaps  # noqa no-changed-when
-  ansible.builtin.command:
+  command:
     cmd: snap refresh
 - name: Purge old snaps
-  ansible.builtin.shell: |
+  shell: |
     set -o pipefail
     errors=0
     changed=""

@@ -41,7 +41,7 @@
         mode: "0755"
   when: st.stat.checksum|default("") != eclipse.hash[ansible_architecture]
 - name: Install checkstyle plugin
-  ansible.builtin.command: >
+  command: >
     {{ eclipse.install_path }}/eclipse
     -nosplash
     -application org.eclipse.equinox.p2.director

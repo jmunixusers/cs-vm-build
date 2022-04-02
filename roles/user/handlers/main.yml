@@ -1,10 +1,10 @@
 ---
 # handlers file for user
 - name: Update desktop menu
-  ansible.builtin.command:
+  command:
     cmd: /usr/bin/update-desktop-database
 - name: Suggest restart
-  ansible.builtin.command:
+  command:
     cmd: >-
       notify-send -u critical "JMU Software Change"
       "Changes have been made to your machine that

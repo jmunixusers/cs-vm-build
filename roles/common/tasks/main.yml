@@ -9,7 +9,7 @@
     ubuntu_release: "{{ lookup('ini', 'UBUNTU_CODENAME type=properties file=/etc/os-release') }}"
 
 - name: Process all pending installs
-  ansible.builtin.command: /usr/bin/dpkg --configure -a
+  command: /usr/bin/dpkg --configure -a
   register: dpkg_command
   changed_when: dpkg_command.stdout
   environment:

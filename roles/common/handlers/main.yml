@@ -1,4 +1,4 @@
 ---
 # handlers file for common
 - name: Update icon cache
-  ansible.builtin.command: /usr/sbin/update-icon-caches /usr/share/icons/*
+  command: /usr/sbin/update-icon-caches /usr/share/icons/*

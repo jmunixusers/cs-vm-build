@@ -1,3 +1,5 @@
+---
 skip_list:
-# Package installs should not use latest
   - package-latest
+warn_list:
+  - fqcn-builtins

@@ -30,7 +30,7 @@
 # The apt database can be fairly large and make the image unnecessarily large
 # so removing it before shipping allows us to ship a smaller image.
 - name: Clean the apt package cache
-  ansible.builtin.command:
+  command:
     cmd: apt-get clean
   # This will always report as changed otherwise
   changed_when: false
@@ -54,13 +54,13 @@
 # Extensions which are non-free software and available only under the Oracle
 # PUEL. We should ensure we have not accidentally included them.
 - name: Validate missing USB 2/3 controllers  # noqa risky-shell-pipe
-  ansible.builtin.command:
+  command:
     cmd: lspci
   register: lspci_output
   failed_when: "'ECHI' in lspci_output.stdout or 'xHCI' in lspci_output.stdout"
   changed_when: false
 
 - name: Fill disk with zeros to assist with compression
-  ansible.builtin.shell:
+  shell:
     cmd: dd if=/dev/zero of=/bigfile bs=1M; sync; rm /bigfile
   changed_when: false

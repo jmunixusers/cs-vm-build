@@ -34,12 +34,12 @@
   when: zip.stat.checksum|default("") != jgrasp.hash
 - block:
     - name: Configure jGRASP wedge build
-      ansible.builtin.command:
+      command:
         cmd: './configure'
         creates: '{{ jgrasp.install_path }}/src/Make.sh'
         chdir: '{{ jgrasp.install_path }}/src/'
     - name: Make and install jGRASP wedge
-      ansible.builtin.command:
+      command:
         cmd: './Make.sh'
         creates: '{{ jgrasp.install_path }}/internal_bin/sys_run'
         chdir: '{{ jgrasp.install_path }}/src'

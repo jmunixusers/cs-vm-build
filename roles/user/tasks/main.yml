@@ -95,7 +95,7 @@
   ignore_errors: yes
   loop: "{{ real_users }}"
 - name: Remove Timeshift warning
-  community.general.dconf:
+  dconf:
     key: "/com/linuxmint/updates/warn-about-timeshift"
     value: "false"
     state: present
@@ -104,7 +104,7 @@
   loop: "{{ real_users }}"
   when: "ansible_distribution == 'Linux Mint'"
 - name: Remove mintupdate welcome page
-  community.general.dconf:
+  dconf:
     key: "/com/linuxmint/updates/show-welcome-page"
     value: "false"
     state: present
