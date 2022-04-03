@@ -12,7 +12,7 @@ jobs:
     name: Update Ubuntu ISO file name
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
           sudo apt-get install -q -y jq
@@ -31,7 +31,7 @@ jobs:
           echo "::set-output name=iso_file::$ISO_NAME"
           echo "::set-output name=mirror_url::$MIRROR_URL"
       - name: Open a pull request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           commit-message: >-
             Update to Ubuntu ${{ steps.iso.outputs.version }}

@@ -10,25 +10,28 @@ jobs:
     name: Run Ansible lint tests
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
       - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.x
       - name: Install dependencies
         run: |
-          pip3 install ansible ansible-lint
+          pip3 install ansible ansible-lint yamllint
       - name: Run ansible-lint
         run: |
-          ansible-lint -R -r lintrules/ansible local.yml oem.yml
+          ansible-lint -R -r lintrules/ansible
+      - name: Run actions yamllint
+        run: |
+          yamllint .github/workflows/*yml
   Packer:
     name: Run Packer lint tests
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.x
       - name: Install dependencies
@@ -37,27 +40,36 @@ jobs:
       - name: Run jsonlint
         run: |
           jsonlint packer/*json
-      - name: Fetch and unzip packer nightly
+      - name: Install Hashicorp repo
+        run: >
+          wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor |
+          sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg &&
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg]
+          https://apt.releases.hashicorp.com $(lsb_release -cs) main" |
+          sudo tee /etc/apt/sources.list.d/hashicorp.list
+      - name: Install Packer
         run: |
-          wget -nv -O $HOME/packer.zip https://github.com/hashicorp/packer/releases/download/nightly/packer_linux_amd64.zip
-          unzip -d $HOME/packer $HOME/packer.zip
+          sudo apt-get update
+          sudo apt-get install -y -qq packer
       - name: Packer validate
         run: |
-          $HOME/packer/packer validate packer/ubuntu-build.json
-          $HOME/packer/packer validate packer/mint-build.json
-          $HOME/packer/packer validate -var-file=packer/beta-vars.json packer/mint-build.json
+          packer validate packer/ubuntu-build.json
+          packer validate packer/mint-build.json
+          # Allow beta/test builds to fail validation
+          packer validate -var-file=packer/beta-vars.json packer/mint-build.json || true
   Python:
     name: Run Python lint tests
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.x
       - name: Install Ubuntu dependencies
         run: |
+          sudo apt-get update
           sudo apt-get -q install python3-gi-cairo gir1.2-gtk-3.0 libgirepository1.0-dev gir1.2-vte-2.91
       - name: Install dependencies
         run: |
@@ -82,43 +94,21 @@ jobs:
       - name: Run Shellcheck
         run: |
           shellcheck --shell=bash scripts/oem-build roles/user/files/csvmprofile
-  YAML:
-    name: Run YAML lint tests
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.x
-      - name: Install dependencies
-        run: |
-          pip3 install yamllint
-      - name: Run actions yamllint
-        run: |
-          yamllint .github/workflows/*yml
-      - name: Run top-level yamllint
-        run: |
-          yamllint *yml
-      - name: Run role-level yamllint
-        run: |
-          yamllint roles/*/*/*yml
   Hashes:
     name: Validate file hashes
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.x
       - name: Install dependencies
         run: |
           pip3 install aiohttp jinja2 pyyaml
       - name: Configure download cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/hashlint
           key: hashlint-cache-${{ github.sha }}

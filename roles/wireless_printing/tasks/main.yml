@@ -1,13 +1,13 @@
 ---
 # tasks file for wireless-printing
 - name: Install printer packages
-  apt:
+  ansible.builtin.apt:
     name: '{{ wireless_printing_packages }}'
     state: latest
 # The service must be running for lpadmin commands to work
 # and the server must be working to print
 - name: Ensure CUPS is started
-  service:
+  ansible.builtin.service:
     name: cups
     enabled: yes
     state: started

@@ -1,21 +1,22 @@
 ---
 # tasks file for Finch
 - name: Create Finch directory
-  file:
+  ansible.builtin.file:
     path: '{{ finch.install_path }}'
     state: directory
     owner: root
     group: root
     mode: "0755"
 - name: Fetch Finch zip
-  get_url:
+  ansible.builtin.get_url:
     url: '{{ finch.url }}'
     dest: '{{ finch.zip }}'
     checksum: 'sha1:{{ finch.hash }}'
     force: yes
+    mode: "0644"
   register: download_finch
 - name: Unpack Finch zip
-  unarchive:
+  ansible.builtin.unarchive:
     dest: '{{ finch.install_path }}'
     src: '{{ finch.zip }}'
     owner: root
@@ -26,32 +27,32 @@
 # Recent versions of the Finch zip file have mistakenly included the
 # __pycache__ directory
 - name: Delete Finch pycache
-  file:
+  ansible.builtin.file:
     path: '{{ finch.extract_base }}/__pycache__'
     state: absent
 - name: Install Finch udev rule
-  copy:
+  ansible.builtin.copy:
     src: 55-finch.rules
     dest: '/etc/udev/rules.d/'
     owner: root
     group: root
     mode: "0644"
 - name: Install Finch extra - dance2.py
-  copy:
+  ansible.builtin.copy:
     src: dance2.py
     dest: '{{ finch.extract_base }}'
     owner: root
     group: root
     mode: "0644"
 - name: Install Finch extra - maze.py
-  copy:
+  ansible.builtin.copy:
     src: maze.py
     dest: '{{ finch.extract_base }}'
     owner: root
     group: root
     mode: "0644"
 - name: Create Finch profile entries
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: '{{ global_profile_path }}'
     marker: "## {mark} Finch profile entries ##"
     block: |

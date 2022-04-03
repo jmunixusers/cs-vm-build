@@ -2,12 +2,12 @@
 
 # Tasks for the oem role to run at the beginning of playbook execution
 - name: Remove unneeded stock packages
-  apt:
+  ansible.builtin.apt:
     name: '{{ packages_to_remove }}'
     state: absent
     purge: yes
 - name: Remove i386 architecture
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /var/lib/dpkg/arch
     state: absent
     line: 'i386'

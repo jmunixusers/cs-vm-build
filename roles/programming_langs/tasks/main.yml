@@ -2,16 +2,16 @@
 # tasks file for programming-langs
 
 - name: Install Ruby packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ ruby_packages }}"
     state: latest
 
 - name: Install Haskell packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ haskell_packages }}"
     state: latest
 
 - name: Install Prolog packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ prolog_packages }}"
     state: latest

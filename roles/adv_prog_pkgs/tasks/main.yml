@@ -1,16 +1,16 @@
 ---
 # tasks file for adv-prog-pkgs
 - name: Install advanced language packages
-  apt:
+  ansible.builtin.apt:
     name: '{{ adv_prog_pkgs_adv_lang }}'
     state: latest
 
 - name: Install source control packages
-  apt:
+  ansible.builtin.apt:
     name: '{{ adv_prog_pkgs_source_control }}'
     state: latest
 
 - name: Install code editor packages
-  apt:
+  ansible.builtin.apt:
     name: '{{ adv_prog_pkgs_code_editor }}'
     state: latest

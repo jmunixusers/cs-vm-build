@@ -1,7 +1,7 @@
 ---
 # tasks file for y86
 - name: Creating y86 directories
-  file:
+  ansible.builtin.file:
     path: '{{ item }}'
     state: directory
     owner: root
@@ -12,7 +12,7 @@
     - '{{ y86_man_dir }}'
     - '{{ y86_man1_dir }}'
 - name: Installing y86 binary tools
-  copy:
+  ansible.builtin.copy:
     src: '{{ item }}-{{ ansible_architecture }}'
     dest: '{{ y86_bin_dir }}/{{ item }}'
     owner: root
@@ -20,7 +20,7 @@
     mode: "0755"
   loop: '{{ y86_binaries }}'
 - name: Installing y86ref manpage
-  copy:
+  ansible.builtin.copy:
     src: '{{ item }}'
     dest: '{{ y86_man1_dir }}'
     owner: root
@@ -28,14 +28,14 @@
     mode: "0644"
   loop: '{{ y86_manpages }}'
 - name: Updating PATH to include y86 binaries
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: '{{ global_profile_path }}'
     line: "export PATH={{ y86_bin_dir }}:$PATH"
     state: present
   notify:
     - Suggest restart
 - name: Updating MANPATH to include y86 man pages
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: '{{ global_profile_path }}'
     line: "export MANPATH={{ y86_man_dir }}:$MANPATH"
     state: present

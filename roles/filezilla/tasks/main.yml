@@ -2,11 +2,11 @@
 # tasks file for filezilla
 
 - name: Install Filezilla package
-  apt:
+  ansible.builtin.apt:
     name: filezilla
     state: latest
 - name: Create Filezilla configuration directory
-  file:
+  ansible.builtin.file:
     path: "{{ item.homedir }}/{{ filezilla_config_dir }}"
     state: directory
     owner: '{{ item.uid }}'
@@ -14,7 +14,7 @@
     mode: "0750"
   loop: "{{ real_users }}"
 - name: Copy template default Filezilla configuration
-  template:
+  ansible.builtin.template:
     src: fzdefaults.xml.j2
     dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/fzdefaults.xml"
     owner: '{{ item.uid }}'
@@ -22,7 +22,7 @@
     mode: "0640"
   loop: "{{ real_users }}"
 - name: Attempt to copy Filezilla filters
-  copy:
+  ansible.builtin.copy:
     src: filters.xml
     dest: "{{ item.homedir }}/{{ filezilla_config_dir }}/filters.xml"
     owner: "{{ item.uid }}"
