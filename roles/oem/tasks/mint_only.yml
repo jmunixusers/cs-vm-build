@@ -35,3 +35,12 @@
     src: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
     dest: "{{ skel_desktop_file_path }}/jmucs_config.desktop"
     mode: "0755"
+- name: Copy dconf config file
+  ansible.builtin.copy:
+    src: csconfig-vmonly
+    dest: /etc/dconf/db/local.d/csconfig-mintonly
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Update dconf database

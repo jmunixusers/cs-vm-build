@@ -32,6 +32,11 @@
     mode: "0644"
   notify:
     - Update dconf database
+- name: Create skeleton config dir
+  ansible.builtin.file:
+    path: "{{ skel_path }}/.config/"
+    mode: "0755"
+    state: directory
 - name: Hide the GNOME welcome
   ansible.builtin.copy:
     dest: "{{ skel_path }}/.config/gnome-initial-setup-done"

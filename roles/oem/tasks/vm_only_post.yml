@@ -3,16 +3,6 @@
 # Tasks to only be run on virtualized guest OSes at the end of playbook
 # execution
 
-- name: Copy dconf config file
-  ansible.builtin.copy:
-    src: csconfig-vmonly
-    dest: /etc/dconf/db/local.d/csconfig-vmonly
-    owner: root
-    group: root
-    mode: "0644"
-  notify:
-    - Update dconf database
-
 - name: Install spice agent
   ansible.builtin.apt:
     name:
