@@ -5,27 +5,10 @@
     name: '{{ basic_prog_pkgs_intro_development }}'
     state: latest
 
-- name: Copy idlerc prefs
-  ansible.builtin.copy:
-    src: .idlerc
-    dest: '{{ item.homedir }}'
-    owner: '{{ item.uid }}'
-    group: '{{ item.gid }}'
-    directory_mode: "0750"
-    mode: "0640"
-  loop: "{{ real_users }}"
-- name: Copy mimeapps Idle pref
-  ansible.builtin.copy:
-    src: mimeapps.list
-    dest: '{{ item.homedir }}/.config/'
-    owner: '{{ item.uid }}'
-    group: '{{ item.gid }}'
-    mode: "0640"
-    force: no
-  loop: "{{ real_users }}"
-- name: Set Idle pref in existing mimeapps
-  ansible.builtin.lineinfile:
-    path: '{{ item.homedir }}/.config/mimeapps.list'
-    regexp: '^text/x-python='
-    line: 'text/x-python=idle-python3.6.desktop;gedit.desktop;pluma.desktop'
+- name: Install intro pip packages
+  ansible.builtin.pip:
+    name: '{{ basic_prog_pkgs_pip }}'
+    state: present
+  become: yes
+  become_user: "{{ item.user }}"
   loop: "{{ real_users }}"
