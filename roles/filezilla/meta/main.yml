@@ -4,8 +4,7 @@ galaxy_info:
   description: Installs Filezilla
   company: James Madison University
   license: MIT
-  min_ansible_version: 2.1
-  github_branch: main
+  min_ansible_version: '2.9'
   platforms:
     - name: Ubuntu
       versions:
