@@ -8,7 +8,8 @@
   ansible.builtin.stat:
     path: '{{ eclipse.zip }}'
   register: st
-- block:
+- name: Download and unpack Eclipse
+  block:
     - name: Fetch Eclipse bundle
       ansible.builtin.get_url:
         url: '{{ eclipse.url }}'
