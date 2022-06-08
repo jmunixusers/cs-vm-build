@@ -29,7 +29,7 @@ from mintreport import InfoReport, InfoReportAction
 
 # Since we don't have much choice in the structure of this class since we're
 # specializing a required class, we need to ignore related pylint errors.
-# pylint: disable=no-self-use,unused-argument
+# pylint: disable=unused-argument
 class Report(InfoReport):
     """
     Override of mintreport's InfoReport
