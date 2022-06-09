@@ -12,7 +12,8 @@
   ansible.builtin.stat:
     path: '{{ jgrasp.install_path }}/internal_bin/sys_run'
   register: wedge
-- block:
+- name: Download and unpack jGRASP
+  block:
     - name: Fetch jGRASP zip
       ansible.builtin.get_url:
         url: '{{ jgrasp.url }}'
@@ -32,7 +33,8 @@
         group: root
         mode: "0755"
   when: zip.stat.checksum|default("") != jgrasp.hash
-- block:
+- name: Configure and build jGRASP wedge
+  block:
     - name: Configure jGRASP wedge build
       command:
         cmd: './configure'
