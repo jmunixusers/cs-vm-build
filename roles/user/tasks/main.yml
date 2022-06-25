@@ -21,7 +21,7 @@
   ansible.builtin.set_fact:
     real_users: >-
       {{
-        (real_users|default([])) +
+        (real_users | default([])) +
           [
             {
               'user': item.key,
@@ -31,7 +31,7 @@
             }
           ]
       }}
-  loop: "{{ getent_passwd|dict2items }}"
+  loop: "{{ getent_passwd | dict2items }}"
   when:
     # Ideally, this would pull from useradd.conf to get the lower bound for
     # regular user UIDs; however, 1000 is relatively universal
