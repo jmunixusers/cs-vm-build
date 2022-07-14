@@ -36,12 +36,12 @@
 - name: Configure and build jGRASP wedge
   block:
     - name: Configure jGRASP wedge build
-      command:
+      ansible.builtin.command:
         cmd: './configure'
         creates: '{{ jgrasp.install_path }}/src/Make.sh'
         chdir: '{{ jgrasp.install_path }}/src/'
     - name: Make and install jGRASP wedge
-      command:
+      ansible.builtin.command:
         cmd: './Make.sh'
         creates: '{{ jgrasp.install_path }}/internal_bin/sys_run'
         chdir: '{{ jgrasp.install_path }}/src'
