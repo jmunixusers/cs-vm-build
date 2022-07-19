@@ -69,11 +69,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install pyyaml pygobject pylint click PyGithub jinja2 aiohttp
-      # We cannot just do roles/*/*/*py because we do not want to lint the
-      # finch scripts which we cannot change
       - name: Run pylint
         run: |
-          pylint roles/common/*/*.py scripts/*.py
+          pylint roles/*/*/*.py scripts/*.py
   Shell:
     name: Run Shell linting
     runs-on: ubuntu-20.04
