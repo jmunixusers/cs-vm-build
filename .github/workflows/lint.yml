@@ -30,16 +30,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-      - name: Install dependencies
-        run: |
-          pip3 install demjson3
-      - name: Run jsonlint
-        run: |
-          jsonlint packer/*json
       - name: Install Hashicorp repo
         run: >
           wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor |
@@ -53,10 +43,15 @@ jobs:
           sudo apt-get install -y -qq packer
       - name: Packer validate
         run: |
-          packer validate packer/ubuntu-build.json
-          packer validate packer/mint-build.json
           # Allow beta/test builds to fail validation
-          packer validate -var-file=packer/beta-vars.json packer/mint-build.json || true
+          packer validate -var-file=mint-beta.pkrvars.hcl . || true
+          # This runs last to ensure it's exit status is captured
+          packer validate .
+        working-directory: packer
+      - name: Check Packer HCL formatting
+        run: |
+          packer fmt -diff -check .
+        working-directory: packer
   Python:
     name: Run Python lint tests
     runs-on: ubuntu-20.04

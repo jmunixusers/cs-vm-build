@@ -143,10 +143,10 @@ Linux and Windows hosts, but feedback on other platforms is always welcome.
 
 Due to difficulties with Packer packaging, this VM is frequently built with the
 latest version of Packer available directly from Hashicorp. Check the
-`mint-build.json` file for the current minimum version required.
+`main.pkr.hcl` file for the current minimum version required.
 
 Once the prerequisites are installed, change into the `cs-vm-build/packer`
-directory and execute `packer build mint-build.json`. This will take a
+directory and execute `packer build -only "*.mint" .`. This will take a
 considerable amount of time, depending on host resources available, but should
 output progress indicators along the way.
 
@@ -164,15 +164,31 @@ specify `dsound` for Windows, `coreaudio` for Mac.
 ### Building beta images
 
 A large number of variables can be overridden at once by passing a `var-file`
-to Packer. An example of this is provided as `beta-vars.json`, and can be used
+to Packer. An example of this is provided as `mint-beta.pkrvars.hcl`, and can be used
 like this:
 
-`packer build -var-file=beta-vars.json mint-build.json`
+`packer build -var-file=mint-beta.pkrvars.hcl -only "*.mint" .`
 
 Packer allows further overrides, with precedence given to the last option in the
 command. For example, to build a beta image on Windows, use this command:
 
-`packer build -var-file=beta-vars.json -var 'audio=dsound' mint-build.json`
+`packer build -var-file=mint-beta.pkrvars.hcl -var 'audio=dsound' -only "*.mint" .`
+
+### Building Ubuntu images
+
+Native support is available for creating an Ubuntu variant of the image (and in
+fact, all previous commands have specifically excluded Ubuntu image builds). By
+default, the `packer` configuration will build both a Mint and Ubuntu VM. Try it
+with:
+
+`packer build .`
+
+Much as with the previous commands, you can build only an ubuntu-based image by
+running:
+
+`packer build -only "*.ubuntu" .`
+
+Support for building beta variants of Ubuntu images is not currently supported.
 
 ## Contributing
 
