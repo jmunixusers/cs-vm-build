@@ -4,7 +4,7 @@ variable "mint_version" {
     beta    = bool
   })
   default = {
-    version = "20.3"
+    version = "21"
     beta    = false
   }
 }
@@ -55,7 +55,7 @@ variable "headless" {
 
 variable "semester" {
   type    = string
-  default = "Sp22"
+  default = "Fa22"
 }
 
 variable "ssh_pass" {
