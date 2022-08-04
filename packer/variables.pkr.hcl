@@ -1,11 +1,9 @@
 variable "mint_version" {
   type = object({
-    name    = string
     version = string
     beta    = bool
   })
   default = {
-    name    = "Una"
     version = "20.3"
     beta    = false
   }
@@ -13,12 +11,10 @@ variable "mint_version" {
 
 variable "ubuntu_version" {
   type = object({
-    name          = string
     version       = string
     minor_version = string
   })
   default = {
-    name          = "jammy"
     version       = "22.04"
     minor_version = ""
   }
@@ -80,7 +76,7 @@ variable "vm_name" {
 locals {
   build_id = "${legacy_isotime("2006-01-02")}"
   ubuntu_info = {
-    mirror_url = "${var.mirror.base}/${var.mirror.ubuntu_path}/${var.ubuntu_version.name}"
+    mirror_url = "${var.mirror.base}/${var.mirror.ubuntu_path}/${var.ubuntu_version.version}"
     iso_file   = "ubuntu-${var.ubuntu_version.version}${var.ubuntu_version.minor_version}-desktop-amd64.iso"
   }
   mint_info = {
