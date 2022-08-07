@@ -21,29 +21,17 @@ using these tasks and the VM is available
 * VM management script
 * JMU wireless printing
 
-### CS101
-* Eclipse (with checkstyle plugin)
-* Finch robot
+### CS101 / CS149
 * Mint packages (basic-prog-pkgs role)
-  * artha
-  * bless
-  * chromium-browser
-  * geany
-  * idle
   * libreoffice
   * logisim
   * meld
-  * sqlitebrowser
+  * sqlite / sqlitebrowser
   * thonny
-  * wireshark
-
-### CS149
-* Eclipse (with checkstyle plugin)
-* jGRASP
-* Visual Studio Code (with Java and checkstyle plugins)
 
 ### CS159
 * Eclipse (with checkstyle plugin)
+* Visual Studio Code (with Java and checkstyle plugins)
 
 ### CS261
 * Mint packages (adv-prog-pkgs role)

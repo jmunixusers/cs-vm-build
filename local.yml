@@ -7,11 +7,9 @@
     - { role: user, tags: always }
     - { role: wireless_printing, tags: always }
     - { role: filezilla, tags: always }
-    - { role: basic_prog_pkgs, tags: ["cs101"] }
+    - { role: basic_prog_pkgs, tags: ["cs101", "cs149"] }
     - { role: adv_prog_pkgs, tags: ["cs261", "cs361", "cs432"] }
-    - { role: eclipse, tags: ["cs101", "cs149", "cs159"] }
-    - { role: jgrasp, tags: ["cs149"] }
-    - { role: finch, tags: ["cs101"] }
+    - { role: eclipse, tags: ["cs159"] }
     - { role: y86, tags: ["cs261", "cs432"] }
     - { role: programming_langs, tags: ["cs430"] }
-    - { role: vscode, tags: ["cs149"] }
+    - { role: vscode, tags: ["cs159"] }

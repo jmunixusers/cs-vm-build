@@ -23,14 +23,6 @@ import yaml
 
 CACHE_FILE = Path.home() / ".cache" / "hashlint" / "cache.json"
 URLS = {
-    "roles/jgrasp/vars/main.yml": {
-        "hash": "jgrasp.hash",
-        "urls": ["jgrasp.url"],
-    },
-    "roles/finch/vars/main.yml": {
-        "hash": "finch.hash",
-        "urls": ["finch.url"],
-    },
     "roles/eclipse/vars/main.yml": {
         "hash": "eclipse.hash",
         "urls": ["eclipse.url", "eclipse.url_backup"],
