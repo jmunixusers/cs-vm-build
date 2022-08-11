@@ -15,7 +15,7 @@ variable "ubuntu_version" {
     minor_version = string
   })
   default = {
-    version       = "22.04"
+    version       = "22.04.1"
     minor_version = ""
   }
 }
