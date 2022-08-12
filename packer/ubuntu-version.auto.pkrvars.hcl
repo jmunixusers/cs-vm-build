@@ -1,4 +1,4 @@
 ubuntu_version = {
-  version = "jammy"
+  version         = "jammy"
   patched_version = "22.04.1"
 }

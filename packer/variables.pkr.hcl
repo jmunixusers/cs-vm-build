@@ -11,7 +11,7 @@ variable "mint_version" {
 
 variable "ubuntu_version" {
   type = object({
-    version = string
+    version         = string
     patched_version = string
   })
   # The default value for this is stored in ubuntu-version.auto.pkrvars.hcl, which will be
