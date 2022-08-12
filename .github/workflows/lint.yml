@@ -8,7 +8,7 @@ on:
 jobs:
   Ansible:
     name: Run Ansible lint tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.x
@@ -26,7 +26,7 @@ jobs:
           yamllint .github/workflows/*yml
   Packer:
     name: Run Packer lint tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
         working-directory: packer
   Python:
     name: Run Python lint tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -74,7 +74,7 @@ jobs:
           pylint roles/*/*/*.py scripts/*.py
   Shell:
     name: Run Shell linting
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -89,7 +89,7 @@ jobs:
           shellcheck --shell=bash scripts/oem-build roles/user/files/csvmprofile
   Hashes:
     name: Validate file hashes
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
