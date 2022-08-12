@@ -5,7 +5,7 @@ ISO_NAME="$(curl -sL "$MIRROR_URL/SHA256SUMS" | grep desktop | head -n 1 | cut -
 VERSION="$(echo "$ISO_NAME" | cut -d'-' -f 2)"
 cat << EOF > packer/ubuntu-version.auto.pkrvars.hcl
 ubuntu_version = {
-  version = "$UBUNTU_RELEASE"
+  version         = "$UBUNTU_RELEASE"
   patched_version = "$VERSION"
 }
 EOF
