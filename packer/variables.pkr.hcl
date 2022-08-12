@@ -11,13 +11,11 @@ variable "mint_version" {
 
 variable "ubuntu_version" {
   type = object({
-    version       = string
-    minor_version = string
+    version = string
+    patched_version = string
   })
-  default = {
-    version       = "22.04"
-    minor_version = ""
-  }
+  # The default value for this is stored in ubuntu-version.auto.pkrvars.hcl, which will be
+  # updated by the GitHub Actions workflow that automatically updates the Ubuntu version.
 }
 
 variable "mirror" {
@@ -77,7 +75,7 @@ locals {
   build_id = "${legacy_isotime("2006-01-02")}"
   ubuntu_info = {
     mirror_url = "${var.mirror.base}/${var.mirror.ubuntu_path}/${var.ubuntu_version.version}"
-    iso_file   = "ubuntu-${var.ubuntu_version.version}${var.ubuntu_version.minor_version}-desktop-amd64.iso"
+    iso_file   = "ubuntu-${var.ubuntu_version.patched_version}-desktop-amd64.iso"
   }
   mint_info = {
     mirror_url = "${var.mirror.base}/${var.mirror.mint_path}/${var.mint_version.beta ? "testing" : "stable/${var.mint_version.version}"}"

@@ -5,7 +5,7 @@ on:
     - cron: '0 9 * * *'
   workflow_dispatch:
 env:
-  UBUNTU_RELEASE: focal
+  UBUNTU_RELEASE: jammy
 jobs:
   update-ubuntu:
     if: github.repository == 'jmunixusers/cs-vm-build'
@@ -18,18 +18,7 @@ jobs:
           sudo apt-get install -q -y jq
       - name: Set latest ISO name
         id: iso
-        run: |
-          MIRROR_URL="https://mirror.cs.jmu.edu/pub/ubuntu-iso/$UBUNTU_RELEASE"
-          ISO_NAME="$(curl -sL "$MIRROR_URL/SHA256SUMS" | grep desktop | head -n 1 | cut -d'*' -f 2)"
-          VERSION="$(echo "$ISO_NAME" | cut -d'-' -f 2)"
-          jq \
-            --arg iso "$ISO_NAME" \
-            --arg mirror "$MIRROR_URL" \
-            '.variables.iso_file = $iso | .variables.mirror_url = $mirror' packer/ubuntu-build.json > packer/ubuntu-build-update.json
-          mv packer/ubuntu-build-update.json packer/ubuntu-build.json
-          echo "::set-output name=version::$VERSION"
-          echo "::set-output name=iso_file::$ISO_NAME"
-          echo "::set-output name=mirror_url::$MIRROR_URL"
+        run: ./scripts/update-ubuntu-release
       - name: Open a pull request
         uses: peter-evans/create-pull-request@v4
         with:
