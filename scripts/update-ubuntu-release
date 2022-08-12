@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+MIRROR_URL="https://mirror.cs.jmu.edu/pub/ubuntu-iso/$UBUNTU_RELEASE"
+ISO_NAME="$(curl -sL "$MIRROR_URL/SHA256SUMS" | grep desktop | head -n 1 | cut -d'*' -f 2)"
+VERSION="$(echo "$ISO_NAME" | cut -d'-' -f 2)"
+cat << EOF > packer/ubuntu-version.auto.pkrvars.hcl
+ubuntu_version = {
+  version = "$UBUNTU_RELEASE"
+  patched_version = "$VERSION"
+}
+EOF
+echo "::set-output name=version::$VERSION"
+echo "::set-output name=iso_file::$ISO_NAME"
+echo "::set-output name=mirror_url::$MIRROR_URL"
