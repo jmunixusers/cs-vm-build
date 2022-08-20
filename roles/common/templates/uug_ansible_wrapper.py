@@ -7,16 +7,22 @@ in a configuration file (~/.config/vm_config). The branch to pull and the
 URL to pull from can be changed in the program's Settings.
 """
 
+# pylint: disable=too-many-lines
+
 import ast
 import functools
 import logging
 import os
+import pathlib
 import re
 import subprocess
+import urllib.error
 import urllib.request
+import webbrowser
 from tempfile import TemporaryDirectory
 
-import json
+import yaml
+from xdg import BaseDirectory
 
 import gi
 
@@ -43,7 +49,7 @@ COURSES = {
     "CS 430": "cs430",
     "CS 432": "cs432",
 }
-USER_CONFIG_PATH = os.path.join(os.environ["HOME"], ".config", "vm_config")
+EXPERIMENTAL_COURSES = {}
 USER_CONFIG = {
     "git_branch": None,
     "git_url": DEFAULT_GIT_REMOTE,
@@ -51,9 +57,12 @@ USER_CONFIG = {
     "roles_all_time": ["common"],
     # Roles to be used for this particular run
     "roles_this_run": ["common"],
+    # Allow experimental courses to be shown
+    "allow_experimental": False,
 }
+APP_NAME = "cs-vm-build"
 NAME = "JMU CS VM Configuration"
-VERSION = "Spring 2019"
+VERSION = "2022.08"
 
 
 def main():
@@ -63,7 +72,9 @@ def main():
 
     # Configure logging. Log to a file and create it if it doesn't exist. If
     # it cannot be opened, then fall back to logging on the console
-    user_log_file = os.path.join(os.environ["HOME"], ".cache", "uug_ansible_wrapper.log")
+    user_log_file = (
+        pathlib.Path(BaseDirectory.save_cache_path(APP_NAME)) / "ansible-wrapper.log"
+    )
     try:
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s: %(message)s",
@@ -147,26 +158,9 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         contents.pack_start(label, False, False, 0)
 
-        courses_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-
-        # This button doesn't do anything. Common is always run
-        refresh = Gtk.CheckButton(label="Base configuration")
-        refresh.set_tooltip_text("This option is required")
-        refresh.set_active(True)
-        refresh.set_sensitive(False)
-        courses_box.pack_start(refresh, False, False, 0)
-
-        # Add a checkbox for every course; sorting is necessary because
-        # dictionaries do not guarantee that order is preserved
-        for (course, tag) in sorted(COURSES.items()):
-            checkbox = Gtk.CheckButton(label=course)
-            checkbox.set_tooltip_text(f"Configure for {course}")
-            courses_box.pack_start(checkbox, False, False, 0)
-            if tag in USER_CONFIG["roles_this_run"]:
-                checkbox.set_active(True)
-            checkbox.connect("toggled", self.on_course_toggled, tag)
-            self.checkboxes.append(checkbox)
-        contents.pack_start(courses_box, False, False, 0)
+        self.courses_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.add_all_courses()
+        contents.pack_start(self.courses_box, False, False, 0)
 
         # Add run and cancel buttons
         button_box = Gtk.Box(spacing=6)
@@ -190,6 +184,42 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.terminal.connect("child-exited", self.sub_command_exited)
         contents.pack_end(self.terminal, True, True, 0)
         self.vbox.pack_end(contents, True, True, 0)
+
+    def add_all_courses(self):
+        """
+        Add all courses the window through the checkbox list.
+        """
+        # Remove the existing elements
+        for child in self.courses_box.get_children():
+            child.destroy()
+        self.checkboxes.clear()
+
+        # This button doesn't do anything. Common is always run
+        refresh = Gtk.CheckButton(label="Base configuration")
+        refresh.set_tooltip_text("This option is required")
+        refresh.set_active(True)
+        refresh.set_sensitive(False)
+        self.courses_box.pack_start(refresh, False, False, 0)
+
+        def add_course(course, tag, experimental=False):
+            if experimental and not USER_CONFIG["allow_experimental"]:
+                return
+            checkbox = Gtk.CheckButton(label=course)
+            checkbox.set_tooltip_text(f"Configure for {course}")
+            self.courses_box.pack_start(checkbox, False, False, 0)
+            if tag in USER_CONFIG["roles_this_run"]:
+                checkbox.set_active(True)
+            checkbox.connect("toggled", self.on_course_toggled, tag)
+            self.checkboxes.append(checkbox)
+
+        # Add a checkbox for every course; sorting is necessary because
+        # dictionaries do not guarantee that order is preserved
+        for (course, tag) in sorted(COURSES.items()):
+            add_course(course, tag, experimental=False)
+        if USER_CONFIG["allow_experimental"]:
+            for (course, tag) in sorted(EXPERIMENTAL_COURSES.items()):
+                add_course(f"{course} ⚠️Experimental⚠️", tag, experimental=True)
+        self.courses_box.show_all()
 
     @classmethod
     def on_course_toggled(cls, button, name):
@@ -238,6 +268,14 @@ class AnsibleWrapperWindow(Gtk.Window):
         about.connect("activate", self.show_about_dialog)
         help_menu.append(about)
 
+        # Add a documentation link to the help menu
+        docs = Gtk.MenuItem(label="Documentation")
+        docs.connect(
+            "activate",
+            lambda _: webbrowser.open("http://www.jmunixusers.org/presentations/vm/"),
+        )
+        help_menu.append(docs)
+
         menu_bar.append(help_item)
 
         self.vbox.pack_start(menu_bar, False, False, 0)
@@ -247,47 +285,10 @@ class AnsibleWrapperWindow(Gtk.Window):
         Displays a dialog for changing the program's settings.
         """
 
-        dialog = Gtk.Dialog(title="Settings", parent=self, modal=True)
-        grid = Gtk.Grid()
-        branch_label = Gtk.Label(label="Branch:")
-        branch_label.set_justify(Gtk.Justification.RIGHT)
-        branch_label.set_halign(Gtk.Align.END)
-
-        url_label = Gtk.Label(label="URL:")
-        url_label.set_justify(Gtk.Justification.RIGHT)
-        url_label.set_halign(Gtk.Align.END)
-
-        branch_field = Gtk.Entry()
-        url_field = Gtk.Entry()
-        branch_field.set_text(USER_CONFIG["git_branch"])
-        url_field.set_text(USER_CONFIG["git_url"])
-        branch_field.set_width_chars(40)
-        url_field.set_width_chars(40)
-
-        grid.add(branch_label)
-        grid.attach_next_to(branch_field, branch_label, Gtk.PositionType.RIGHT, 1, 1)
-        grid.attach_next_to(url_label, branch_label, Gtk.PositionType.BOTTOM, 1, 1)
-        grid.attach_next_to(url_field, url_label, Gtk.PositionType.RIGHT, 1, 1)
-        dialog.get_content_area().pack_end(grid, False, False, 0)
-        ok_button = dialog.add_button(Gtk.STOCK_OK, Gtk.ResponseType.OK)
-        dialog.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
-
-        def click_ok(_):
-            ok_button.clicked()
-
-        branch_field.connect("activate", click_ok)
-        url_field.connect("activate", click_ok)
-        dialog.set_default_size(400, 100)
-        grid.set_row_spacing(6)
-        grid.set_column_spacing(6)
-        grid.set_border_width(6)
-        grid.show_all()
-
+        dialog = SettingsDialog(parent=self)
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            USER_CONFIG["git_branch"] = branch_field.get_text()
-            USER_CONFIG["git_url"] = url_field.get_text()
-            write_user_config()
+            self.add_all_courses()
         dialog.destroy()
 
     def show_about_dialog(self, _):
@@ -299,14 +300,14 @@ class AnsibleWrapperWindow(Gtk.Window):
         about_dialog.set_logo_icon_name("{{ tux_icon_name }}")
         about_dialog.set_transient_for(self)
         about_dialog.set_program_name(NAME)
-        about_dialog.set_copyright("Copyright \xa9 2018 JMU Unix Users Group")
+        about_dialog.set_copyright("Copyright \xa9 2018-2022 JMU Unix Users Group")
         about_dialog.set_comments(
             "A tool for configuring virtual machines for use in the "
             "JMU Department of Computer Science, "
             "maintained by the Unix Users Group"
         )
         about_dialog.set_authors(["JMU Unix Users Group"])
-        about_dialog.set_website("https://github.com/jmunixusers/cs-vm-build")
+        about_dialog.set_website("http://github.com/jmunixusers/cs-vm-build")
         about_dialog.set_website_label("Project GitHub page")
         about_dialog.set_version(VERSION)
         about_dialog.set_license_type(Gtk.License.MIT_X11)
@@ -324,8 +325,8 @@ class AnsibleWrapperWindow(Gtk.Window):
         self.cancel_button.set_sensitive(True)
         self.run_button.set_sensitive(True)
         if exit_status == 0:
-            success_msg = (
-                f"Your machine has been configured for {', '.join(USER_CONFIG['roles_this_run'])}"
+            success_msg = "Your machine has been configured for " + ", ".join(
+                sorted(USER_CONFIG["roles_this_run"])
             )
             show_dialog(
                 self,
@@ -346,7 +347,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         # hopefully can remove the 32xxx values at some point in the future
         elif exit_status in (126, 32256):
             pkexec_err_msg = (
-                "Unable to authenticate due to the dialog being closed. Please try again."
+                "Authentication failed because the dialog was closed. Please try again."
             )
             show_dialog(
                 self,
@@ -485,6 +486,147 @@ class AnsibleWrapperWindow(Gtk.Window):
                 self.sub_command_exited(None, 1)
 
 
+class SettingsDialog(Gtk.Dialog):
+    """
+    Settings dialog window for the configuration tool.
+    """
+
+    def __init__(self, parent):
+        Gtk.Dialog.__init__(self, "Settings", parent, 0)
+        self.add_buttons(
+            Gtk.STOCK_CANCEL,
+            Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OK,
+            Gtk.ResponseType.OK,
+        )
+
+        self._settings = {}
+        self.set_default_size(400, 100)
+
+        # Use a grid so that the labels and entries can be aligned correctly.
+        grid = Gtk.Grid()
+        grid.set_row_spacing(6)
+        grid.set_column_spacing(6)
+        grid.set_border_width(6)
+
+        branch_label = self._create_label("Release track:")
+        url_label = self._create_label("Source URL:")
+        ignore_main_label = self._create_label("Development:")
+        experimental_label = self._create_label("Experimental:")
+
+        branch_entry = self._create_entry(USER_CONFIG["git_branch"])
+        url_entry = self._create_entry(USER_CONFIG["git_url"])
+        experimental_check = self._create_checkbox(
+            "Allow running unsupported/experimental courses",
+            USER_CONFIG["allow_experimental"],
+        )
+        ignore_main_check = self._create_checkbox(
+            "Allow running from development branch",
+            USER_CONFIG.get("ignore_main", False),
+        )
+
+        self._register_setting("git_branch", branch_entry)
+        self._register_setting("git_url", url_entry)
+        self._register_setting("allow_experimental", experimental_check)
+        self._register_setting("ignore_main", ignore_main_check)
+
+        self._add_row(grid, 0, branch_label, branch_entry)
+        self._add_row(grid, 1, url_label, url_entry)
+        self._add_row(grid, 2, ignore_main_label, ignore_main_check)
+        self._add_row(grid, 3, experimental_label, experimental_check)
+
+        self.get_content_area().pack_end(grid, False, False, 0)
+
+        grid.show_all()
+
+        def handle_response(_, response):
+            if response != Gtk.ResponseType.OK:
+                return
+
+            for key in self._settings:
+                USER_CONFIG[key] = self.get_setting(key)
+            write_user_config()
+
+        self.connect("response", handle_response)
+
+    @staticmethod
+    def _add_row(grid, row, label, widget):
+        """
+        Add a row to the list of settings widgets in the Dialog.
+        """
+        grid.attach(label, 0, row, 1, 1)
+        grid.attach(widget, 1, row, 1, 1)
+
+    def _register_setting(self, key, widget):
+        """
+        Registers a setting and its associated GTK widget. This allows it to
+        be retrieved by the settings key later.
+        """
+
+        self._settings[key] = widget
+
+    def get_setting(self, key):
+        """
+        Retrieves the value associated with a particular setting. This allows
+        for the caller to get the value the user chose.
+        """
+
+        widget = self._settings.get(key, None)
+        if widget is None:
+            return None
+
+        if isinstance(widget, Gtk.Entry):
+            # The docs say that the string returned from get_text() should not
+            # be freed, modified, nor stored. It is unclear if this is a
+            # relic from C++, but to be safe, we'll make a copy of the string
+            # and return that to the caller.
+            return str(widget.get_text())
+        if isinstance(widget, Gtk.CheckButton):
+            return widget.get_active()
+
+        # Add more widget types here as appropriate
+        return None
+
+    def get_all_settings(self):
+        """
+        Retrieves a mapping of all settings.
+        """
+        return {key: self.get_setting(key) for key in self._settings}
+
+    @staticmethod
+    def _create_label(text):
+        """
+        Helps with creating a GTK Label. Sets the text to the given text and then
+        right-justifies the text.
+        """
+
+        label = Gtk.Label(label=text)
+        label.set_justify(Gtk.Justification.RIGHT)
+        label.set_halign(Gtk.Align.END)
+        return label
+
+    @staticmethod
+    def _create_entry(text, width=40):
+        """
+        Creates a GTK Entry widget with the given width and default text.
+        """
+
+        entry = Gtk.Entry()
+        entry.set_text(text)
+        entry.set_width_chars(width)
+        return entry
+
+    @staticmethod
+    def _create_checkbox(text, checked):
+        """
+        Creates a GTK Check Button widget
+        """
+
+        checkbox = Gtk.CheckButton(label=text)
+        checkbox.set_active(checked)
+        return checkbox
+
+
 def on_dialog_close(action, _):
     """
     Destroys the dialog.
@@ -518,7 +660,7 @@ def show_dialog(parent, dialog_type, buttons_type, header, message):
     return response
 
 
-def parse_json_config(path, config):
+def parse_json_config(path: pathlib.Path, config):
     """
     Loads the data in the file at the provided path into a dictionary.
     :param path: The path to the JSON file
@@ -527,23 +669,41 @@ def parse_json_config(path, config):
 
     try:
         with open(path, "r", encoding="utf-8") as config_file:
-            config.update(json.load(config_file))
+            config.update(yaml.safe_load(config_file))
     except FileNotFoundError as fne:
         logging.info("User configuration file not present. Ignoring.", exc_info=fne)
-    except json.decoder.JSONDecodeError as jde:
+    except yaml.YAMLError as jde:
         logging.info("User configuration is invalid. Ignoring.", exc_info=jde)
 
 
-def write_json_config(path, config):
+def write_json_config(path: pathlib.Path, config):
     """
     Writes a dictionary to a file at the provided at path in JSON format.
     :param path: The path of the file to write the dictionary to
     :param config: The dictionary to write. Must be serializable as JSON
     """
 
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    class IndentingSafeDumper(yaml.SafeDumper):
+        """
+        PyYAML Dumper that increments indentation for lists and objects
+        correctly.
+        """
+
+        def increase_indent(self, flow=False, indentless=False):
+            return super().increase_indent(flow=flow, indentless=False)
+
     with open(path, "w", encoding="utf-8") as config_file:
         # Make the written file relatively readable & writable by users
-        json.dump(config, config_file, indent=4, sort_keys=True)
+        yaml.dump(
+            config,
+            config_file,
+            Dumper=IndentingSafeDumper,
+            default_flow_style=False,
+            encoding="utf-8",
+            explicit_start=True,
+        )
 
 
 def parse_user_config():
@@ -551,14 +711,19 @@ def parse_user_config():
     Loads a user's configuration.
     """
 
-    parse_json_config(USER_CONFIG_PATH, USER_CONFIG)
+    config_dir = BaseDirectory.load_first_config(APP_NAME)
+    if config_dir:
+        config_path = pathlib.Path(config_dir) / "settings.yml"
+        parse_json_config(config_path, USER_CONFIG)
+    else:
+        logging.info("User configuration has not been created yet")
 
     USER_CONFIG["roles_all_time"] = list(set(USER_CONFIG["roles_all_time"]))
     USER_CONFIG["roles_this_run"] += USER_CONFIG["roles_all_time"]
     # Remove duplicates from roles for this run
     USER_CONFIG["roles_this_run"] = list(set(USER_CONFIG["roles_this_run"]))
 
-    logging.info("Read config: %s from %s", USER_CONFIG, USER_CONFIG_PATH)
+    logging.info("Read config: %s from %s", USER_CONFIG, config_dir)
 
 
 @functools.lru_cache
@@ -569,10 +734,10 @@ def parse_os_release():
     """
 
     # Set os_release_file to the first item in the list that exists
-    for os_release_file in ["/etc/os-release", "/usr/lib/os-release"]:
-        if os.path.exists(os_release_file):
-            break
-
+    os_release_file = [
+        file for file in ["/etc/os-release", "/usr/lib/os-release"]
+        if os.path.exists(file)
+    ][0]
     os_release_contents = {}
     # os-release(5) specifies that it is expected that the strings in
     # this file are UTF-8 encoding
@@ -848,8 +1013,6 @@ def is_online(url="http://detectportal.firefox.com", expected=b"success\n"):
         logging.error("Unable to connect to %s", url, exc_info=url_err)
         return False
 
-    return False
-
 
 def write_user_config():
     """
@@ -864,9 +1027,12 @@ def write_user_config():
     # Since there could now be duplicates in roles_all_time, remove them
     USER_CONFIG["roles_all_time"] = list(set(USER_CONFIG["roles_all_time"]))
 
-    logging.info("Writing user configuration %s to %s", USER_CONFIG, USER_CONFIG_PATH)
+    config_path = (
+        pathlib.Path(BaseDirectory.save_config_path("cs-vm-build")) / "settings.yml"
+    )
+    logging.info("Writing user configuration %s to %s", USER_CONFIG, config_path)
 
-    write_json_config(USER_CONFIG_PATH, USER_CONFIG)
+    write_json_config(config_path, USER_CONFIG)
 
 
 if __name__ == "__main__":
