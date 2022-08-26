@@ -24,10 +24,10 @@
         (real_users | default([])) +
           [
             {
-              'user': item.key,
-              'homedir': item.value.4,
-              'uid': item.value.1 | int,
-              'gid': item.value.2
+              'user':item.key,
+              'homedir':item.value.4,
+              'uid':item.value.1 |int,
+              'gid':item.value.2
             }
           ]
       }}
