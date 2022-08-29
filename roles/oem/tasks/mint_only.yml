@@ -37,7 +37,7 @@
     mode: "0755"
 - name: Copy dconf config file
   ansible.builtin.copy:
-    src: csconfig-vmonly
+    src: csconfig-mintonly
     dest: /etc/dconf/db/local.d/csconfig-mintonly
     owner: root
     group: root
