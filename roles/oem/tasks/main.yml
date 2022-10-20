@@ -1,7 +1,8 @@
 ---
 # tasks file for oem
 
-- include_tasks: vm_only_pre.yml
+- name: Load VM-specific early run tasks
+  ansible.builtin.include_tasks: vm_only_pre.yml
   when: "ansible_virtualization_role == 'guest'"
 - name: Remove unused dependencies
   ansible.builtin.apt:
@@ -34,11 +35,14 @@
     mode: "0755"
     owner: root
 
-- include_tasks: ubuntu_only.yml
+- name: Load Ubuntu tasks
+  ansible.builtin.include_tasks: ubuntu_only.yml
   when: "ansible_distribution == 'Ubuntu'"
-- include_tasks: mint_only.yml
+- name: Load Mint tasks
+  ansible.builtin.include_tasks: mint_only.yml
   when: "ansible_distribution == 'Linux Mint'"
 
 # Some tasks should only be run when running as a guest OS.
-- include_tasks: vm_only_post.yml
+- name: Load VM-specific late run tasks
+  ansible.builtin.include_tasks: vm_only_post.yml
   when: "ansible_virtualization_role == 'guest'"

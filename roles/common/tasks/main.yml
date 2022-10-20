@@ -57,9 +57,11 @@
     dest: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
     mode: "0755"
 
-- include_tasks: ubuntu_only.yml
+- name: Load Ubuntu tasks
+  ansible.builtin.include_tasks: ubuntu_only.yml
   when: "ansible_distribution == 'Ubuntu'"
-- include_tasks: mint_only.yml
+- name: Load Mint tasks
+  ansible.builtin.include_tasks: mint_only.yml
   when: "ansible_distribution == 'Linux Mint'"
 - name: Refresh apt cache
   ansible.builtin.apt:

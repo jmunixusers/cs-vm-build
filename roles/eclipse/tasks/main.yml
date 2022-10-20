@@ -9,6 +9,7 @@
     path: '{{ eclipse.zip }}'
   register: st
 - name: Download and unpack Eclipse
+  when: st.stat.checksum | default("") != eclipse.hash[ansible_architecture]
   block:
     - name: Fetch Eclipse bundle
       ansible.builtin.get_url:
@@ -40,7 +41,6 @@
         owner: root
         group: root
         mode: "0755"
-  when: st.stat.checksum | default("") != eclipse.hash[ansible_architecture]
 - name: Install checkstyle plugin
   ansible.builtin.command: >
     {{ eclipse.install_path }}/eclipse
