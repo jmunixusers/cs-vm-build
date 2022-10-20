@@ -8,6 +8,10 @@ mint_mirrors:
   - "https://mirror.cs.jmu.edu/pub/linuxmint/packages"
   - "http://packages.linuxmint.com"
 
+mirror_file_path:
+  mint: /etc/apt/mint-mirrors.txt
+  ubuntu: /etc/apt/ubuntu-mirrors.txt
+
 global_base_path: "/opt"
 global_profile_path: "{{ global_base_path }}/csvmprofile"
 
