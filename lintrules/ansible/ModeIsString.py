@@ -2,14 +2,18 @@ from typing import Any, Dict, Union
 
 import ansiblelint.utils
 from ansiblelint.rules import AnsibleLintRule
+from ansiblelint.file_utils import Lintable
 
 class ModeIsString(AnsibleLintRule):
+    """
+    mode must be a string
+    """
+
     id = "mode-is-string"
-    shortdesc = "mode must be a string"
     description = "File and directory modes must be strings"
     tags = ['idiom']
 
-    def matchtask(self, task: Dict[str, Any]) -> Union[bool, str]:
+    def matchtask(self, task: Dict[str, Any], file: Lintable | None = None) -> bool | str:
         # Tasks without a mode should not be matched
         if "action" not in task:
             return False
