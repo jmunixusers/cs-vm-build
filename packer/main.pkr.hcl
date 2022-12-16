@@ -44,6 +44,7 @@ source "virtualbox-iso" "base-build" {
   vboxmanage = [
     ["modifyvm", "{{ .Name }}", "--audioin", "off"],
     ["modifyvm", "{{ .Name }}", "--clipboard-mode", "bidirectional"],
+    ["modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on"],
     ["modifyvm", "{{ .Name }}", "--mouse", "usbtablet"],
     ["modifyvm", "{{ .Name }}", "--pae", "on"],
     ["modifyvm", "{{ .Name }}", "--usb", "on", "--usbehci", "off", "--usbxhci", "off"],
@@ -52,6 +53,7 @@ source "virtualbox-iso" "base-build" {
     ["storagectl", "{{ .Name }}", "--name", "SATA Controller", "--hostiocache", "on"]
   ]
   vboxmanage_post = [
+    ["modifyvm", "{{.Name}}", "--nat-localhostreachable1", "off"],
     ["storageattach", "{{ .Name }}", "--storagectl", "SATA Controller", "--port", "1", "--type", "dvddrive", "--medium", "emptydrive"]
   ]
 }
