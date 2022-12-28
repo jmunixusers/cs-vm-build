@@ -31,7 +31,7 @@ source "virtualbox-iso" "base-build" {
     "c<wait>",
     "linux /casper/vmlinuz fsck.mode=skip<wait> noprompt",
     " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
-    " automatic-ubiquity debug-ubiquity keymap=us<enter>",
+    " automatic-ubiquity noninteractive debug-ubiquity keymap=us<enter>",
     # Different distributions name (and compress) the initrd differently. Fortunately,
     # GRUB is mostly smart and if the file doesn't exist, it just won't apply that directive.
     # So to prevent duplication, we specify both and let GRUB ignore the wrong one.
@@ -109,7 +109,7 @@ build {
       "echo UPDATE",
       "apt-get update",
       "echo INSTALL",
-      "apt-get install -V -y git ansible aptitude",
+      "apt-get install -V -y git ansible",
       "git clone -b ${var.git_branch} ${var.git_repo}",
       "cd /home/oem/cs-vm-build/scripts",
       "./oem-build",
