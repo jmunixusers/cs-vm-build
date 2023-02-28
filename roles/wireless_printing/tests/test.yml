@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - wireless-printing
+    - wireless_printing

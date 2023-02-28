@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - basic-prog-pkgs
+    - basic_prog_pkgs
