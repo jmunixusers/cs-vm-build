@@ -8,6 +8,12 @@
 - name: Upgrade all installed packages  # noqa no-changed-when
   ansible.builtin.command:
     cmd: /usr/bin/mintupdate-cli -y upgrade
+- name: Install oem-config
+  ansible.builtin.apt:
+    name:
+      - oem-config
+      - oem-config-gtk
+    state: latest
 
 - name: Ensure skeleton desktop directory exists
   ansible.builtin.file:
