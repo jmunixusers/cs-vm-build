@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
+  name: Test basic_prog_pkgs
   remote_user: root
   roles:
     - basic_prog_pkgs

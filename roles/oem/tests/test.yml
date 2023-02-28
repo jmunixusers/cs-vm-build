@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
+  name: Test oem
   remote_user: root
   roles:
     - oem

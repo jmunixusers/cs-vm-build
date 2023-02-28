@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
+  name: Test filezilla
   remote_user: root
   roles:
     - filezilla
