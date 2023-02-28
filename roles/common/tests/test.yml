@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
+  name: Test common
   remote_user: root
   roles:
     - common
