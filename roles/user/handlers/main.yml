@@ -3,6 +3,7 @@
 - name: Update desktop menu
   ansible.builtin.command:
     cmd: /usr/bin/update-desktop-database
+  changed_when: true
 - name: Suggest restart
   ansible.builtin.command:
     cmd: >-
@@ -15,3 +16,4 @@
   become: yes
   become_user: "{{ item.user }}"
   loop: "{{ real_users }}"
+  changed_when: true

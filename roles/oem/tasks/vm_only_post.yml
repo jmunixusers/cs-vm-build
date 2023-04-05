@@ -28,12 +28,8 @@
 # The apt database can be fairly large and make the image unnecessarily large
 # so removing it before shipping allows us to ship a smaller image.
 - name: Clean the apt package cache
-  ansible.builtin.command:
-    cmd: apt-get clean
-  # This will always report as changed otherwise
-  changed_when: false
-  args:
-    warn: no
+  ansible.builtin.apt:
+    clean: true
 
 - name: Find package lists to delete
   ansible.builtin.find:
