@@ -20,7 +20,7 @@ jobs:
         id: iso
         run: ./scripts/update-ubuntu-release
       - name: Open a pull request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           commit-message: >-
             Update to Ubuntu ${{ steps.iso.outputs.version }}
