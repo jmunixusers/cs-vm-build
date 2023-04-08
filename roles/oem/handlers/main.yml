@@ -3,3 +3,4 @@
 - name: Update dconf database
   ansible.builtin.command:
     cmd: /usr/bin/dconf update
+  changed_when: true
