@@ -27,9 +27,12 @@
 
 # The apt database can be fairly large and make the image unnecessarily large
 # so removing it before shipping allows us to ship a smaller image.
-- name: Clean the apt package cache
-  ansible.builtin.apt:
-    clean: true
+# This should be converted to the apt module clean once we have Ansible 2.13
+- name: Clean the apt package cache  # noqa command-instead-of-module
+  ansible.builtin.command:
+    cmd: apt-get clean
+  # This will always report as changed otherwise
+  changed_when: false
 
 - name: Find package lists to delete
   ansible.builtin.find:
