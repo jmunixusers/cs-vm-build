@@ -47,7 +47,6 @@ source "virtualbox-iso" "base-build" {
     ["modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on"],
     ["modifyvm", "{{ .Name }}", "--mouse", "usbtablet"],
     ["modifyvm", "{{ .Name }}", "--pae", "on"],
-    ["modifyvm", "{{ .Name }}", "--usb", "on", "--usbehci", "off", "--usbxhci", "off"],
     ["modifyvm", "{{ .Name }}", "--vrde", "off"],
     ["storagectl", "{{ .Name }}", "--name", "IDE Controller", "--remove"],
     ["storagectl", "{{ .Name }}", "--name", "SATA Controller", "--hostiocache", "on"]
