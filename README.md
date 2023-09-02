@@ -132,7 +132,8 @@ Linux and Windows hosts, but feedback on other platforms is always welcome.
 
 Due to difficulties with Packer packaging, this VM is frequently built with the
 latest version of Packer available directly from Hashicorp. Check the
-`main.pkr.hcl` file for the current minimum version required.
+`main.pkr.hcl` file for the current minimum version required. To install the
+required plugins, run `packer init .` within the `cs-vm-build/packer` directory.
 
 Once the prerequisites are installed, change into the `cs-vm-build/packer`
 directory and execute `packer build -only "*.mint" .`. This will take a

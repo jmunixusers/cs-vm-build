@@ -52,7 +52,6 @@ jobs:
           packer validate -var-file=mint-beta.pkrvars.hcl . || true
           # This runs last to ensure it's exit status is captured
           packer validate .
-          packer validate ubuntu-kvm.json
         working-directory: packer
       - name: Check Packer HCL formatting
         run: |

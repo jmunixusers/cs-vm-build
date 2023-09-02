@@ -1,11 +1,71 @@
 packer {
-  required_version = ">= 1.7.0"
+  required_version = ">= 1.9.0"
   required_plugins {
+    qemu = {
+      source  = "github.com/hashicorp/qemu"
+      version = "~> 1"
+    }
     virtualbox = {
       version = "~> 1"
       source  = "github.com/hashicorp/virtualbox"
     }
   }
+}
+
+source "qemu" "kvm" {
+  cpus         = 2
+  memory       = 4096
+  disk_size    = 20480
+  machine_type = "virt"
+  accelerator  = var.qemu_accelerator
+
+  format         = "qcow2"
+  headless       = "${var.headless}"
+  http_directory = "http"
+  qemu_binary    = "qemu-system-aarch64"
+
+  efi_firmware_code = "${var.qemu_firmware_directory}/QEMU_EFI.fd"
+  efi_firmware_vars = "${var.qemu_firmware_directory}/QEMU_VARS.fd"
+  qemuargs = [
+    ["-boot", "strict=off"],
+    ["-cpu", "host"],
+    ["-display", var.headless ? "none" : "gtk"],
+    ["-device", "virtio-rng-pci"],
+    ["-device", "virtio-gpu"],
+    ["-device", "nec-usb-xhci,id=xhci"],
+    ["-device", "usb-kbd,bus=xhci.0"],
+    ["-device", "usb-tablet,bus=xhci.0"]
+  ]
+  qemu_img_args {
+    create  = ["-o", "preallocation=falloc"]
+    convert = ["-o", "compression_type=zstd"]
+  }
+  disk_cache         = "unsafe"
+  disk_compression   = "true"
+  disk_detect_zeroes = "unmap"
+  disk_discard       = "unmap"
+  disk_interface     = "virtio"
+  net_device         = "virtio-net"
+  ssh_username       = var.ssh_user
+  ssh_password       = var.ssh_pass
+  ssh_timeout        = "100m"
+
+  boot_wait = var.aarch64_boot_wait
+  boot_command = [
+    # Enter the command line
+    "c<wait><wait>",
+    # Configure the kernel
+    "linux /casper/vmlinuz",
+    " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
+    " automatic-ubiquity only-ubiquity",
+    " debug-ubiquity oem-config/enable=true",
+    " keymap=us fsck.mode=skip",
+    " noprompt splash --<enter><wait><wait>",
+    # Configure initrd & boot
+    "initrd /casper/initrd ",
+    "<enter>boot<enter>"
+  ]
+  shutdown_command = "echo -e \"${var.ssh_pass}\\n\" | sudo -S poweroff"
 }
 
 source "virtualbox-iso" "base-build" {
@@ -111,6 +171,14 @@ build {
       "--version", "${var.ubuntu_version.version}",
       "--vmname", "${var.vm_name} Ubuntu ${var.semester}"
     ]
+  }
+
+  source "source.qemu.kvm" {
+    name             = "ubuntu-aarch64"
+    vm_name          = "image.qcow2"
+    iso_url          = "${local.ubuntu_aarch64_info.mirror_url}/${local.ubuntu_aarch64_info.iso_file}"
+    iso_checksum     = "file:${local.ubuntu_aarch64_info.mirror_url}/SHA256SUMS"
+    output_directory = "${local.artifact_dir_prefix}ubuntu-aarch64"
   }
 
   provisioner "shell" {
