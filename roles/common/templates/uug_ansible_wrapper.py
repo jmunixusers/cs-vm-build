@@ -135,7 +135,7 @@ class AnsibleWrapperWindow(Gtk.Window):
 
         # Attempt to use tux as the icon. If it fails, that's okay
         try:
-            self.set_icon_name("{{ tux_icon_name }}")
+            self.set_icon_name("{{ common_tux_icon_name }}")
         except GLib.GError as err:
             logging.warning("Unable to set Tux icon", exc_info=err)
 
@@ -297,7 +297,7 @@ class AnsibleWrapperWindow(Gtk.Window):
         """
 
         about_dialog = Gtk.AboutDialog()
-        about_dialog.set_logo_icon_name("{{ tux_icon_name }}")
+        about_dialog.set_logo_icon_name("{{ common_tux_icon_name }}")
         about_dialog.set_transient_for(self)
         about_dialog.set_program_name(NAME)
         about_dialog.set_copyright("Copyright \xa9 2018-2022 JMU Unix Users Group")
@@ -376,7 +376,7 @@ class AnsibleWrapperWindow(Gtk.Window):
                 "There was an error while running the configuration tasks. "
                 "Please try again."
                 "\nIf this issue continues to occur, copy"
-                " {{ ansible_log_file }} and"
+                " {{ common_ansible_log_file }} and"
                 f" <a href='{USER_CONFIG['git_url']}'>create an issue</a>"
             )
             show_dialog(

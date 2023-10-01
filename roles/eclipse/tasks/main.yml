@@ -36,7 +36,7 @@
         state: absent
     - name: Unpack Eclipse bundle
       ansible.builtin.unarchive:
-        dest: '{{ global_base_path }}'
+        dest: '{{ common_global_base_path }}'
         src: '{{ eclipse.zip }}'
         owner: root
         group: root

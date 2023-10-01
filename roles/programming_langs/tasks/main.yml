@@ -3,15 +3,15 @@
 
 - name: Install Ruby packages
   ansible.builtin.apt:
-    name: "{{ ruby_packages }}"
+    name: "{{ programming_langs_ruby_packages }}"
     state: latest
 
 - name: Install Haskell packages
   ansible.builtin.apt:
-    name: "{{ haskell_packages }}"
+    name: "{{ programming_langs_haskell_packages }}"
     state: latest
 
 - name: Install Prolog packages
   ansible.builtin.apt:
-    name: "{{ prolog_packages }}"
+    name: "{{ programming_langs_prolog_packages }}"
     state: latest

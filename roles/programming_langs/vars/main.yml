@@ -1,10 +1,10 @@
 ---
 # vars file for programming-langs
-ruby_packages:
+programming_langs_ruby_packages:
   - ruby
 
-haskell_packages:
+programming_langs_haskell_packages:
   - haskell-platform
 
-prolog_packages:
+programming_langs_prolog_packages:
   - swi-prolog

@@ -4,7 +4,7 @@
 # Place modifications in another file in /etc/apt/sources.list.d/ with a .list
 # file extension.
 
-{% for mirror in ubuntu_mirrors %}
+{% for mirror in common_ubuntu_mirrors %}
 deb {{ mirror }} {{ ubuntu_release }} main restricted universe multiverse
 deb {{ mirror }} {{ ubuntu_release }}-updates main restricted universe multiverse
 deb {{ mirror }} {{ ubuntu_release }}-backports main restricted universe multiverse

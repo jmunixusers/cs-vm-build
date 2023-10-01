@@ -1,7 +1,5 @@
 ---
 # vars file for user
-global_profile_path: "{{ global_base_path }}/csvmprofile"
-
 user_dependencies:
   - default-jdk
   - libnotify-bin
@@ -10,4 +8,4 @@ user_dependencies:
   - vim
   - vim-gtk3
 
-stu_host_key: "stu.cs.jmu.edu ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXS19kf1swKRC9GTTiUDyOzra0sYT+kt6Vxd4Q0H9uw"
+user_stu_host_key: "stu.cs.jmu.edu ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXS19kf1swKRC9GTTiUDyOzra0sYT+kt6Vxd4Q0H9uw"

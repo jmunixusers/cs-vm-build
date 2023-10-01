@@ -2,7 +2,7 @@
 # tasks file for user
 - name: Create opt directory
   ansible.builtin.file:
-    path: "{{ global_base_path }}"
+    path: "{{ common_global_base_path }}"
     state: directory
     owner: root
     group: root
@@ -49,7 +49,7 @@
 - name: Touch VM profile
   ansible.builtin.copy:
     src: csvmprofile
-    dest: '{{ global_profile_path }}'
+    dest: '{{ common_global_profile_path }}'
     mode: "0644"
     owner: root
     group: root
@@ -68,7 +68,7 @@
     # Per ssh_config(5), this is the default value of GlobalKnownHostsFile
     path: /etc/ssh/ssh_known_hosts
     name: stu.cs.jmu.edu
-    key: "{{ stu_host_key }}"
+    key: "{{ user_stu_host_key }}"
     hash_host: yes
     state: present
 - name: Create stu-home bookmark
@@ -85,7 +85,7 @@
 - name: Add profile to user bashrc
   ansible.builtin.lineinfile:
     path: '{{ item.homedir }}/.bashrc'
-    line: "source {{ global_profile_path }}"
+    line: "source {{ common_global_profile_path }}"
     state: present
     insertafter: EOF
     # We don't want to break things by having a very basic .bashrc that just

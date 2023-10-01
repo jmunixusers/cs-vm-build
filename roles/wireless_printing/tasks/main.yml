@@ -25,4 +25,4 @@
     -o "printer-is-shared=false"
   register: lpstat_result
   changed_when: '"Invalid destination name" in lpstat_result.stderr'
-  with_items: "{{ printers }}"
+  with_items: "{{ wireless_printing_printers }}"

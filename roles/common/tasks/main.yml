@@ -16,12 +16,12 @@
     DEBIAN_FRONTEND: noninteractive
 - name: Ensure log directory exists
   ansible.builtin.file:
-    path: "{{ log_directory }}"
+    path: "{{ common_log_directory }}"
     state: directory
     mode: "0755"
 - name: Create directory for shared data
   ansible.builtin.file:
-    path: "{{ share_directory }}"
+    path: "{{ common_share_directory }}"
     state: directory
     owner: root
     group: root
@@ -37,24 +37,24 @@
 - name: Install Ansible wrapper GUI script
   ansible.builtin.template:
     src: uug_ansible_wrapper.py
-    dest: '{{ uug_ansible_wrapper }}'
+    dest: '{{ common_uug_ansible_wrapper }}'
     mode: "0755"
 - name: Install JMU-colored Tux icon
   ansible.builtin.copy:
     src: jmu-tux.svg
-    dest: "/usr/share/icons/hicolor/scalable/apps/{{ tux_icon_name }}.svg"
+    dest: "/usr/share/icons/hicolor/scalable/apps/{{ common_tux_icon_name }}.svg"
     mode: "0644"
   notify: Update icon cache
 
 - name: Ensure local applications folder exists
   ansible.builtin.file:
-    path: "{{ wrapper_desktop_file_path }}"
+    path: "{{ common_wrapper_desktop_file_path }}"
     state: directory
     mode: "0755"
 - name: Copy shortcut to desktop file directory
   ansible.builtin.template:
     src: desktop-template.desktop.j2
-    dest: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
+    dest: "{{ common_wrapper_desktop_file_path }}/jmucs_config.desktop"
     mode: "0755"
 
 - name: Load Ubuntu tasks

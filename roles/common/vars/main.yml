@@ -1,22 +1,22 @@
 ---
 # vars file for common
-ubuntu_mirrors:
+common_ubuntu_mirrors:
   - "https://mirror.cs.jmu.edu/pub/ubuntu"
   - "http://us.archive.ubuntu.com/ubuntu"
 
-mint_mirrors:
+common_mint_mirrors:
   - "https://mirror.cs.jmu.edu/pub/linuxmint/packages"
   - "http://packages.linuxmint.com"
 
-global_base_path: "/opt"
-global_profile_path: "{{ global_base_path }}/csvmprofile"
+common_global_base_path: "/opt"
+common_global_profile_path: "{{ common_global_base_path }}/csvmprofile"
 
-log_directory: "/var/log/vmtools"
-ansible_log_file: "{{ log_directory }}/ansible_runs.log"
+common_log_directory: "/var/log/vmtools"
+common_ansible_log_file: "{{ common_log_directory }}/ansible_runs.log"
 
-share_directory: "/usr/local/share/jmu-uug"
-uug_ansible_wrapper: "{{ share_directory }}/uug_ansible_wrapper.py"
+common_share_directory: "/usr/local/share/jmu-uug"
+common_uug_ansible_wrapper: "{{ common_share_directory }}/uug_ansible_wrapper.py"
 
-tux_icon_name: "edu.jmu.uug.tux"
+common_tux_icon_name: "edu.jmu.uug.tux"
 
-wrapper_desktop_file_path: "/usr/local/share/applications"
+common_wrapper_desktop_file_path: "/usr/local/share/applications"
