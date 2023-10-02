@@ -18,6 +18,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install ansible ansible-lint yamllint
+      - name: Create log directory
+        run: |
+          sudo mkdir /var/log/vmtools/
+          sudo chmod 777 /var/log/vmtools/
       - name: Run ansible-lint
         run: |
           ansible-lint -R -r lintrules/ansible
