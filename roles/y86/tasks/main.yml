@@ -29,14 +29,14 @@
   loop: '{{ y86_manpages }}'
 - name: Updating PATH to include y86 binaries
   ansible.builtin.lineinfile:
-    dest: '{{ global_profile_path }}'
+    dest: '{{ common_global_profile_path }}'
     line: "export PATH={{ y86_bin_dir }}:$PATH"
     state: present
   notify:
     - Suggest restart
 - name: Updating MANPATH to include y86 man pages
   ansible.builtin.lineinfile:
-    dest: '{{ global_profile_path }}'
+    dest: '{{ common_global_profile_path }}'
     line: "export MANPATH={{ y86_man_dir }}:$MANPATH"
     state: present
   notify:

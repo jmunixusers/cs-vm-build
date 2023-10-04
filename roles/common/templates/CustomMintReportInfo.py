@@ -4,9 +4,9 @@
 
 # NOTE: This file is parsed by Jinja2 as part of an Ansible playbook.
 # The following values were interpreted:
-#   tux_icon_name: {{ tux_icon_name }}
-#   global_profile_path: {{ global_profile_path }}
-#   uug_ansible_wrapper: {{ uug_ansible_wrapper }}
+#   common_tux_icon_name: {{ common_tux_icon_name }}
+#   common_global_profile_path: {{ common_global_profile_path }}
+#   common_uug_ansible_wrapper: {{ common_uug_ansible_wrapper }}
 
 """
 Custom mintreport script for ensuring the JMU CS VM Config Tool has been run on
@@ -38,7 +38,7 @@ class Report(InfoReport):
     def __init__(self):
 
         self.title = "Run JMU CS Config Tool"
-        self.icon = "{{ tux_icon_name }}"
+        self.icon = "{{ common_tux_icon_name }}"
         self.has_ignore_button = False
 
     def is_pertinent(self):
@@ -46,7 +46,7 @@ class Report(InfoReport):
         Validates whether this report should be shown the mintreport
         """
 
-        return not os.path.exists('{{ global_profile_path }}')
+        return not os.path.exists('{{ common_global_profile_path }}')
 
     def get_descriptions(self):
         """
@@ -84,7 +84,7 @@ class Report(InfoReport):
         """
 
         subprocess.run(
-            ["{{ uug_ansible_wrapper }}"],
+            ["{{ common_uug_ansible_wrapper }}"],
             start_new_session=True, check=False
         )
         return True

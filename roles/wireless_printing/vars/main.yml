@@ -1,7 +1,7 @@
 ---
 # vars file for wireless-printing
 # Printer attributes must be at the same indentation level
-printers:
+wireless_printing_printers:
   - bandw:
     name: JMU-LabPrintBW
     queue: lpd://labprintremote@labprint.jmu.edu/LabPrintBW

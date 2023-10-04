@@ -3,7 +3,7 @@
 
 - name: Update mintupdate package
   ansible.builtin.apt:
-    name: "{{ upgrade_pre_mintupdate }}"
+    name: "{{ oem_upgrade_pre_mintupdate }}"
     state: latest
 - name: Upgrade all installed packages  # noqa no-changed-when
   ansible.builtin.command:
@@ -17,29 +17,29 @@
 
 - name: Ensure skeleton desktop directory exists
   ansible.builtin.file:
-    path: "{{ skel_desktop_file_path }}"
+    path: "{{ oem_skel_desktop_file_path }}"
     state: directory
     mode: "0755"
 - name: Copy welcome shortcut to skeleton desktop directory
   ansible.builtin.copy:
     src: welcome-to-vm.desktop
-    dest: "{{ skel_desktop_file_path }}/welcome-to-vm.desktop"
+    dest: "{{ oem_skel_desktop_file_path }}/welcome-to-vm.desktop"
     mode: "0644"
 - name: Hide the mintwelcome window
   ansible.builtin.file:
-    path: "{{ skel_path }}/.linuxmint/mintwelcome"
+    path: "{{ oem_skel_path }}/.linuxmint/mintwelcome"
     mode: "0755"
     state: directory
 - name: Hide the mintwelcome window
   ansible.builtin.copy:
-    dest: "{{ skel_path }}/.linuxmint/mintwelcome/norun.flag"
+    dest: "{{ oem_skel_path }}/.linuxmint/mintwelcome/norun.flag"
     mode: "0664"
     content: ""
     force: no
 - name: Copy setup script shortcut to desktop
   ansible.builtin.copy:
-    src: "{{ wrapper_desktop_file_path }}/jmucs_config.desktop"
-    dest: "{{ skel_desktop_file_path }}/jmucs_config.desktop"
+    src: "{{ common_wrapper_desktop_file_path }}/jmucs_config.desktop"
+    dest: "{{ oem_skel_desktop_file_path }}/jmucs_config.desktop"
     mode: "0755"
 - name: Copy dconf config file
   ansible.builtin.copy:

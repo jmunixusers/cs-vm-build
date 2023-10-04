@@ -3,7 +3,7 @@
 # Tasks for the oem role to run at the beginning of playbook execution
 - name: Remove unneeded stock packages
   ansible.builtin.apt:
-    name: '{{ packages_to_remove }}'
+    name: '{{ oem_packages_to_remove }}'
     state: absent
     purge: yes
 - name: Remove i386 architecture
