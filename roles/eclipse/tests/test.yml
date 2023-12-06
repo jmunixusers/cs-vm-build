@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  name: Test eclipse
+- name: Test eclipse
+  hosts: localhost
   remote_user: root
   roles:
     - eclipse

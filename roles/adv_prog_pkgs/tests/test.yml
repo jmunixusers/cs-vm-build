@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  name: Test adv_prog_pkgs
+- name: Test adv_prog_pkgs
+  hosts: localhost
   remote_user: root
   roles:
     - adv_prog_pkgs

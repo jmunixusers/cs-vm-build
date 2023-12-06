@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  name: Test wireless_printing
+- name: Test wireless_printing
+  hosts: localhost
   remote_user: root
   roles:
     - wireless_printing

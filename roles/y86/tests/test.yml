@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  name: Test y86
+- name: Test y86
+  hosts: localhost
   remote_user: root
   roles:
     - y86
