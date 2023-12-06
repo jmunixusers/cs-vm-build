@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  name: Test programming_langs
+- name: Test programming_langs
+  hosts: localhost
   remote_user: root
   roles:
     - programming_langs

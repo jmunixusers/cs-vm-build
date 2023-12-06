@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  name: Test vscode
+- name: Test vscode
+  hosts: localhost
   remote_user: root
   roles:
     - vscode
