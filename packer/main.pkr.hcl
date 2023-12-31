@@ -27,17 +27,16 @@ source "virtualbox-iso" "base-build" {
 
   boot_wait = "5s"
   boot_command = [
-    "<esc><wait><esc><wait><esc><wait>",
-    "c<wait>",
-    "linux /casper/vmlinuz fsck.mode=skip<wait> noprompt",
+    "<wait>",
+    # Select the OEM install option
+    "<down><down>",
+    # Edit the OEM option and remove "--" to add more options
+    "<tab><bs><bs>",
+    "fsck.mode=skip<wait> noprompt",
     " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
     " automatic-ubiquity noninteractive debug-ubiquity keymap=us<enter>",
-    # Different distributions name (and compress) the initrd differently. Fortunately,
-    # GRUB is mostly smart and if the file doesn't exist, it just won't apply that directive.
-    # So to prevent duplication, we specify both and let GRUB ignore the wrong one.
-    "initrd /casper/initrd<enter><wait>",
-    "initrd /casper/initrd.lz<enter><wait>",
-    "boot<enter>"
+    # Start booting
+    "<enter>"
   ]
   shutdown_command = "echo -e \"${var.ssh_pass}\\n\" | sudo -S poweroff"
 
