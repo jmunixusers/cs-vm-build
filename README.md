@@ -158,7 +158,7 @@ like this:
 
 ```bash
 packer init .
-packer build -var-file=mint-beta.pkrvars.hcl -only "*.min" .
+packer build -var-file=mint-beta.pkrvars.hcl -only "*.mint" .
 ```
 
 Packer allows further overrides, with precedence given to the last option in the
