@@ -107,7 +107,7 @@ If you have a Mint or Ubuntu instance (VM or laptop) that you built yourself,
 and wish to use this project to get started with JMU CS software, follow these
 steps:
 
-```
+```bash
 apt-get install ansible git
 git clone https://github.com/jmunixusers/cs-vm-build
 cd cs-vm-build
@@ -115,9 +115,10 @@ ansible-playbook -i hosts -K -t TAGS local.yml
 ```
 or directly from GitHub:
 
-```
+```bash
 ansible-pull -U https://github.com/jmunixusers/cs-vm-build --directory /tmp/cs-vm-build --purge -i hosts -K -t TAGS
 ```
+
 where TAGS is a comma separated list (with no spaces) of
 cs101, cs149, cs159, cs261, cs361 and/or cs430 as appropriate.
 
@@ -155,12 +156,18 @@ A large number of variables can be overridden at once by passing a `var-file`
 to Packer. An example of this is provided as `mint-beta.pkrvars.hcl`, and can be used
 like this:
 
-`packer build -var-file=mint-beta.pkrvars.hcl -only "*.mint" .`
+```bash
+packer init .
+packer build -var-file=mint-beta.pkrvars.hcl -only "*.min" .
+```
 
 Packer allows further overrides, with precedence given to the last option in the
 command. For example, to build a beta image on Windows, use this command:
 
-`packer build -var-file=mint-beta.pkrvars.hcl -var 'audio=dsound' -only "*.mint" .`
+```bash
+packer init .
+packer build -var-file=mint-beta.pkrvars.hcl -var 'audio=dsound' -only "*.mint" .
+```
 
 ### Building Ubuntu images
 
@@ -169,12 +176,18 @@ fact, all previous commands have specifically excluded Ubuntu image builds). By
 default, the `packer` configuration will build both a Mint and Ubuntu VM. Try it
 with:
 
-`packer build .`
+```bash
+packer init .
+packer build .
+```
 
 Much as with the previous commands, you can build only an ubuntu-based image by
 running:
 
-`packer build -only "*.ubuntu" .`
+```bash
+packer init .
+packer build -only "*.ubuntu" .
+```
 
 Support for building beta variants of Ubuntu images is not currently supported.
 
