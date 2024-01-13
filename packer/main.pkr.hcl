@@ -19,11 +19,12 @@ source "virtualbox-iso" "base-build" {
   gfx_controller           = "vmsvga"
   gfx_accelerate_3d        = true
   hard_drive_discard       = true
-  hard_drive_interface     = "sata"
+  hard_drive_interface     = "virtio"
   hard_drive_nonrotational = true
   headless                 = "${var.headless}"
   http_directory           = "http"
-  iso_interface            = "sata"
+  iso_interface            = "virtio"
+  nic_type                 = "virtio"
   rtc_time_base            = "UTC"
   sata_port_count          = 2
   sound                    = "${var.audio}"
@@ -55,11 +56,11 @@ source "virtualbox-iso" "base-build" {
     ["modifyvm", "{{ .Name }}", "--pae", "on"],
     ["modifyvm", "{{ .Name }}", "--vrde", "off"],
     ["storagectl", "{{ .Name }}", "--name", "IDE Controller", "--remove"],
-    ["storagectl", "{{ .Name }}", "--name", "SATA Controller", "--hostiocache", "on"]
+    ["storagectl", "{{ .Name }}", "--name", "VirtIO Controller", "--hostiocache", "on"]
   ]
   vboxmanage_post = [
     ["modifyvm", "{{.Name}}", "--nat-localhostreachable1", "off"],
-    ["storageattach", "{{ .Name }}", "--storagectl", "SATA Controller", "--port", "1", "--type", "dvddrive", "--medium", "emptydrive"]
+    ["storageattach", "{{ .Name }}", "--storagectl", "VirtIO Controller", "--port", "1", "--type", "dvddrive", "--medium", "emptydrive"]
   ]
 }
 
