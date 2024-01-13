@@ -4,7 +4,7 @@ variable "mint_version" {
     beta    = bool
   })
   default = {
-    version = "21.2"
+    version = "21.3"
     beta    = false
   }
 }
