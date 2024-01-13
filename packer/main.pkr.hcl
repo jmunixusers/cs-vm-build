@@ -66,7 +66,7 @@ source "virtualbox-iso" "base-build" {
 build {
   source "source.virtualbox-iso.base-build" {
     name             = "mint"
-    vm_name          = "${var.vm_name} Linux Mint ${var.semester}"
+    vm_name          = "${var.vm_name} Linux Mint ${var.semester} Build ${local.build_id}"
     iso_url          = "${local.mint_info.mirror_url}/${local.mint_info.iso_file}"
     iso_checksum     = "file:${local.mint_info.mirror_url}/sha256sum.txt"
     output_filename  = "image-${lower(var.semester)}-mint"
@@ -79,13 +79,14 @@ build {
       "--producturl", "https://linuxmint.com/",
       "--vendor", "JMU Unix Users Group",
       "--vendorurl", "${var.git_repo}",
-      "--version", "${var.mint_version.version}"
+      "--version", "${var.mint_version.version}",
+      "--vmname", "${var.vm_name} Linux Mint ${var.semester}"
     ]
   }
 
   source "source.virtualbox-iso.base-build" {
     name             = "ubuntu"
-    vm_name          = "${var.vm_name} Ubuntu ${var.semester}"
+    vm_name          = "${var.vm_name} Ubuntu ${var.semester} Build ${local.build_id}"
     iso_url          = "${local.ubuntu_info.mirror_url}/${local.ubuntu_info.iso_file}"
     iso_checksum     = "file:${local.ubuntu_info.mirror_url}/SHA256SUMS"
     output_filename  = "image-${lower(var.semester)}-ubuntu"
@@ -98,7 +99,8 @@ build {
       "--producturl", "https://ubuntu.com/",
       "--vendor", "JMU Unix Users Group",
       "--vendorurl", "${var.git_repo}",
-      "--version", "${var.ubuntu_version.version}"
+      "--version", "${var.ubuntu_version.version}",
+      "--vmname", "${var.vm_name} Ubuntu ${var.semester}"
     ]
   }
 

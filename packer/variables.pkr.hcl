@@ -72,7 +72,7 @@ variable "vm_name" {
 }
 
 locals {
-  build_id = "${legacy_isotime("2006-01-02")}"
+  build_id = formatdate("YYYY-MM-DD", timestamp())
   ubuntu_info = {
     mirror_url = "${var.mirror.base}/${var.mirror.ubuntu_path}/${var.ubuntu_version.version}"
     iso_file   = "ubuntu-${var.ubuntu_version.patched_version}-desktop-amd64.iso"
