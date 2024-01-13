@@ -16,6 +16,7 @@ source "virtualbox-iso" "base-build" {
   gfx_vram_size = 64
 
   format                   = "ova"
+  firmware                 = "efi"
   gfx_controller           = "vmsvga"
   gfx_accelerate_3d        = true
   hard_drive_discard       = true
@@ -33,17 +34,23 @@ source "virtualbox-iso" "base-build" {
 
   boot_wait = "5s"
   boot_command = [
-    "<esc><wait><esc><wait><esc><wait>",
-    "c<wait>",
-    "linux /casper/vmlinuz fsck.mode=skip<wait> noprompt",
+    # Enter the command line
+    "c<wait><wait>",
+    # Configure the kernel
+    "linux /casper/vmlinuz",
+    " boot=casper",
     " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
-    " automatic-ubiquity noninteractive debug-ubiquity keymap=us<enter>",
+    " automatic-ubiquity only-ubiquity",
+    " debug-ubiquity oem-config/enable=true",
+    " keymap=us fsck.mode=skip",
+    " noprompt splash --<enter><wait><wait>",
+    # Configure initrd & boot
     # Different distributions name (and compress) the initrd differently. Fortunately,
     # GRUB is mostly smart and if the file doesn't exist, it just won't apply that directive.
     # So to prevent duplication, we specify both and let GRUB ignore the wrong one.
-    "initrd /casper/initrd<enter><wait>",
+    "initrd /casper/initrd<enter>",
     "initrd /casper/initrd.lz<enter><wait>",
-    "boot<enter>"
+    "<enter>boot<enter>"
   ]
   shutdown_command = "echo -e \"${var.ssh_pass}\\n\" | sudo -S poweroff"
 
