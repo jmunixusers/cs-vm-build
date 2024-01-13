@@ -67,6 +67,7 @@ source "virtualbox-iso" "base-build" {
   ]
   vboxmanage_post = [
     ["modifyvm", "{{.Name}}", "--nat-localhostreachable1", "off"],
+    ["modifyvm", "{{.Name}}", "--usb-xhci", "on"],
     ["storageattach", "{{ .Name }}", "--storagectl", "VirtIO Controller", "--port", "1", "--type", "dvddrive", "--medium", "emptydrive"]
   ]
 }
