@@ -41,6 +41,11 @@
         owner: root
         group: root
         mode: "0755"
+- name: Install logback config file
+  ansible.builtin.copy:
+    src: logback.xml
+    dest: '{{ eclipse.install_path }}'
+    mode: "0644"
 - name: Install checkstyle plugin
   ansible.builtin.command: >
     {{ eclipse.install_path }}/eclipse
@@ -49,6 +54,8 @@
     -repository https://checkstyle.org/eclipse-cs-update-site/
     -installIU net.sf.eclipsecs.feature.group
     -destination {{ eclipse.install_path }}
+    -vmargs
+    -Dlogback.configurationFile=file:{{ eclipse.install_path }}/logback.xml
   args:
     creates: '{{ eclipse.install_path }}/plugins/net.sf.eclipsecs.checkstyle*'
 - name: Install Eclipse desktop icon
