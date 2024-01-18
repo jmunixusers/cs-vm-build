@@ -106,7 +106,7 @@ jobs:
         run: |
           pip3 install aiohttp jinja2 pyyaml
       - name: Configure download cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/hashlint
           key: hashlint-cache-${{ github.sha }}
