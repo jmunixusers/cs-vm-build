@@ -1,11 +1,11 @@
 variable "mint_version" {
   type = object({
-    version = string
-    beta    = bool
+    version    = string
+    build_type = string
   })
   default = {
-    version = "21.3"
-    beta    = false
+    version    = "21.3"
+    build_type = "edge"
   }
 }
 
@@ -78,8 +78,8 @@ locals {
     iso_file   = "ubuntu-${var.ubuntu_version.patched_version}-desktop-amd64.iso"
   }
   mint_info = {
-    mirror_url = "${var.mirror.base}/${var.mirror.mint_path}/${var.mint_version.beta ? "testing" : "stable/${var.mint_version.version}"}"
-    iso_file   = "linuxmint-${var.mint_version.version}-cinnamon-64bit${var.mint_version.beta ? "-beta" : ""}.iso"
+    mirror_url = "${var.mirror.base}/${var.mirror.mint_path}/${var.mint_version.build_type == "beta" ? "testing" : "stable/${var.mint_version.version}"}"
+    iso_file   = "linuxmint-${var.mint_version.version}-cinnamon-64bit${var.mint_version.build_type != null ? "-${var.mint_version.build_type}" : ""}.iso"
   }
   artifact_dir_prefix = "${path.cwd}/artifacts_"
 }
