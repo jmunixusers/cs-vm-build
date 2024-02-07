@@ -24,8 +24,8 @@ source "qemu" "kvm" {
   http_directory = "http"
   qemu_binary    = "qemu-system-aarch64"
 
-  efi_firmware_code = "${var.qemu_firmware_directory}/QEMU_EFI.fd"
-  efi_firmware_vars = "${var.qemu_firmware_directory}/QEMU_VARS.fd"
+  efi_firmware_code = "${var.qemu_firmware_directory}/AAVMF_CODE.fd"
+  efi_firmware_vars = "${var.qemu_firmware_directory}/AAVMF_VARS.fd"
   qemuargs = [
     ["-boot", "strict=off"],
     ["-cpu", "host"],
