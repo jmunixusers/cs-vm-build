@@ -93,7 +93,7 @@ variable "qemu_accelerator" {
 
 variable "qemu_firmware_directory" {
   type        = string
-  default     = "/usr/share/edk2/aarch64"
+  default     = "/usr/share/AAVMF/"
   description = <<EOF
     The directory where the QEMU EFI code and variables are stored. On Fedora and
     similar distributions, this is likely /usr/share/edk2/aarch64. On Debian
