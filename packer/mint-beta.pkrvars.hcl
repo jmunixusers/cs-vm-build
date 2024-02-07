@@ -1,4 +1,4 @@
-semester = "Fa23"
+semester = "Sp24"
 
 mint_version = {
   version    = "21.3"

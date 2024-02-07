@@ -53,7 +53,7 @@ variable "headless" {
 
 variable "semester" {
   type    = string
-  default = "Fa23"
+  default = "Sp24"
 }
 
 variable "ssh_pass" {

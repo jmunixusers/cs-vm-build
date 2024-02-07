@@ -1,9 +1,16 @@
 ---
 
 # Tasks for the oem role to run at the beginning of playbook execution
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+- name: Find unneeded backgrounds
+  ansible.builtin.set_fact:
+    obsolete_backgrounds: "{{ ansible_facts.packages | select('search', 'mint-background') | reject('search', ansible_distribution_release) | list }}"
+
 - name: Remove unneeded stock packages
   ansible.builtin.apt:
-    name: '{{ oem_packages_to_remove }}'
+    name: '{{ oem_packages_to_remove + obsolete_backgrounds }}'
     state: absent
     purge: yes
 - name: Remove i386 architecture
