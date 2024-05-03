@@ -1,0 +1,35 @@
+#cloud-config
+autoinstall:
+  version: 1
+  interactive-sections: []
+  locale: 'en_US.UTF-8'
+  refresh-installer:
+    update: true
+  keyboard:
+    layout: us
+  apt:
+    mirror-selection:
+      primary:
+        - arches: [i386, amd64]
+          uri: 'http://mirror.cs.jmu.edu/pub/ubuntu'
+        - arches: [arm64]
+          uri: 'http://ports.ubuntu.com/ubuntu-ports'
+      fallback: abort
+  packages:
+    - oem-config
+  storage:
+    layout:
+      name: direct
+  identity:
+    hostname: jmucs
+    realname: 'OEM User'
+    username: oem
+    password: $1$.WsfKhkz$G/3ZFe1ZGQrJJJ7GoJ.vY.
+  ssh:
+    install-server: true
+  codecs:
+    install: true
+  oem:
+    install: true
+  updates: all
+  shutdown: reboot
