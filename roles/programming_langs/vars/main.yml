@@ -4,7 +4,9 @@ programming_langs_ruby_packages:
   - ruby
 
 programming_langs_haskell_packages:
-  - haskell-platform
+  - ghc
+  - ghc-doc
+  - ghc-prof
 
 programming_langs_prolog_packages:
   - swi-prolog
