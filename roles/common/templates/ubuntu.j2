@@ -9,8 +9,4 @@ deb {{ mirror }} {{ ubuntu_release }} main restricted universe multiverse
 deb {{ mirror }} {{ ubuntu_release }}-updates main restricted universe multiverse
 deb {{ mirror }} {{ ubuntu_release }}-backports main restricted universe multiverse
 deb {{ mirror }} {{ ubuntu_release }}-security main restricted universe multiverse
-
 {% endfor %}
-
-# Parter repository (necessary for optional media codecs) -- not mirrored
-deb http://archive.canonical.com/ubuntu {{ ubuntu_release }} partner
