@@ -11,6 +11,3 @@ basic_prog_pkgs_intro_development:
  - sqlite3
  - sqlitebrowser
  - thonny
-
-basic_prog_pkgs_pip:
- - darglint
