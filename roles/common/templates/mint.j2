@@ -12,12 +12,7 @@ deb {{ mirror }} {{ ubuntu_release }}-backports main restricted universe multive
 deb {{ mirror }} {{ ubuntu_release }}-security main restricted universe multiverse
 
 {% endfor %}
-
 {% for mirror in common_mint_mirrors %}
 # Mint sources for {{ mirror }}
 deb {{ mirror }} {{ ansible_distribution_release }} main upstream import backport
-
 {% endfor %}
-
-# Parter repository (necessary for optional media codecs) -- not mirrored
-deb http://archive.canonical.com/ubuntu {{ ubuntu_release }} partner

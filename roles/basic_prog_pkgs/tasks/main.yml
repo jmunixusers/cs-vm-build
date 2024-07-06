@@ -4,11 +4,3 @@
   ansible.builtin.apt:
     name: '{{ basic_prog_pkgs_intro_development }}'
     state: latest
-
-- name: Install intro pip packages
-  ansible.builtin.pip:
-    name: '{{ basic_prog_pkgs_pip }}'
-    state: present
-  become: yes
-  become_user: "{{ item.user }}"
-  loop: "{{ real_users }}"
