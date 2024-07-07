@@ -39,19 +39,10 @@ source "virtualbox-iso" "base-build" {
     "c<wait><wait>",
     # Configure the kernel
     "linux /casper/vmlinuz",
-    " boot=casper",
-    " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
-    " automatic-ubiquity only-ubiquity",
-    " debug-ubiquity oem-config/enable=true",
-    " keymap=us fsck.mode=skip",
-    " noprompt splash --<enter><wait><wait>",
-    # Configure initrd & boot
-    # Different distributions name (and compress) the initrd differently. Fortunately,
-    # GRUB is mostly smart and if the file doesn't exist, it just won't apply that directive.
-    # So to prevent duplication, we specify both and let GRUB ignore the wrong one.
+    " autoinstall cloud-config-url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/autoinstall.yaml",
+    " --<enter>",
     "initrd /casper/initrd<enter>",
-    "initrd /casper/initrd.lz<enter><wait>",
-    "<enter>boot<enter>"
+    "<wait><enter>boot<enter>"
   ]
   shutdown_command = "echo -e \"${var.ssh_pass}\\n\" | sudo -S poweroff"
 
