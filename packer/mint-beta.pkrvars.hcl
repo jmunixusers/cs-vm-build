@@ -1,6 +1,6 @@
-semester = "Fa24"
+semester = "Sp25"
 
 mint_version = {
-  version    = "22"
+  version    = "22.1"
   build_type = "beta"
 }
