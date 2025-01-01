@@ -160,7 +160,7 @@ def build_packer_command(
     "template-file",
     type=click.Path(exists=True),
 )
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, too-many-positional-arguments
 def main(
     interactive,
     packer_cmd,
