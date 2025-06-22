@@ -59,7 +59,7 @@ jobs:
         working-directory: packer
   Python:
     name: Run Python lint tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,10 +70,7 @@ jobs:
       - name: Install Ubuntu dependencies
         run: |
           sudo apt-get update
-          sudo apt-get -q install python3-gi-cairo gir1.2-gtk-3.0 libgirepository1.0-dev gir1.2-vte-2.91
-      - name: Install dependencies
-        run: |
-          pip3 install pyyaml pygobject pylint click PyGithub jinja2 aiohttp pyxdg
+          sudo apt-get -q install pylint python3-aiohttp python3-xdg python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-vte-2.91 python3-yaml python3-jinja2
       - name: Run pylint
         run: |
           pylint roles/*/*/*.py scripts/*.py
