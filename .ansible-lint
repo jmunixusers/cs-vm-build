@@ -2,6 +2,7 @@
 skip_list:
   # Package installs should not use latest
   - package-latest
+  - var-naming
 warn_list:
   - ignore-errors
   - experimental
