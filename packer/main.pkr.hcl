@@ -13,7 +13,7 @@ source "virtualbox-iso" "base-build" {
   memory        = 4096
   disk_size     = 20480
   guest_os_type = "Ubuntu_64"
-  gfx_vram_size = 64
+  gfx_vram_size = 128
 
   format                   = "ova"
   firmware                 = "efi"
