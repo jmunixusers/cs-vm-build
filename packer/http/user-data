@@ -1,0 +1,18 @@
+#cloud-config
+autoinstall:
+  version: 1
+  codecs:
+    install: true
+  identity:
+    hostname: ubuntu
+    username: oem
+    password: $6$250qJD2ObtCZAp.v$8nYXTi6MJo.Qd3dQNQgcz136tbrfza3p8RqXF47T1A1PYlwJ91ug5sJAMy.kCAlWRyQJb8PptIFQ0EmipHltk.
+  packages:
+    - ansible
+    - git
+  shutdown: reboot
+  source:
+    id: ubuntu-server-minimal
+  ssh:
+    install-server: true
+  timezone: "US/Eastern"

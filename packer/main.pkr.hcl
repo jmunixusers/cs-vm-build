@@ -56,9 +56,7 @@ source "qemu" "kvm" {
     "c<wait><wait>",
     # Configure the kernel
     "linux /casper/vmlinuz",
-    " auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/oem-preseed.cfg",
-    " automatic-ubiquity only-ubiquity",
-    " debug-ubiquity oem-config/enable=true",
+    " ds=nocloud;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/",
     " keymap=us fsck.mode=skip",
     " noprompt splash --<enter><wait><wait>",
     # Configure initrd & boot
