@@ -13,7 +13,7 @@ packer {
 }
 
 source "qemu" "kvm" {
-  cpus         = 2
+  cpus         = 4
   memory       = 4096
   disk_size    = 20480
   machine_type = "virt"
@@ -28,7 +28,7 @@ source "qemu" "kvm" {
   efi_firmware_vars = "${var.qemu_firmware_directory}/AAVMF_VARS.fd"
   qemuargs = [
     ["-boot", "strict=off"],
-    ["-cpu", "host"],
+    ["-cpu", "max"],
     ["-display", var.headless ? "none" : "gtk"],
     ["-device", "virtio-rng-pci"],
     ["-device", "virtio-gpu"],
@@ -55,10 +55,9 @@ source "qemu" "kvm" {
     # Enter the command line
     "c<wait><wait>",
     # Configure the kernel
-    "linux /casper/vmlinuz",
-    " ds=nocloud;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/",
-    " keymap=us fsck.mode=skip",
-    " noprompt splash --<enter><wait><wait>",
+    "linux /casper/vmlinuz ",
+    " autoinstall 'ds=nocloud;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/'",
+    " <enter><wait><wait>",
     # Configure initrd & boot
     "initrd /casper/initrd ",
     "<enter>boot<enter>"

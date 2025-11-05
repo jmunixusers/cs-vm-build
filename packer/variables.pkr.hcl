@@ -84,7 +84,7 @@ variable "aarch64_boot_wait" {
 
 variable "qemu_accelerator" {
   type        = string
-  default     = "kvm"
+  default     = "tcg"
   description = <<EOF
     The QEMU accelerator to use; keep this as 'kvm' unless building on macOS, in
     which case it's probably best to use 'hvf'.
@@ -112,8 +112,8 @@ locals {
     iso_file   = "linuxmint-${var.mint_version.version}-cinnamon-64bit${var.mint_version.build_type != null ? "-${var.mint_version.build_type}" : ""}.iso"
   }
   ubuntu_aarch64_info = {
-    mirror_url = "http://cdimage.ubuntu.com/${var.ubuntu_version.version}/daily-live/current"
-    iso_file   = "${var.ubuntu_version.version}-desktop-arm64.iso"
+    mirror_url = "http://cdimage.ubuntu.com/releases/${var.ubuntu_version.version}/release"
+    iso_file   = "ubuntu-${var.ubuntu_version.patched_version}-live-server-arm64.iso"
   }
   artifact_dir_prefix = "${path.cwd}/artifacts_"
 }
