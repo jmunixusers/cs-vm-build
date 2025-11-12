@@ -16,16 +16,16 @@ source "qemu" "kvm" {
   cpus         = 4
   memory       = 4096
   disk_size    = 20480
-  machine_type = "virt"
-  accelerator  = var.qemu_accelerator
+  machine_type = "q35"
+  accelerator  = "kvm"
 
   format         = "qcow2"
   headless       = "${var.headless}"
   http_directory = "http"
-  qemu_binary    = "qemu-system-aarch64"
+#  qemu_binary    = "qemu-system-aarch64"
 
-  efi_firmware_code = "${var.qemu_firmware_directory}/AAVMF_CODE.fd"
-  efi_firmware_vars = "${var.qemu_firmware_directory}/AAVMF_VARS.fd"
+#  efi_firmware_code = "${var.qemu_firmware_directory}/AAVMF_CODE.fd"
+#  efi_firmware_vars = "${var.qemu_firmware_directory}/AAVMF_VARS.fd"
   qemuargs = [
     ["-boot", "strict=off"],
     ["-cpu", "max"],
@@ -178,7 +178,17 @@ build {
     output_directory = "${local.artifact_dir_prefix}ubuntu-aarch64"
   }
 
+  source "source.qemu.kvm" {
+    name             = "ubuntu-amd64"
+    vm_name          = "image.qcow2"
+    iso_url          = "${local.ubuntu_aarch64_info.mirror_url}/${local.ubuntu_amd64_info.iso_file}"
+    iso_checksum     = "file:${local.ubuntu_amd64_info.mirror_url}/SHA256SUMS"
+    output_directory = "${local.artifact_dir_prefix}ubuntu-amd64"
+  }
+
   provisioner "shell" {
+    only = ["virtualbox-iso.base-build"]
+
     execute_command = "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive"

@@ -9,10 +9,21 @@ autoinstall:
     password: $6$250qJD2ObtCZAp.v$8nYXTi6MJo.Qd3dQNQgcz136tbrfza3p8RqXF47T1A1PYlwJ91ug5sJAMy.kCAlWRyQJb8PptIFQ0EmipHltk.
   packages:
     - ansible
+    - cinnamon-desktop-environment
+    - gdm3
     - git
+    - ubuntucinnamon-wallpapers-noble
   shutdown: reboot
   source:
     id: ubuntu-server-minimal
   ssh:
     install-server: true
+  storage:
+    layout:
+      name: lvm
+      sizing-policy: all
   timezone: "US/Eastern"
+  late-commands:
+    - curtin in-target -- locale-gen en_US.UTF-8
+    - curtin in-target -- git clone -b aarch64-support https://github.com/ripleymj/cs-vm-build
+    - curtin in-target -- bash -c "export LC_ALL=en_US.UTF-8; cs-vm-build/scripts/oem-build"
