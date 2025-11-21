@@ -12,7 +12,7 @@ jobs:
     name: Update Ubuntu ISO file name
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Install dependencies
         run: |
           sudo apt-get install -q -y jq
