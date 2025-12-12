@@ -13,9 +13,11 @@
     errors=0
     changed=""
     while read snapname revision; do
-      snap remove "$snapname" --revision="$revision"
+      if [[ -n "$snapname" ]] && [[ -n "$revision" ]]; then
+        snap remove "$snapname" --revision="$revision"
+        changed="Snap removed"
+      fi
       errors=$((errors + $?))
-      changed="Snap removed"
     done <<< "$(snap list --all | awk '/disabled/{print $1, $3}')"
     echo $changed
     exit $errors
