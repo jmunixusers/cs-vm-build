@@ -7,15 +7,26 @@ autoinstall:
     hostname: ubuntu
     username: oem
     password: $6$250qJD2ObtCZAp.v$8nYXTi6MJo.Qd3dQNQgcz136tbrfza3p8RqXF47T1A1PYlwJ91ug5sJAMy.kCAlWRyQJb8PptIFQ0EmipHltk.
+  network:
+    version: 2
+    ethernets:
+      eth0:
+        dhcp4: true
+        match:
+          name: en*
   packages:
     - ansible
-    - cinnamon-desktop-environment
-    - gdm3
+    - bash-completion
+#    - cinnamon-desktop-environment
+#    - gdm3
+#    - gnome-initial-setup
     - git
-    - ubuntucinnamon-wallpapers-noble
+    - linux-image-virtual
+#    - ubuntucinnamon-wallpapers-noble
+    - vim
   shutdown: reboot
   source:
-    id: ubuntu-server-minimal
+    id: ubuntu-server
   ssh:
     install-server: true
   storage:
@@ -25,5 +36,7 @@ autoinstall:
   timezone: "US/Eastern"
   late-commands:
     - curtin in-target -- locale-gen en_US.UTF-8
+    - curtin in-target -- apt-get -y --autoremove --purge remove linux-generic linux-image-generic linux-headers* linux-modules-extra* linux-tools* linux-firmware
+    - curtin in-target -- apt-get -y install cinnamon-desktop-environment gdm3 gnome-initial-setup ubuntucinnamon-wallpapers-noble
     - curtin in-target -- git clone -b aarch64-support https://github.com/ripleymj/cs-vm-build
     - curtin in-target -- bash -c "export LC_ALL=en_US.UTF-8; cs-vm-build/scripts/oem-build"

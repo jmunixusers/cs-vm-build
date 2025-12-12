@@ -110,7 +110,7 @@ source "virtualbox-iso" "base-build" {
     "initrd /casper/initrd.lz<enter><wait>",
     "<enter>boot<enter>"
   ]
-  shutdown_command = "echo -e \"${var.ssh_pass}\\n\" | sudo -S poweroff"
+  shutdown_command = "echo -e \"${var.ssh_pass}\\n\" | sudo -S userdel -rf oem; echo -e \"${var.ssh_pass}\\n\" | sudo -S poweroff"
 
   vboxmanage = [
     ["modifyvm", "{{ .Name }}", "--audioin", "off"],
